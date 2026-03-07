@@ -311,3 +311,77 @@
 .card-article-info {
   margin-top: 1rem;
 }
+
+/* Keep product thumbnails fully visible in these homepage featured collections. */
+[id$="__featured_collection_GeNpUQ"] .card__media .media > img,
+[id$="__featured_collection_H7n3GH"] .card__media .media > img {
+  object-fit: contain;
+}
+
+[id$="__featured_collection_GeNpUQ"] .card__media .media,
+[id$="__featured_collection_H7n3GH"] .card__media .media {
+  background-color: #ffffff;
+}
+
+/* Product page "You may also like" image containment (easy to remove if you prefer cropped look). */
+[id$="__product-recommendations"] .card__media .media > img {
+  object-fit: contain;
+}
+
+/* Tactical card skin for featured-collection sections. */
+.collection.collection--card-skin-tactical .card {
+  position: relative;
+  border: 0.1rem solid rgba(214, 190, 145, 0.22);
+}
+
+.collection.collection--card-skin-tactical .card__inner {
+  background: #ffffff;
+}
+
+.collection.collection--card-skin-tactical .card__media .media {
+  background-color: #ffffff;
+}
+
+.collection.collection--card-skin-tactical .card > .card__content {
+  background: linear-gradient(180deg, #242a34 0%, #171d25 100%);
+  padding: 1.2rem 1.6rem 1.6rem;
+}
+
+.collection.collection--card-skin-tactical .card__heading a {
+  color: rgb(var(--color-base-text));
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+}
+
+.collection.collection--card-skin-tactical .card__heading {
+  min-height: 5rem;
+}
+
+.collection.collection--card-skin-tactical .card-information > .price {
+  color: rgb(var(--color-base-text));
+}
+
+.collection.collection--card-skin-tactical .card__badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  left: auto;
+  z-index: 3;
+}
+
+.collection.collection--card-skin-tactical .badge {
+  background: #a98d60;
+  color: #10141b;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.collection.collection--card-skin-tactical .quick-add__submit.button--secondary {
+  background: #a98d60;
+  color: #10141b;
+  border-color: #a98d60;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}

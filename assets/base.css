@@ -20,13 +20,13 @@
 }
 
 .color-accent-1 {
-  --color-foreground: var(--color-base-solid-button-labels);
+  --color-foreground: var(--color-base-text);
   --color-background: var(--color-base-accent-1);
   --gradient-background: var(--gradient-base-accent-1);
 }
 
 .color-accent-2 {
-  --color-foreground: var(--color-base-solid-button-labels);
+  --color-foreground: var(--color-base-text);
   --color-background: var(--color-base-accent-2);
   --gradient-background: var(--gradient-base-accent-2);
 }
@@ -59,7 +59,7 @@
 
 :root,
 .color-background-1 {
-  --color-button: var(--color-base-accent-1);
+  --color-button: var(--color-base-accent-2);
   --color-button-text: var(--color-base-solid-button-labels);
   --alpha-button-background: 1;
   --alpha-button-border: 1;
@@ -69,8 +69,8 @@
 .color-inverse,
 .color-accent-1,
 .color-accent-2 {
-  --color-button: var(--color-foreground);
-  --color-button-text: var(--color-background);
+  --color-button: var(--color-base-accent-2);
+  --color-button-text: var(--color-base-solid-button-labels);
 }
 
 .button--secondary {
