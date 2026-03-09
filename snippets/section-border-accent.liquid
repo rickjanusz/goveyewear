@@ -6,11 +6,6 @@
       isolation: isolate;
     }
 
-    #shopify-section-{{ section.id }} > * {
-      position: relative;
-      z-index: 2;
-    }
-
     #shopify-section-{{ section.id }}::before,
     #shopify-section-{{ section.id }}::after {
       content: '';
@@ -19,7 +14,7 @@
       width: 100%;
       height: {{ border_accent_height }}px;
       pointer-events: none;
-      z-index: 1;
+      z-index: 2;
       background-repeat: repeat-x;
       background-position: center;
       background-size: auto 100%;
