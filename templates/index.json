@@ -85,9 +85,7 @@
         "corner_accent_offset_y": 0,
         "corner_accent_random_rotation": false,
         "corner_accent_rotation_min": -12,
-        "corner_accent_rotation_max": 12,
-        "border_accent_top": "shopify://shop_images/border-top-accent.png",
-        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png"
+        "corner_accent_rotation_max": 12
       }
     },
     "featured_collection": {
@@ -170,9 +168,7 @@
         "corner_accent_offset_y": 0,
         "corner_accent_random_rotation": false,
         "corner_accent_rotation_min": -12,
-        "corner_accent_rotation_max": 12,
-        "border_accent_top": "shopify://shop_images/border-top-accent.png",
-        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png"
+        "corner_accent_rotation_max": 12
       }
     },
     "featured_collection_pKawwp": {
@@ -293,9 +289,7 @@
         "corner_accent_offset_y": 10,
         "corner_accent_random_rotation": true,
         "corner_accent_rotation_min": -19,
-        "corner_accent_rotation_max": 45,
-        "border_accent_top": "shopify://shop_images/border-top-accent.png",
-        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png"
+        "corner_accent_rotation_max": 45
       }
     },
     "featured_collection_tLqpCY": {
@@ -510,9 +504,7 @@
         "corner_accent_offset_y": 0,
         "corner_accent_random_rotation": false,
         "corner_accent_rotation_min": -12,
-        "corner_accent_rotation_max": 12,
-        "border_accent_top": "shopify://shop_images/border-top-accent.png",
-        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png"
+        "corner_accent_rotation_max": 12
       }
     }
   },
