@@ -14,7 +14,18 @@
       "settings": {
         "show_collection_description": false,
         "show_collection_image": true,
-        "color_scheme": "background-1"
+        "color_scheme": "background-1",
+        "border_accent_top": "shopify://shop_images/border-top-accent.png",
+        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_image_all": "shopify://shop_images/rivet.png",
+        "corner_accent_size": 24,
+        "corner_accent_offset_x": 0,
+        "corner_accent_offset_y": 0,
+        "corner_accent_random_rotation": false,
+        "corner_accent_rotation_min": -12,
+        "corner_accent_rotation_max": 12
       }
     },
     "brand-showcase": {
@@ -48,7 +59,10 @@
         "corner_accent_offset_y": 0,
         "corner_accent_random_rotation": false,
         "corner_accent_rotation_min": -12,
-        "corner_accent_rotation_max": 12
+        "corner_accent_rotation_max": 12,
+        "border_accent_top": "shopify://shop_images/border-top-accent.png",
+        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
+        "corner_accent_image_all": "shopify://shop_images/rivet.png"
       }
     },
     "product-grid": {
@@ -73,7 +87,18 @@
         "grid_subheader": "<p>Use filters, sorting, and optional tag filter to narrow mission-fit products.</p>",
         "grid_header_alignment": "center",
         "product_display_mode": "grid",
-        "product_tag_filter": ""
+        "product_tag_filter": "",
+        "border_accent_top": "shopify://shop_images/border-top-accent.png",
+        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_image_all": "shopify://shop_images/rivet.png",
+        "corner_accent_size": 24,
+        "corner_accent_offset_x": 0,
+        "corner_accent_offset_y": 0,
+        "corner_accent_random_rotation": false,
+        "corner_accent_rotation_min": -12,
+        "corner_accent_rotation_max": 12
       }
     },
     "brand-video": {
@@ -89,7 +114,17 @@
         "subheading_size": "h3",
         "padding_top": 40,
         "padding_bottom": 40,
-        "border_accent_height": 60
+        "border_accent_height": 60,
+        "border_accent_top": "shopify://shop_images/border-top-accent.png",
+        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
+        "corner_accent_image_mode": "all",
+        "corner_accent_image_all": "shopify://shop_images/rivet.png",
+        "corner_accent_size": 24,
+        "corner_accent_offset_x": 0,
+        "corner_accent_offset_y": 0,
+        "corner_accent_random_rotation": false,
+        "corner_accent_rotation_min": -12,
+        "corner_accent_rotation_max": 12
       }
     },
     "brand-featured-product": {
@@ -112,7 +147,17 @@
         "show_quick_add": true,
         "padding_top": 40,
         "padding_bottom": 40,
-        "border_accent_height": 60
+        "border_accent_height": 60,
+        "border_accent_top": "shopify://shop_images/border-top-accent.png",
+        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
+        "corner_accent_image_mode": "all",
+        "corner_accent_image_all": "shopify://shop_images/rivet.png",
+        "corner_accent_size": 24,
+        "corner_accent_offset_x": 0,
+        "corner_accent_offset_y": 0,
+        "corner_accent_random_rotation": false,
+        "corner_accent_rotation_min": -12,
+        "corner_accent_rotation_max": 12
       }
     },
     "brand-image-overlay": {
@@ -135,7 +180,17 @@
         "text_alignment": "center",
         "padding_top": 40,
         "padding_bottom": 40,
-        "border_accent_height": 60
+        "border_accent_height": 60,
+        "border_accent_top": "shopify://shop_images/border-top-accent.png",
+        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
+        "corner_accent_image_mode": "all",
+        "corner_accent_image_all": "shopify://shop_images/rivet.png",
+        "corner_accent_size": 24,
+        "corner_accent_offset_x": 0,
+        "corner_accent_offset_y": 0,
+        "corner_accent_random_rotation": false,
+        "corner_accent_rotation_min": -12,
+        "corner_accent_rotation_max": 12
       }
     }
   },
