@@ -211,7 +211,17 @@
               ></iframe>
             {%- endif -%}
           {%- else -%}
-            {{ section.settings.hero_image | image_url: width: 1800 | image_tag: loading: 'lazy', widths: '375, 550, 750, 1100, 1500, 1800', alt: section.settings.brand_name }}
+            {%- if section.settings.hero_image.id != blank -%}
+              {{ section.settings.hero_image | image_url: width: 1800 | image_tag: loading: 'lazy', widths: '375, 550, 750, 1100, 1500, 1800', alt: section.settings.brand_name }}
+            {%- else -%}
+              <img
+                src="{{ section.settings.hero_image }}"
+                alt="{{ section.settings.brand_name | escape }}"
+                loading="lazy"
+                width="1800"
+                height="1013"
+              >
+            {%- endif -%}
           {%- endif -%}
         </div>
       {%- endif -%}
