@@ -1,0 +1,109 @@
+{%- liquid
+  assign corner_mode = section.settings.corner_accent_image_mode | default: 'all'
+  assign corner_size = section.settings.corner_accent_size | default: 24 | plus: 0
+  assign corner_offset_x = section.settings.corner_accent_offset_x | default: 0 | plus: 0
+  assign corner_offset_y = section.settings.corner_accent_offset_y | default: 0 | plus: 0
+  assign random_rotation = section.settings.corner_accent_random_rotation
+  assign rotation_min = section.settings.corner_accent_rotation_min | default: -12 | plus: 0
+  assign rotation_max = section.settings.corner_accent_rotation_max | default: 12 | plus: 0
+
+  assign image_all = section.settings.corner_accent_image_all
+  assign image_tl = section.settings.corner_accent_image_top_left
+  assign image_tr = section.settings.corner_accent_image_top_right
+  assign image_bl = section.settings.corner_accent_image_bottom_left
+  assign image_br = section.settings.corner_accent_image_bottom_right
+
+  if corner_mode == 'all'
+    assign image_tl = image_all
+    assign image_tr = image_all
+    assign image_bl = image_all
+    assign image_br = image_all
+  endif
+-%}
+
+{%- if image_tl != blank or image_tr != blank or image_bl != blank or image_br != blank -%}
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      position: relative;
+      isolation: isolate;
+    }
+
+    #shopify-section-{{ section.id }} .section-corner-accent {
+      position: absolute;
+      width: {{ corner_size }}px;
+      height: {{ corner_size }}px;
+      pointer-events: none;
+      z-index: 60;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+    }
+
+    #shopify-section-{{ section.id }} .section-corner-accent--top-left {
+      top: {{ corner_offset_y }}px;
+      left: {{ corner_offset_x }}px;
+    }
+
+    #shopify-section-{{ section.id }} .section-corner-accent--top-right {
+      top: {{ corner_offset_y }}px;
+      right: {{ corner_offset_x }}px;
+    }
+
+    #shopify-section-{{ section.id }} .section-corner-accent--bottom-left {
+      bottom: {{ corner_offset_y }}px;
+      left: {{ corner_offset_x }}px;
+    }
+
+    #shopify-section-{{ section.id }} .section-corner-accent--bottom-right {
+      bottom: {{ corner_offset_y }}px;
+      right: {{ corner_offset_x }}px;
+    }
+  {%- endstyle -%}
+
+  {%- if image_tl != blank -%}
+    <span
+      class="section-corner-accent section-corner-accent--top-left{% if random_rotation %} section-corner-accent--random{% endif %}"
+      aria-hidden="true"
+      style="background-image:url('{{ image_tl | image_url: width: 240 }}');"
+    ></span>
+  {%- endif -%}
+
+  {%- if image_tr != blank -%}
+    <span
+      class="section-corner-accent section-corner-accent--top-right{% if random_rotation %} section-corner-accent--random{% endif %}"
+      aria-hidden="true"
+      style="background-image:url('{{ image_tr | image_url: width: 240 }}');"
+    ></span>
+  {%- endif -%}
+
+  {%- if image_bl != blank -%}
+    <span
+      class="section-corner-accent section-corner-accent--bottom-left{% if random_rotation %} section-corner-accent--random{% endif %}"
+      aria-hidden="true"
+      style="background-image:url('{{ image_bl | image_url: width: 240 }}');"
+    ></span>
+  {%- endif -%}
+
+  {%- if image_br != blank -%}
+    <span
+      class="section-corner-accent section-corner-accent--bottom-right{% if random_rotation %} section-corner-accent--random{% endif %}"
+      aria-hidden="true"
+      style="background-image:url('{{ image_br | image_url: width: 240 }}');"
+    ></span>
+  {%- endif -%}
+
+  {%- if random_rotation -%}
+    <script>
+      (() => {
+        const section = document.getElementById('shopify-section-{{ section.id }}');
+        if (!section) return;
+        const min = {{ rotation_min }};
+        const max = {{ rotation_max }};
+        section.querySelectorAll('.section-corner-accent--random').forEach((el) => {
+          const deg = Math.floor(Math.random() * (max - min + 1)) + min;
+          el.style.transform = `rotate(${deg}deg)`;
+        });
+      })();
+    </script>
+  {%- endif -%}
+{%- endif -%}

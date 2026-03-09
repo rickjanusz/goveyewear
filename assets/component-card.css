@@ -312,76 +312,121 @@
   margin-top: 1rem;
 }
 
-/* Keep product thumbnails fully visible in these homepage featured collections. */
-[id$="__featured_collection_GeNpUQ"] .card__media .media > img,
-[id$="__featured_collection_H7n3GH"] .card__media .media > img {
+/* Product cards: keep image fully visible and keep media area white. */
+.product-grid .card__media .media,
+.predictive-search .card__media .media,
+#product-grid .card__media .media,
+[id$="__product-recommendations"] .card__media .media {
+  background-color: rgb(var(--color-base-background-1));
+}
+
+.product-grid .card-wrapper--image-fit-contain .card__media .media > img,
+#product-grid .card-wrapper--image-fit-contain .card__media .media > img,
+[id$="__product-recommendations"] .card-wrapper--image-fit-contain .card__media .media > img {
   object-fit: contain;
 }
 
-[id$="__featured_collection_GeNpUQ"] .card__media .media,
-[id$="__featured_collection_H7n3GH"] .card__media .media {
-  background-color: #ffffff;
-}
-
-/* Product page "You may also like" image containment (easy to remove if you prefer cropped look). */
-[id$="__product-recommendations"] .card__media .media > img {
-  object-fit: contain;
+.product-grid .card-wrapper--image-fit-cover .card__media .media > img,
+#product-grid .card-wrapper--image-fit-cover .card__media .media > img,
+[id$="__product-recommendations"] .card-wrapper--image-fit-cover .card__media .media > img {
+  object-fit: cover;
 }
 
 /* Tactical card skin for featured-collection sections. */
 .collection.collection--card-skin-tactical .card {
   position: relative;
-  border: 0.1rem solid rgba(214, 190, 145, 0.22);
-}
-
-.collection.collection--card-skin-tactical .card__inner {
-  background: #ffffff;
-}
-
-.collection.collection--card-skin-tactical .card__media .media {
-  background-color: #ffffff;
+  border: 0.1rem solid rgba(var(--color-base-accent-2), 0.32);
 }
 
 .collection.collection--card-skin-tactical .card > .card__content {
-  background: linear-gradient(180deg, #242a34 0%, #171d25 100%);
+  background: rgb(var(--color-base-accent-1));
+  border-top: 0.1rem solid rgba(var(--color-base-accent-2), 0.2);
   padding: 1.2rem 1.6rem 1.6rem;
 }
 
 .collection.collection--card-skin-tactical .card__heading a {
-  color: rgb(var(--color-base-text));
+  color: rgb(var(--color-base-accent-2));
   text-transform: uppercase;
   letter-spacing: 0.08em;
   line-height: 1.25;
 }
 
 .collection.collection--card-skin-tactical .card__heading {
+  margin-bottom: 0.6rem;
   min-height: 5rem;
 }
 
-.collection.collection--card-skin-tactical .card-information > .price {
-  color: rgb(var(--color-base-text));
+.collection.collection--card-skin-tactical .card-information > * {
+  color: rgba(var(--color-base-accent-2), 0.9);
 }
 
-.collection.collection--card-skin-tactical .card__badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  left: auto;
-  z-index: 3;
+.collection.collection--card-skin-tactical .card-information > .price {
+  color: rgb(var(--color-base-accent-2));
+  margin-top: 0.9rem;
+}
+
+.collection.collection--card-skin-tactical .card-information .caption-with-letter-spacing {
+  color: rgba(var(--color-base-accent-2), 0.75);
+  text-transform: uppercase;
 }
 
 .collection.collection--card-skin-tactical .badge {
-  background: #a98d60;
-  color: #10141b;
-  border: none;
+  border: 0.1rem solid rgba(var(--color-base-accent-2), 0.24);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .collection.collection--card-skin-tactical .quick-add__submit.button--secondary {
-  background: #a98d60;
-  color: #10141b;
-  border-color: #a98d60;
+  background-color: rgb(var(--color-base-accent-2));
+  border-color: rgb(var(--color-base-accent-2));
+  color: rgb(var(--color-base-accent-1));
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+@media screen and (max-width: 989px) {
+  /* Tactical cards: keep CTA fully inside card width on mobile. */
+  .collection.collection--card-skin-tactical .card--card .quick-add {
+    margin: 0 0 1rem;
+    width: 100%;
+  }
+
+  .collection.collection--card-skin-tactical .card--card .quick-add__submit {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Ensure image uses the full media box constraints consistently on mobile. */
+  .collection.collection--card-skin-tactical .card__media .media > img {
+    width: 100%;
+    height: 100%;
+    object-position: center;
+  }
+
+  /* Product sliders: remove peek bleed so cards stay fully contained. */
+  .product-grid.slider--tablet.grid--peek .grid__item {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  .product-grid.slider--tablet.grid--peek .grid__item:first-of-type {
+    margin-left: 0;
+  }
+
+  .product-grid.slider--tablet.grid--peek .grid__item:last-of-type {
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .product-grid.slider--tablet.grid--peek.grid--2-col-tablet-down .grid__item,
+  .product-grid.grid--2-col-tablet-down .grid__item {
+    width: calc(50% - var(--grid-mobile-horizontal-spacing) / 2);
+  }
+}
+
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .product-grid.slider--tablet.grid--peek.grid--2-col-tablet-down .grid__item {
+    width: calc(50% - var(--grid-desktop-horizontal-spacing) / 2);
+  }
 }

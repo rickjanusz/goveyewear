@@ -1,3 +1,5 @@
+{% render 'section-border-accent' %}
+
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
@@ -15,6 +17,10 @@
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  .section-{{ section.id }}-heading {
+    text-align: {{ section.settings.heading_alignment | default: 'left' }};
   }
 
   @media screen and (min-width: 750px) {
@@ -47,7 +53,7 @@
 
 <div class="color-{{ section.settings.color_scheme }} isolate gradient">
   <div class="collection section-{{ section.id }}-padding collection--card-skin-{{ section.settings.card_skin }}{% if section.settings.full_width %} collection--full-width{% endif %}">
-      <div class="collection__title title-wrapper title-wrapper--no-top-margin page-width{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% endif %}{% if show_desktop_slider %} collection__title--desktop-slider{% endif %}">
+      <div class="collection__title title-wrapper title-wrapper--no-top-margin page-width section-{{ section.id }}-heading{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% endif %}{% if show_desktop_slider %} collection__title--desktop-slider{% endif %}">
         {%- if section.settings.title != blank -%}
           <h2 class="title {{ section.settings.heading_size }}">{{ section.settings.title | escape }}</h2>
         {%- endif -%}
@@ -58,25 +64,29 @@
 
     <slider-component class="slider-mobile-gutter{% if section.settings.full_width %} slider-component-full-width{% endif %}{% if show_mobile_slider == false %} page-width{% endif %}{% if show_desktop_slider == false and section.settings.full_width == false %} page-width-desktop{% endif %}{% if show_desktop_slider %} slider-component-desktop{% endif %}">
       <ul id="Slider-{{ section.id }}" class="grid product-grid contains-card{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid--{{ section.settings.columns_desktop }}-col-desktop{% if section.settings.collection == blank %} grid--2-col-tablet-down{% else %} grid--{{ section.settings.columns_mobile }}-col-tablet-down{% endif %}{% if show_mobile_slider or show_desktop_slider %} slider{% if show_desktop_slider %} slider--desktop{% endif %}{% if show_mobile_slider %} slider--tablet grid--peek{% endif %}{% endif %}" role="list" aria-label="{{ 'sections.featured_collection.slider' | t }}">
-        {%- for product in section.settings.collection.products limit: section.settings.products_to_show -%}
+        {%- assign featured_limit = section.settings.products_to_show | plus: 0 -%}
+        {% comment %}theme-check-disable LiquidHTMLSyntaxError{% endcomment %}
+        {%- for product in section.settings.collection.products limit: featured_limit -%}
           <li id="Slide-{{ section.id }}-{{ forloop.index }}" class="grid__item{% if show_mobile_slider or show_desktop_slider %} slider__slide{% endif %}">
             {% render 'card-product',
               card_product: product,
               media_aspect_ratio: section.settings.image_ratio,
+              card_image_fit: section.settings.card_image_fit,
               show_secondary_image: section.settings.show_secondary_image,
               show_vendor: section.settings.show_vendor,
               show_rating: section.settings.show_rating,
               show_quick_add: section.settings.enable_quick_add,
               section_id: section.id
             %}
-          </li>
-        {%- else -%}
+            </li>
+          {%- else -%}
           {%- for i in (1..4) -%}
             <li class="grid__item">
               {% render 'card-product', show_vendor: section.settings.show_vendor %}
             </li>
           {%- endfor -%}
-        {%- endfor -%}
+          {%- endfor -%}
+        {% comment %}theme-check-enable LiquidHTMLSyntaxError{% endcomment %}
       </ul>
       {%- if show_mobile_slider or show_desktop_slider -%}
         <div class="slider-buttons no-js-hidden">
@@ -136,6 +146,17 @@
       ],
       "default": "h1",
       "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
     },
     {
       "type": "richtext",
@@ -299,6 +320,16 @@
       "label": "t:sections.featured-collection.settings.image_ratio.label"
     },
     {
+      "type": "select",
+      "id": "card_image_fit",
+      "label": "Product image fit",
+      "default": "contain",
+      "options": [
+        { "value": "contain", "label": "Contain" },
+        { "value": "cover", "label": "Cover" }
+      ]
+    },
+    {
       "type": "checkbox",
       "id": "show_secondary_image",
       "default": false,
@@ -373,7 +404,129 @@
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
     }
-  ],
+,
+    {
+      "type": "image_picker",
+      "id": "border_accent_top",
+      "label": "Border Accent Top"
+    },
+    {
+      "type": "image_picker",
+      "id": "border_accent_bottom",
+      "label": "Border Accent Bottom"
+    },
+    {
+      "type": "range",
+      "id": "border_accent_height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60,
+      "label": "Border Accent Height"
+    }
+,
+    {
+      "type": "header",
+      "content": "Corner Accents"
+    },
+    {
+      "type": "select",
+      "id": "corner_accent_image_mode",
+      "label": "Corner image source",
+      "default": "all",
+      "options": [
+        { "value": "all", "label": "One image for all corners" },
+        { "value": "individual", "label": "Different image per corner" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_all",
+      "label": "Corner image (all)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'all' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_top_left",
+      "label": "Corner image (top left)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_top_right",
+      "label": "Corner image (top right)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_bottom_left",
+      "label": "Corner image (bottom left)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_bottom_right",
+      "label": "Corner image (bottom right)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_size",
+      "min": 8,
+      "max": 108,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "label": "Corner size"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_offset_x",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Corner horizontal offset"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_offset_y",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Corner vertical offset"
+    },
+    {
+      "type": "checkbox",
+      "id": "corner_accent_random_rotation",
+      "default": false,
+      "label": "Randomize corner rotation"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_rotation_min",
+      "min": -45,
+      "max": 0,
+      "step": 1,
+      "unit": "deg",
+      "default": -12,
+      "label": "Rotation min"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_rotation_max",
+      "min": 0,
+      "max": 45,
+      "step": 1,
+      "unit": "deg",
+      "default": 12,
+      "label": "Rotation max"
+    }
+    ],
   "presets": [
     {
       "name": "t:sections.featured-collection.presets.name"

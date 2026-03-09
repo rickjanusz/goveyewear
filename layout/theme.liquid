@@ -44,6 +44,15 @@
       {{ body_font_italic | font_face: font_display: 'swap' }}
       {{ body_font_bold_italic | font_face: font_display: 'swap' }}
       {{ settings.type_header_font | font_face: font_display: 'swap' }}
+      {%- if settings.use_custom_heading_font and settings.custom_heading_font_url != blank -%}
+        @font-face {
+          font-family: "{{ settings.custom_heading_font_family | default: 'Black Ops One' }}";
+          src: url('{{ settings.custom_heading_font_url }}') format('truetype');
+          font-weight: 400;
+          font-style: normal;
+          font-display: swap;
+        }
+      {%- endif -%}
 
       :root {
         --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
@@ -51,9 +60,15 @@
         --font-body-weight: {{ settings.type_body_font.weight }};
         --font-body-weight-bold: {{ settings.type_body_font.weight | plus: 300 | at_most: 1000 }};
 
-        --font-heading-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
-        --font-heading-style: {{ settings.type_header_font.style }};
-        --font-heading-weight: {{ settings.type_header_font.weight }};
+        {%- if settings.use_custom_heading_font and settings.custom_heading_font_url != blank -%}
+          --font-heading-family: "{{ settings.custom_heading_font_family | default: 'Black Ops One' }}", {{ settings.type_header_font.fallback_families }};
+          --font-heading-style: normal;
+          --font-heading-weight: 400;
+        {%- else -%}
+          --font-heading-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+          --font-heading-style: {{ settings.type_header_font.style }};
+          --font-heading-weight: {{ settings.type_header_font.weight }};
+        {%- endif -%}
 
         --font-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
         --font-heading-scale: {{ settings.heading_scale | times: 1.0 | divided_by: settings.body_scale }};
@@ -225,7 +240,66 @@
 
     {% section 'announcement-bar' %}
     {% section 'header' %}
-    <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+    {%- assign main_content_style = '' -%}
+    {%- if request.page_type != 'index' -%}
+      {%- capture main_content_style -%}
+        --color-base-text: {{ settings.non_home_main_text_color.red }}, {{ settings.non_home_main_text_color.green }}, {{ settings.non_home_main_text_color.blue }};
+        --color-base-outline-button-labels: {{ settings.non_home_main_text_color.red }}, {{ settings.non_home_main_text_color.green }}, {{ settings.non_home_main_text_color.blue }};
+      {%- endcapture -%}
+    {%- endif -%}
+
+    {%- assign brand_palette_prefix = '' -%}
+    {%- if request.page_type == 'collection' -%}
+      {%- if collection.handle == 'gatorz' and settings.brand_palette_gatorz_enabled -%}
+        {%- assign brand_palette_prefix = 'brand_palette_gatorz' -%}
+      {%- elsif collection.handle == 'revision' and settings.brand_palette_revision_enabled -%}
+        {%- assign brand_palette_prefix = 'brand_palette_revision' -%}
+      {%- elsif collection.handle == 'ess' and settings.brand_palette_ess_enabled -%}
+        {%- assign brand_palette_prefix = 'brand_palette_ess' -%}
+      {%- elsif collection.handle == 'fast-metal' and settings.brand_palette_fast_metal_enabled -%}
+        {%- assign brand_palette_prefix = 'brand_palette_fast_metal' -%}
+      {%- elsif collection.handle == 'bolle' and settings.brand_palette_bolle_enabled -%}
+        {%- assign brand_palette_prefix = 'brand_palette_bolle' -%}
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if brand_palette_prefix != blank -%}
+      {%- assign palette_text_key = brand_palette_prefix | append: '_text' -%}
+      {%- assign palette_background_1_key = brand_palette_prefix | append: '_background_1' -%}
+      {%- assign palette_background_2_key = brand_palette_prefix | append: '_background_2' -%}
+      {%- assign palette_accent_1_key = brand_palette_prefix | append: '_accent_1' -%}
+      {%- assign palette_accent_2_key = brand_palette_prefix | append: '_accent_2' -%}
+      {%- assign palette_button_labels_key = brand_palette_prefix | append: '_solid_button_labels' -%}
+
+      {%- assign palette_text = settings[palette_text_key] -%}
+      {%- assign palette_background_1 = settings[palette_background_1_key] -%}
+      {%- assign palette_background_2 = settings[palette_background_2_key] -%}
+      {%- assign palette_accent_1 = settings[palette_accent_1_key] -%}
+      {%- assign palette_accent_2 = settings[palette_accent_2_key] -%}
+      {%- assign palette_button_labels = settings[palette_button_labels_key] -%}
+
+      {%- capture main_content_style -%}
+        --color-base-text: {{ palette_text.red }}, {{ palette_text.green }}, {{ palette_text.blue }};
+        --color-base-outline-button-labels: {{ palette_text.red }}, {{ palette_text.green }}, {{ palette_text.blue }};
+        --color-base-background-1: {{ palette_background_1.red }}, {{ palette_background_1.green }}, {{ palette_background_1.blue }};
+        --color-base-background-2: {{ palette_background_2.red }}, {{ palette_background_2.green }}, {{ palette_background_2.blue }};
+        --color-base-accent-1: {{ palette_accent_1.red }}, {{ palette_accent_1.green }}, {{ palette_accent_1.blue }};
+        --color-base-accent-2: {{ palette_accent_2.red }}, {{ palette_accent_2.green }}, {{ palette_accent_2.blue }};
+        --color-base-solid-button-labels: {{ palette_button_labels.red }}, {{ palette_button_labels.green }}, {{ palette_button_labels.blue }};
+        --gradient-base-background-1: {{ palette_background_1 }};
+        --gradient-base-background-2: {{ palette_background_2 }};
+        --gradient-base-accent-1: {{ palette_accent_1 }};
+        --gradient-base-accent-2: {{ palette_accent_2 }};
+      {%- endcapture -%}
+    {%- endif -%}
+
+    <main
+      id="MainContent"
+      class="content-for-layout focus-none{% unless request.page_type == 'index' %} color-{{ settings.non_home_main_content_scheme }} gradient{% endunless %}"
+      {% if main_content_style != blank %}style="{{ main_content_style | strip }}"{% endif %}
+      role="main"
+      tabindex="-1"
+    >
       {{ content_for_layout }}
     </main>
 

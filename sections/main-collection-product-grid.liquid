@@ -2,6 +2,7 @@
 {{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
 
 <link rel="preload" href="{{ 'component-rte.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
@@ -13,9 +14,50 @@
 <noscript>{{ 'component-rte.css' | asset_url | stylesheet_tag }}</noscript>
 
 {%- style -%}
+  {{ section.settings.grid_preheader_font | font_face: font_display: 'swap' }}
+  {{ section.settings.grid_heading_font | font_face: font_display: 'swap' }}
+  {{ section.settings.grid_subheader_font | font_face: font_display: 'swap' }}
+
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  .product-grid-header-{{ section.id }} {
+    margin-bottom: 2.4rem;
+    text-align: {{ section.settings.grid_header_alignment }};
+  }
+
+  .product-grid-header-{{ section.id }} .product-grid-header__preheader {
+    margin: 0 0 0.8rem;
+    color: {{ section.settings.grid_preheader_color }};
+    font-family: {{ section.settings.grid_preheader_font.family }}, {{ section.settings.grid_preheader_font.fallback_families }};
+    font-style: {{ section.settings.grid_preheader_font.style }};
+    font-weight: {{ section.settings.grid_preheader_font.weight }};
+    font-size: {{ section.settings.grid_preheader_size_mobile }}px;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .product-grid-header-{{ section.id }} .product-grid-header__heading {
+    margin: 0 0 1rem;
+    color: {{ section.settings.grid_heading_color }};
+    font-family: {{ section.settings.grid_heading_font.family }}, {{ section.settings.grid_heading_font.fallback_families }};
+    font-style: {{ section.settings.grid_heading_font.style }};
+    font-weight: {{ section.settings.grid_heading_font.weight }};
+    font-size: {{ section.settings.grid_heading_size_mobile }}px;
+    line-height: 1.05;
+  }
+
+  .product-grid-header-{{ section.id }} .product-grid-header__subheader {
+    margin: 0;
+    color: {{ section.settings.grid_subheader_color }};
+    font-family: {{ section.settings.grid_subheader_font.family }}, {{ section.settings.grid_subheader_font.fallback_families }};
+    font-style: {{ section.settings.grid_subheader_font.style }};
+    font-weight: {{ section.settings.grid_subheader_font.weight }};
+    font-size: {{ section.settings.grid_subheader_size_mobile }}px;
+    line-height: 1.45;
   }
 
   @media screen and (min-width: 750px) {
@@ -23,11 +65,38 @@
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
+
+    .product-grid-header-{{ section.id }} .product-grid-header__preheader {
+      font-size: {{ section.settings.grid_preheader_size }}px;
+    }
+
+    .product-grid-header-{{ section.id }} .product-grid-header__heading {
+      font-size: {{ section.settings.grid_heading_size }}px;
+    }
+
+    .product-grid-header-{{ section.id }} .product-grid-header__subheader {
+      font-size: {{ section.settings.grid_subheader_size }}px;
+    }
   }
 {%- endstyle -%}
 
 <div class="section-{{ section.id }}-padding">
   {% comment %} Sort is the first tabbable element when filter type is vertical {% endcomment %}
+
+{% render 'section-border-accent' %}
+  {%- if section.settings.grid_preheader != blank or section.settings.grid_heading != blank or section.settings.grid_subheader != blank -%}
+    <div class="page-width product-grid-header-{{ section.id }}">
+      {%- if section.settings.grid_preheader != blank -%}
+        <p class="product-grid-header__preheader">{{ section.settings.grid_preheader | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.grid_heading != blank -%}
+        <h2 class="product-grid-header__heading">{{ section.settings.grid_heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.grid_subheader != blank -%}
+        <div class="product-grid-header__subheader rte">{{ section.settings.grid_subheader }}</div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
   {%- if section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
     <facet-filters-form class="facets facets-vertical-sort page-width small-hide no-js-hidden">
       <form class="facets-vertical-form" id="FacetSortForm">
@@ -83,7 +152,12 @@
     {%- endif -%}
 
     <div class="product-grid-container" id="ProductGridContainer">
-      {%- paginate collection.products by section.settings.products_per_page -%}
+      {%- assign tag_filter_raw = section.settings.product_tag_filter | strip | downcase -%}
+      {%- assign tag_filters = tag_filter_raw | split: ',' -%}
+      {%- assign products_per_page = section.settings.products_per_page -%}
+
+      {%- if tag_filter_raw == blank -%}
+      {%- paginate collection.products by products_per_page -%}
         {%- if collection.products.size == 0 -%}
           <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
             <div class="loading-overlay gradient"></div>
@@ -97,30 +171,78 @@
         {%- else -%}
           <div class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}">
             <div class="loading-overlay gradient"></div>
-    
-            <ul id="product-grid" data-id="{{ section.id }}" class="
-              grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
-              grid--{{ section.settings.columns_desktop }}-col-desktop">
-              {%- for product in collection.products -%}
-                {% assign lazy_load = false %}
-                {%- if forloop.index > 2 -%}
-                  {%- assign lazy_load = true -%}
-                {%- endif -%}
-                <li class="grid__item">
-                  {% render 'card-product',
-                    card_product: product,
-                    media_aspect_ratio: section.settings.image_ratio,
-                    show_secondary_image: section.settings.show_secondary_image,
-                    show_vendor: section.settings.show_vendor,
-                    show_rating: section.settings.show_rating,
-                    lazy_load: lazy_load,
-                    show_quick_add: section.settings.enable_quick_add,
-                    section_id: section.id
+            {%- assign is_carousel = false -%}
+            {%- if section.settings.product_display_mode == 'carousel' -%}
+              {%- assign is_carousel = true -%}
+            {%- endif -%}
+            {%- assign rendered_product_count = 0 -%}
 
-                  %}
-                </li>
-              {%- endfor -%}
-            </ul>
+            {%- if is_carousel -%}
+              <slider-component class="slider-mobile-gutter">
+            {%- endif -%}
+              <ul id="product-grid" data-id="{{ section.id }}" class="
+                grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
+                grid--{{ section.settings.columns_desktop }}-col-desktop{% if is_carousel %} slider slider--everywhere{% endif %}">
+                {%- for product in collection.products -%}
+                  {% assign lazy_load = false %}
+                  {%- if forloop.index > 2 -%}
+                    {%- assign lazy_load = true -%}
+                  {%- endif -%}
+                  {%- assign include_product = true -%}
+                  {%- if tag_filter_raw != blank -%}
+                    {%- assign include_product = false -%}
+                    {%- assign product_tags_csv = product.tags | join: ',' | downcase -%}
+                    {%- assign product_tags_wrapped = ',' | append: product_tags_csv | append: ',' -%}
+                    {%- for tag_value in tag_filters -%}
+                      {%- assign required_tag = tag_value | strip -%}
+                      {%- assign required_tag_wrapped = ',' | append: required_tag | append: ',' -%}
+                      {%- if required_tag != blank and product_tags_wrapped contains required_tag_wrapped -%}
+                        {%- assign include_product = true -%}
+                        {%- break -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- endif -%}
+
+                  {%- if include_product -%}
+                    <li class="grid__item{% if is_carousel %} slider__slide{% endif %}">
+                      {% render 'card-product',
+                        card_product: product,
+                        media_aspect_ratio: section.settings.image_ratio,
+                        card_image_fit: section.settings.card_image_fit,
+                        show_secondary_image: section.settings.show_secondary_image,
+                        show_vendor: section.settings.show_vendor,
+                        show_rating: section.settings.show_rating,
+                        lazy_load: lazy_load,
+                        show_quick_add: section.settings.enable_quick_add,
+                        section_id: section.id
+                      %}
+                    </li>
+                    {%- assign rendered_product_count = rendered_product_count | plus: 1 -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+              {%- if rendered_product_count == 0 -%}
+                <div class="title-wrapper center">
+                  <h2 class="title title--primary">
+                    No products match the tag filter.
+                  </h2>
+                </div>
+              {%- endif -%}
+              {%- if is_carousel and rendered_product_count > 1 -%}
+                <div class="slider-buttons no-js-hidden">
+                  <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}" aria-controls="product-grid">{% render 'icon-caret' %}</button>
+                  <div class="slider-counter caption">
+                    <span class="slider-counter--current">1</span>
+                    <span aria-hidden="true"> / </span>
+                    <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
+                    <span class="slider-counter--total">{{ rendered_product_count }}</span>
+                  </div>
+                  <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'general.slider.next_slide' | t }}" aria-controls="product-grid">{% render 'icon-caret' %}</button>
+                </div>
+              {%- endif -%}
+            {%- if is_carousel -%}
+              </slider-component>
+            {%- endif -%}
     
             {%- if paginate.pages > 1 -%}
               {% render 'pagination', paginate: paginate, anchor: '' %}
@@ -128,6 +250,153 @@
           </div>
         {%- endif -%}
       {%- endpaginate -%}
+      {%- else -%}
+      {%- paginate collection.products by 250 -%}
+        {%- if collection.products.size == 0 -%}
+          <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
+            <div class="loading-overlay gradient"></div>
+            <div class="title-wrapper center">
+              <h2 class="title title--primary">
+                {{ 'sections.collection_template.empty' | t }}<br>
+                {{ 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url, class: "underlined-link link" }}
+              </h2>
+            </div>
+          </div>
+        {%- else -%}
+          <div class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}">
+            <div class="loading-overlay gradient"></div>
+            {%- assign is_carousel = false -%}
+            {%- if section.settings.product_display_mode == 'carousel' -%}
+              {%- assign is_carousel = true -%}
+            {%- endif -%}
+
+            {%- assign rendered_product_count = 0 -%}
+            {%- assign filtered_product_index = 0 -%}
+            {%- assign current_page = paginate.current_page -%}
+            {%- assign start_index = current_page | minus: 1 | times: products_per_page -%}
+            {%- assign end_index = start_index | plus: products_per_page -%}
+
+            {%- if is_carousel -%}
+              <slider-component class="slider-mobile-gutter">
+            {%- endif -%}
+              <ul id="product-grid" data-id="{{ section.id }}" class="
+                grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
+                grid--{{ section.settings.columns_desktop }}-col-desktop{% if is_carousel %} slider slider--everywhere{% endif %}">
+                {%- for product in collection.products -%}
+                  {% assign lazy_load = false %}
+                  {%- if forloop.index > 2 -%}
+                    {%- assign lazy_load = true -%}
+                  {%- endif -%}
+
+                  {%- assign include_product = false -%}
+                  {%- assign product_tags_csv = product.tags | join: ',' | downcase -%}
+                  {%- assign product_tags_wrapped = ',' | append: product_tags_csv | append: ',' -%}
+                  {%- for tag_value in tag_filters -%}
+                    {%- assign required_tag = tag_value | strip -%}
+                    {%- assign required_tag_wrapped = ',' | append: required_tag | append: ',' -%}
+                    {%- if required_tag != blank and product_tags_wrapped contains required_tag_wrapped -%}
+                      {%- assign include_product = true -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+
+                  {%- if include_product -%}
+                    {%- assign should_render_product = false -%}
+                    {%- if is_carousel -%}
+                      {%- assign should_render_product = true -%}
+                    {%- elsif filtered_product_index >= start_index and filtered_product_index < end_index -%}
+                      {%- assign should_render_product = true -%}
+                    {%- endif -%}
+
+                    {%- if should_render_product -%}
+                      <li class="grid__item{% if is_carousel %} slider__slide{% endif %}">
+                        {% render 'card-product',
+                          card_product: product,
+                          media_aspect_ratio: section.settings.image_ratio,
+                          card_image_fit: section.settings.card_image_fit,
+                          show_secondary_image: section.settings.show_secondary_image,
+                          show_vendor: section.settings.show_vendor,
+                          show_rating: section.settings.show_rating,
+                          lazy_load: lazy_load,
+                          show_quick_add: section.settings.enable_quick_add,
+                          section_id: section.id
+                        %}
+                      </li>
+                      {%- assign rendered_product_count = rendered_product_count | plus: 1 -%}
+                    {%- endif -%}
+                    {%- assign filtered_product_index = filtered_product_index | plus: 1 -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+
+              {%- assign filtered_total = filtered_product_index -%}
+              {%- assign filtered_pages = filtered_total | divided_by: products_per_page -%}
+              {%- assign filtered_remainder = filtered_total | modulo: products_per_page -%}
+              {%- if filtered_remainder > 0 -%}
+                {%- assign filtered_pages = filtered_pages | plus: 1 -%}
+              {%- endif -%}
+
+              {%- if rendered_product_count == 0 -%}
+                <div class="title-wrapper center">
+                  <h2 class="title title--primary">
+                    No products match the tag filter.
+                  </h2>
+                </div>
+              {%- endif -%}
+
+              {%- if is_carousel and rendered_product_count > 1 -%}
+                <div class="slider-buttons no-js-hidden">
+                  <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}" aria-controls="product-grid">{% render 'icon-caret' %}</button>
+                  <div class="slider-counter caption">
+                    <span class="slider-counter--current">1</span>
+                    <span aria-hidden="true"> / </span>
+                    <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
+                    <span class="slider-counter--total">{{ filtered_total }}</span>
+                  </div>
+                  <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'general.slider.next_slide' | t }}" aria-controls="product-grid">{% render 'icon-caret' %}</button>
+                </div>
+              {%- endif -%}
+            {%- if is_carousel -%}
+              </slider-component>
+            {%- endif -%}
+
+            {%- unless is_carousel -%}
+              {%- if filtered_pages > 1 -%}
+                <nav class="pagination-wrapper" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+                  <ul class="pagination list-unstyled" role="list">
+                    {%- if current_page > 1 -%}
+                      <li>
+                        <a href="{{ collection.url }}?page={{ current_page | minus: 1 }}" class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce" aria-label="{{ 'general.pagination.previous' | t }}">
+                          {% render 'icon-caret' %}
+                        </a>
+                      </li>
+                    {%- endif -%}
+
+                    {%- for page_number in (1..filtered_pages) -%}
+                      <li>
+                        {%- if page_number == current_page -%}
+                          <a role="link" aria-disabled="true" class="pagination__item pagination__item--current light" aria-current="page" aria-label="{{ 'general.pagination.page' | t: number: page_number }}">{{ page_number }}</a>
+                        {%- else -%}
+                          <a href="{{ collection.url }}?page={{ page_number }}" class="pagination__item link" aria-label="{{ 'general.pagination.page' | t: number: page_number }}">{{ page_number }}</a>
+                        {%- endif -%}
+                      </li>
+                    {%- endfor -%}
+
+                    {%- if current_page < filtered_pages -%}
+                      <li>
+                        <a href="{{ collection.url }}?page={{ current_page | plus: 1 }}" class="pagination__item pagination__item--prev pagination__item-arrow link motion-reduce" aria-label="{{ 'general.pagination.next' | t }}">
+                          {% render 'icon-caret' %}
+                        </a>
+                      </li>
+                    {%- endif -%}
+                  </ul>
+                </nav>
+              {%- endif -%}
+            {%- endunless -%}
+          </div>
+        {%- endif -%}
+      {%- endpaginate -%}
+      {%- endif -%}
     </div>
   </div>
 </div>
@@ -158,6 +427,148 @@
     },
     {
       "type": "header",
+      "content": "Product grid header"
+    },
+    {
+      "type": "text",
+      "id": "grid_preheader",
+      "label": "Preheader"
+    },
+    {
+      "type": "text",
+      "id": "grid_heading",
+      "label": "Header"
+    },
+    {
+      "type": "richtext",
+      "id": "grid_subheader",
+      "label": "Subheader"
+    },
+    {
+      "type": "select",
+      "id": "grid_header_alignment",
+      "label": "Header alignment",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "font_picker",
+      "id": "grid_preheader_font",
+      "label": "Preheader font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "grid_preheader_size",
+      "min": 10,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 14,
+      "label": "Preheader size"
+    },
+    {
+      "type": "range",
+      "id": "grid_preheader_size_mobile",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 12,
+      "label": "Preheader size (mobile)"
+    },
+    {
+      "type": "color",
+      "id": "grid_preheader_color",
+      "label": "Preheader color",
+      "default": "#8B7355"
+    },
+    {
+      "type": "font_picker",
+      "id": "grid_heading_font",
+      "label": "Header font",
+      "default": "assistant_n7"
+    },
+    {
+      "type": "range",
+      "id": "grid_heading_size",
+      "min": 18,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 44,
+      "label": "Header size"
+    },
+    {
+      "type": "range",
+      "id": "grid_heading_size_mobile",
+      "min": 16,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "default": 32,
+      "label": "Header size (mobile)"
+    },
+    {
+      "type": "color",
+      "id": "grid_heading_color",
+      "label": "Header color",
+      "default": "#D4C5A8"
+    },
+    {
+      "type": "font_picker",
+      "id": "grid_subheader_font",
+      "label": "Subheader font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "grid_subheader_size",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 18,
+      "label": "Subheader size"
+    },
+    {
+      "type": "range",
+      "id": "grid_subheader_size_mobile",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16,
+      "label": "Subheader size (mobile)"
+    },
+    {
+      "type": "color",
+      "id": "grid_subheader_color",
+      "label": "Subheader color",
+      "default": "#D4C5A8"
+    },
+    {
+      "type": "select",
+      "id": "product_display_mode",
+      "label": "Product display mode",
+      "default": "grid",
+      "options": [
+        { "value": "grid", "label": "Grid" },
+        { "value": "carousel", "label": "Carousel" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "product_tag_filter",
+      "label": "Product tag filter",
+      "info": "Optional. Comma-separated tags. Shows products matching any listed tag."
+    },
+    {
+      "type": "header",
       "content": "t:sections.main-collection-product-grid.settings.header__3.content"
     },
     {
@@ -179,6 +590,16 @@
       ],
       "default": "adapt",
       "label": "t:sections.main-collection-product-grid.settings.image_ratio.label"
+    },
+    {
+      "type": "select",
+      "id": "card_image_fit",
+      "label": "Product image fit",
+      "default": "contain",
+      "options": [
+        { "value": "contain", "label": "Contain" },
+        { "value": "cover", "label": "Cover" }
+      ]
     },
     {
       "type": "checkbox",
@@ -287,6 +708,128 @@
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
     }
-  ]
+,
+    {
+      "type": "image_picker",
+      "id": "border_accent_top",
+      "label": "Border Accent Top"
+    },
+    {
+      "type": "image_picker",
+      "id": "border_accent_bottom",
+      "label": "Border Accent Bottom"
+    },
+    {
+      "type": "range",
+      "id": "border_accent_height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60,
+      "label": "Border Accent Height"
+    }
+,
+    {
+      "type": "header",
+      "content": "Corner Accents"
+    },
+    {
+      "type": "select",
+      "id": "corner_accent_image_mode",
+      "label": "Corner image source",
+      "default": "all",
+      "options": [
+        { "value": "all", "label": "One image for all corners" },
+        { "value": "individual", "label": "Different image per corner" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_all",
+      "label": "Corner image (all)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'all' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_top_left",
+      "label": "Corner image (top left)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_top_right",
+      "label": "Corner image (top right)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_bottom_left",
+      "label": "Corner image (bottom left)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_bottom_right",
+      "label": "Corner image (bottom right)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_size",
+      "min": 8,
+      "max": 108,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "label": "Corner size"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_offset_x",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Corner horizontal offset"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_offset_y",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Corner vertical offset"
+    },
+    {
+      "type": "checkbox",
+      "id": "corner_accent_random_rotation",
+      "default": false,
+      "label": "Randomize corner rotation"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_rotation_min",
+      "min": -45,
+      "max": 0,
+      "step": 1,
+      "unit": "deg",
+      "default": -12,
+      "label": "Rotation min"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_rotation_max",
+      "min": 0,
+      "max": 45,
+      "step": 1,
+      "unit": "deg",
+      "default": 12,
+      "label": "Rotation max"
+    }
+    ]
 }
 {% endschema %}

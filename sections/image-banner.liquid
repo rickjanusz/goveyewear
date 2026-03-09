@@ -1,3 +1,5 @@
+{% render 'section-border-accent' %}
+
 {{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
 
 {%- if section.settings.adapt_height_first_image and section.settings.image != blank -%}
@@ -25,11 +27,122 @@
 
 {%- style -%}
   #Banner-{{ section.id }}::after {
-    opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
+    display: none;
   }
+
+  #Banner-{{ section.id }} .banner__media::after {
+    {%- if section.settings.image != blank or section.settings.image_2 != blank -%}
+      background: {{ section.settings.feature_overlay_color | default: '#000000' }};
+      opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
+    {%- else -%}
+      background: transparent;
+      opacity: 0;
+    {%- endif -%}
+  }
+
+  #Banner-{{ section.id }} .banner__box {
+    {%- if section.settings.feature_content_width_mode == 'full' -%}
+      max-width: none;
+      width: 100%;
+    {%- else -%}
+      max-width: {{ section.settings.feature_content_max_width | default: 700 }}px;
+    {%- endif -%}
+  }
+
+  #Banner-{{ section.id }} .banner__text {
+    max-width: {{ section.settings.feature_text_max_width | default: 640 }}px;
+  }
+
+  #Banner-{{ section.id }} .banner__heading {
+    font-size: {{ section.settings.feature_heading_font_size_mobile | default: 46 }}px;
+  }
+
+  #Banner-{{ section.id }} .banner__text {
+    font-size: {{ section.settings.feature_body_font_size_mobile | default: 22 }}px;
+  }
+
+  #Banner-{{ section.id }} .banner__heading,
+  #Banner-{{ section.id }} .banner__heading span {
+    {%- case section.settings.feature_heading_font_choice -%}
+      {%- when 'theme_heading' -%}
+        font-family: var(--font-heading-family);
+      {%- when 'theme_body' -%}
+        font-family: var(--font-body-family);
+      {%- when 'custom' -%}
+        font-family: {{ section.settings.feature_heading_font_family | default: "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif" }};
+      {%- else -%}
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    {%- endcase -%}
+  }
+
+  #Banner-{{ section.id }} .banner__heading .hl-a,
+  #Banner-{{ section.id }} .banner__heading .hl-b {
+    display: inline-block;
+  }
+
+  #Banner-{{ section.id }} .banner__heading .hl-b--newline {
+    display: block;
+    margin-top: var(--split-space-desktop, 0px);
+  }
+
+  #Banner-{{ section.id }} .banner__heading .hl-b--inline {
+    margin-left: var(--split-space-desktop, 0px);
+  }
+
+  @media screen and (max-width: 749px) {
+    #Banner-{{ section.id }} .banner__heading .hl-b--newline {
+      margin-top: var(--split-space-mobile, var(--split-space-desktop, 0px));
+    }
+
+    #Banner-{{ section.id }} .banner__heading .hl-b--inline {
+      margin-left: var(--split-space-mobile, var(--split-space-desktop, 0px));
+    }
+  }
+
+  {%- if section.settings.feature_body_font_family != blank -%}
+    #Banner-{{ section.id }} .banner__text,
+    #Banner-{{ section.id }} .banner__text span {
+      font-family: {{ section.settings.feature_body_font_family }};
+    }
+  {%- endif -%}
+
+  {%- if section.settings.feature_heading_color != blank -%}
+    #Banner-{{ section.id }} .banner__heading,
+    #Banner-{{ section.id }} .banner__heading span {
+      color: {{ section.settings.feature_heading_color }};
+    }
+  {%- endif -%}
+
+  {%- if section.settings.feature_text_color != blank -%}
+    #Banner-{{ section.id }} .banner__text,
+    #Banner-{{ section.id }} .banner__text span {
+      color: {{ section.settings.feature_text_color }};
+    }
+  {%- endif -%}
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+
+    #Banner-{{ section.id }} .banner__heading {
+      font-size: {{ section.settings.feature_heading_font_size_desktop | default: 72 }}px;
+    }
+
+    #Banner-{{ section.id }} .banner__text {
+      font-size: {{ section.settings.feature_body_font_size_desktop | default: 28 }}px;
+    }
+  }
+
 {%- endstyle -%}
 
-<div id="Banner-{{ section.id }}" class="banner banner--content-align-{{ section.settings.desktop_content_alignment }} banner--content-align-mobile-{{ section.settings.mobile_content_alignment }} banner--{{ section.settings.image_height }}{% if section.settings.stack_images_on_mobile and section.settings.image != blank and section.settings.image_2 != blank %} banner--stacked{% endif %}{% if section.settings.adapt_height_first_image and section.settings.image != blank %} banner--adapt{% endif %}{% if section.settings.show_text_below %} banner--mobile-bottom{%- endif -%}{% if section.settings.show_text_box == false %} banner--desktop-transparent{% endif %}">
+<div id="Banner-{{ section.id }}" class="banner section-{{ section.id }}-padding banner--content-align-{{ section.settings.desktop_content_alignment }} banner--content-align-mobile-{{ section.settings.mobile_content_alignment }} banner--{{ section.settings.image_height }}{% if section.settings.stack_images_on_mobile and section.settings.image != blank and section.settings.image_2 != blank %} banner--stacked{% endif %}{% if section.settings.adapt_height_first_image and section.settings.image != blank %} banner--adapt{% endif %}{% if section.settings.show_text_below %} banner--mobile-bottom{%- endif -%}{% if section.settings.show_text_box == false %} banner--desktop-transparent{% endif %}">
   {%- if section.settings.image != blank -%}
     <div class="banner__media media{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}">
       {%-liquid
@@ -92,11 +205,24 @@
         {%- case block.type -%}
           {%- when 'heading' -%}
             <h2 class="banner__heading {{ block.settings.heading_size }}" {{ block.shopify_attributes }}>
-              <span>{{ block.settings.heading | escape }}</span>
+              {%- if block.settings.heading_split_enabled -%}
+                {%- if block.settings.heading_part_a != blank -%}
+                  <span class="hl-a" {% if block.settings.heading_split_color_a != blank %}style="color: {{ block.settings.heading_split_color_a }};"{% endif %}>{{ block.settings.heading_part_a | escape }}</span>
+                {%- endif -%}
+                {%- if block.settings.heading_part_b != blank -%}
+                  {%- if block.settings.heading_split_newline -%}
+                    <span class="hl-b hl-b--newline" style="--split-space-desktop: {{ block.settings.heading_split_spacing | default: 0 }}px; --split-space-mobile: {{ block.settings.heading_split_spacing_mobile | default: block.settings.heading_split_spacing | default: 0 }}px;{% if block.settings.heading_split_color_b != blank %} color: {{ block.settings.heading_split_color_b }};{% endif %}">{{ block.settings.heading_part_b | escape }}</span>
+                  {%- else -%}
+                    <span class="hl-b hl-b--inline" style="--split-space-desktop: {{ block.settings.heading_split_spacing | default: 0 }}px; --split-space-mobile: {{ block.settings.heading_split_spacing_mobile | default: block.settings.heading_split_spacing | default: 0 }}px;{% if block.settings.heading_split_color_b != blank %} color: {{ block.settings.heading_split_color_b }};{% endif %}">{{ block.settings.heading_part_b | escape }}</span>
+                  {%- endif -%}
+                {%- endif -%}
+              {%- elsif block.settings.heading != blank -%}
+                {{ block.settings.heading }}
+              {%- endif -%}
             </h2>
           {%- when 'text' -%}
             <div class="banner__text {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
-              <span>{{ block.settings.text | escape }}</span>
+              {{ block.settings.text }}
             </div>
           {%- when 'buttons' -%}
             <div class="banner__buttons{% if block.settings.button_label_1 != blank and block.settings.button_label_2 != blank %} banner__buttons--multiple{% endif %}" {{ block.shopify_attributes }}>
@@ -302,8 +428,266 @@
       "id": "show_text_below",
       "default": true,
       "label": "t:sections.image-banner.settings.show_text_below.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Feature text layout"
+    },
+    {
+      "type": "range",
+      "id": "feature_content_max_width",
+      "min": 280,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 700,
+      "label": "Feature content max width"
+    },
+    {
+      "type": "select",
+      "id": "feature_content_width_mode",
+      "label": "Feature content width mode",
+      "default": "content",
+      "options": [
+        { "value": "content", "label": "Content width" },
+        { "value": "full", "label": "Full width" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "feature_text_max_width",
+      "min": 220,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 640,
+      "label": "Feature body text max width"
+    },
+    {
+      "type": "color",
+      "id": "feature_overlay_color",
+      "default": "#000000",
+      "label": "Feature image overlay color"
+    },
+    {
+      "type": "color",
+      "id": "feature_heading_color",
+      "label": "Feature heading color"
+    },
+    {
+      "type": "color",
+      "id": "feature_text_color",
+      "label": "Feature body text color"
+    },
+    {
+      "type": "select",
+      "id": "feature_heading_font_choice",
+      "label": "Feature heading font",
+      "default": "impact",
+      "options": [
+        { "value": "impact", "label": "Impact" },
+        { "value": "theme_heading", "label": "Theme heading font" },
+        { "value": "theme_body", "label": "Theme body font" },
+        { "value": "custom", "label": "Custom font family" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "feature_heading_font_family",
+      "label": "Feature heading font family",
+      "default": "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      "visible_if": "{{ section.settings.feature_heading_font_choice == 'custom' }}"
+    },
+    {
+      "type": "text",
+      "id": "feature_body_font_family",
+      "label": "Feature body font family"
+    },
+    {
+      "type": "range",
+      "id": "feature_heading_font_size_desktop",
+      "min": 28,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "default": 72,
+      "label": "Feature heading size (desktop)"
+    },
+    {
+      "type": "range",
+      "id": "feature_heading_font_size_mobile",
+      "min": 22,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 46,
+      "label": "Feature heading size (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "feature_body_font_size_desktop",
+      "min": 14,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 28,
+      "label": "Feature body size (desktop)"
+    },
+    {
+      "type": "range",
+      "id": "feature_body_font_size_mobile",
+      "min": 12,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "default": 22,
+      "label": "Feature body size (mobile)"
+    },
+    {
+      "type": "image_picker",
+      "id": "border_accent_top",
+      "label": "Border Accent Top"
+    },
+    {
+      "type": "image_picker",
+      "id": "border_accent_bottom",
+      "label": "Border Accent Bottom"
+    },
+    {
+      "type": "range",
+      "id": "border_accent_height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60,
+      "label": "Border Accent Height"
+    },
+    {
+      "type": "header",
+      "content": "Corner Accents"
+    },
+    {
+      "type": "select",
+      "id": "corner_accent_image_mode",
+      "label": "Corner image source",
+      "default": "all",
+      "options": [
+        { "value": "all", "label": "One image for all corners" },
+        { "value": "individual", "label": "Different image per corner" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_all",
+      "label": "Corner image (all)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'all' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_top_left",
+      "label": "Corner image (top left)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_top_right",
+      "label": "Corner image (top right)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_bottom_left",
+      "label": "Corner image (bottom left)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_bottom_right",
+      "label": "Corner image (bottom right)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_size",
+      "min": 8,
+      "max": 108,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "label": "Corner size"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_offset_x",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Corner horizontal offset"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_offset_y",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Corner vertical offset"
+    },
+    {
+      "type": "checkbox",
+      "id": "corner_accent_random_rotation",
+      "default": false,
+      "label": "Randomize corner rotation"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_rotation_min",
+      "min": -45,
+      "max": 0,
+      "step": 1,
+      "unit": "deg",
+      "default": -12,
+      "label": "Rotation min"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_rotation_max",
+      "min": 0,
+      "max": 45,
+      "step": 1,
+      "unit": "deg",
+      "default": 12,
+      "label": "Rotation max"
     }
-  ],
+    ],
   "blocks": [
     {
       "type": "heading",
@@ -311,10 +695,69 @@
       "limit": 1,
       "settings": [
         {
-          "type": "text",
+          "type": "inline_richtext",
           "id": "heading",
           "default": "Image banner",
           "label": "t:sections.image-banner.blocks.heading.settings.heading.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "heading_split_enabled",
+          "default": false,
+          "label": "Enable split heading"
+        },
+        {
+          "type": "text",
+          "id": "heading_part_a",
+          "label": "Split heading part A",
+          "visible_if": "{{ block.settings.heading_split_enabled }}"
+        },
+        {
+          "type": "text",
+          "id": "heading_part_b",
+          "label": "Split heading part B",
+          "visible_if": "{{ block.settings.heading_split_enabled }}"
+        },
+        {
+          "type": "checkbox",
+          "id": "heading_split_newline",
+          "default": true,
+          "label": "Split heading on new line",
+          "visible_if": "{{ block.settings.heading_split_enabled }}"
+        },
+        {
+          "type": "range",
+          "id": "heading_split_spacing",
+          "min": -20,
+          "max": 80,
+          "step": 1,
+          "unit": "px",
+          "default": 0,
+          "label": "Split heading spacing",
+          "visible_if": "{{ block.settings.heading_split_enabled }}"
+        },
+        {
+          "type": "range",
+          "id": "heading_split_spacing_mobile",
+          "min": -20,
+          "max": 80,
+          "step": 1,
+          "unit": "px",
+          "default": 0,
+          "label": "Split heading spacing (mobile)",
+          "visible_if": "{{ block.settings.heading_split_enabled }}"
+        },
+        {
+          "type": "color",
+          "id": "heading_split_color_a",
+          "label": "Split color A",
+          "visible_if": "{{ block.settings.heading_split_enabled }}"
+        },
+        {
+          "type": "color",
+          "id": "heading_split_color_b",
+          "label": "Split color B",
+          "visible_if": "{{ block.settings.heading_split_enabled }}"
         },
         {
           "type": "select",
@@ -344,9 +787,9 @@
       "limit": 1,
       "settings": [
         {
-          "type": "text",
+          "type": "richtext",
           "id": "text",
-          "default": "Give customers details about the banner image(s) or content on the template.",
+          "default": "<p>Give customers details about the banner image(s) or content on the template.</p>",
           "label": "t:sections.image-banner.blocks.text.settings.text.label"
         },
         {

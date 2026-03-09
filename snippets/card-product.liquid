@@ -11,6 +11,7 @@
     - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
     - show_quick_add: {Boolean} Show the quick add button.
     - section_id: {String} The ID of the section that contains this card.
+    - card_image_fit: {String} Product image fit mode. Values: "contain" or "cover". Default: "contain".
 
     Usage:
     {% render 'card-product', show_vendor: section.settings.show_vendor %}
@@ -19,6 +20,9 @@
 {{ 'component-rating.css' | asset_url | stylesheet_tag }}
 
 {%- if card_product and card_product != empty -%}
+  {%- liquid
+    assign resolved_card_image_fit = card_image_fit | default: 'contain'
+  -%}
   {%- liquid
     assign ratio = 1
     if card_product.featured_media and media_aspect_ratio == 'portrait'
@@ -30,7 +34,7 @@
       assign ratio = 1
     endif
   -%}
-  <div class="card-wrapper underline-links-hover">
+  <div class="card-wrapper card-wrapper--image-fit-{{ resolved_card_image_fit }} underline-links-hover">
     <div class="card
       card--{{ settings.card_style }}
       {% if card_product.featured_media %} card--media{% else %} card--text{% endif %}

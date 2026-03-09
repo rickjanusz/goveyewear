@@ -1,1 +1,523 @@
-{"sections":{"image_banner":{"type":"image-banner","blocks":{"heading":{"type":"heading","settings":{"heading":"Authorized Government Eyewear","heading_size":"h0"}},"text":{"type":"text","settings":{"text":"Vision for the Future","text_style":"subtitle"}},"button":{"type":"buttons","settings":{"button_label_1":"Shop all","button_link_1":"shopify://collections/all","button_style_secondary_1":true,"button_label_2":"","button_link_2":"","button_style_secondary_2":false}}},"block_order":["heading","text","button"],"settings":{"image":"shopify://shop_images/Air_Force_Cover.jpg","image_overlay_opacity":40,"image_height":"large","adapt_height_first_image":false,"desktop_content_position":"bottom-center","show_text_box":false,"desktop_content_alignment":"center","color_scheme":"accent-1","mobile_content_alignment":"center","stack_images_on_mobile":false,"show_text_below":false}},"featured_collection":{"type":"featured-collection","settings":{"title":"Featured Gatorz","heading_size":"h0","description":"","show_description":true,"description_style":"body","collection":"featured","products_to_show":4,"columns_desktop":4,"full_width":true,"show_view_all":true,"view_all_style":"outline","enable_desktop_slider":false,"color_scheme":"accent-1","image_ratio":"adapt","show_secondary_image":true,"show_vendor":true,"show_rating":false,"enable_quick_add":true,"columns_mobile":"1","swipe_on_mobile":true,"padding_top":28,"padding_bottom":36,"card_skin":"tactical"}},"rich_text":{"type":"rich-text","blocks":{"heading":{"type":"heading","settings":{"heading":"<p>Supporting Military and Law Enforcement</p>","heading_size":"h1"}},"text":{"type":"text","settings":{"text":"<p><br/>Whether you're in the field, on base, or supporting critical operations, <strong>GovEyewear</strong> delivers mission-ready protection backed by experience and service. We specialize in <strong>TAA-compliant</strong>, <strong>MILSPEC ballistic-rated</strong>, and <strong>ANSI Z87.1-certified</strong> eyewear designed to meet the operational demands of military, law enforcement, and federal end users.<br/>Our curated selection includes laser-protective lenses, anti-fog coatings, photochromic transitions, and low-profile tactical frames engineered for helmets, comms gear, and harsh environments. We partner with top-tier manufacturers like <strong>Gatorz</strong>, <strong>ESS</strong>, and <strong>Revision</strong> to ensure your eyewear meets or exceeds government standards.<br/>Tested and Battle Ready.</p>"}}},"block_order":["heading","text"],"settings":{"desktop_content_position":"center","content_alignment":"center","color_scheme":"accent-1","full_width":true,"padding_top":40,"padding_bottom":36}},"featured_collection_pKawwp":{"type":"featured-collection","name":"t:sections.featured-collection.presets.name","settings":{"title":"Featured Revision","heading_size":"h0","description":"","show_description":false,"description_style":"body","collection":"featured-revision","products_to_show":4,"columns_desktop":4,"full_width":true,"show_view_all":true,"view_all_style":"outline","enable_desktop_slider":false,"color_scheme":"accent-1","image_ratio":"adapt","show_secondary_image":true,"show_vendor":true,"show_rating":false,"enable_quick_add":true,"columns_mobile":"1","swipe_on_mobile":true,"padding_top":28,"padding_bottom":36,"card_skin":"tactical"}},"5d7ff3c9-05d5-4533-9b1b-209fd34f069e":{"type":"image-banner","blocks":{"template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-0":{"type":"heading","settings":{"heading":"Federal Contract Holder","heading_size":"h0"}},"template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-1":{"type":"text","settings":{"text":"Does your agency require purchasing through federal contract vehicles? View our eyewear listing on GSA Advantage! and FedMall.","text_style":"subtitle"}},"template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-2":{"type":"buttons","settings":{"button_label_1":"GSA Advantage!","button_link_1":"https://www.gsaadvantage.gov/advantage/ws/search/advantage_search?q=0:8arocep%20federal&q=24:5AROCEP%20FEDERAL&q=0:0eyewear&searchType=1&db=0","button_style_secondary_1":true,"button_label_2":"FedMall","button_link_2":"https://www.restricted.fedmall.mil/webapp/wcs/stores/servlet/en/fedmall#Close","button_style_secondary_2":true}}},"block_order":["template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-0","template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-1","template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-2"],"settings":{"image":"shopify://shop_images/stars-of-the-american-flag.jpg","image_overlay_opacity":0,"image_height":"medium","adapt_height_first_image":false,"desktop_content_position":"middle-center","show_text_box":true,"desktop_content_alignment":"center","color_scheme":"accent-1","mobile_content_alignment":"center","stack_images_on_mobile":true,"show_text_below":true}},"featured_collection_tLqpCY":{"type":"featured-collection","name":"t:sections.featured-collection.presets.name","settings":{"title":"Featured ESS","heading_size":"h0","description":"","show_description":false,"description_style":"body","collection":"featured-ess","products_to_show":4,"columns_desktop":4,"full_width":true,"show_view_all":true,"view_all_style":"outline","enable_desktop_slider":false,"color_scheme":"accent-1","image_ratio":"adapt","show_secondary_image":true,"show_vendor":true,"show_rating":false,"enable_quick_add":true,"columns_mobile":"1","swipe_on_mobile":true,"padding_top":28,"padding_bottom":36,"card_skin":"tactical"}},"featured_collection_GeNpUQ":{"type":"featured-collection","name":"t:sections.featured-collection.presets.name","settings":{"title":"Featured Fast Metal","heading_size":"h0","description":"","show_description":false,"description_style":"body","collection":"featured-fast-metal-1","products_to_show":4,"columns_desktop":4,"full_width":true,"show_view_all":true,"view_all_style":"outline","enable_desktop_slider":false,"color_scheme":"accent-1","image_ratio":"square","show_secondary_image":true,"show_vendor":true,"show_rating":false,"enable_quick_add":true,"columns_mobile":"2","swipe_on_mobile":false,"padding_top":36,"padding_bottom":36,"card_skin":"tactical"}},"featured_collection_H7n3GH":{"type":"featured-collection","name":"t:sections.featured-collection.presets.name","settings":{"title":"Featured Bollé","heading_size":"h0","description":"","show_description":false,"description_style":"body","collection":"featured-bolle","products_to_show":4,"columns_desktop":4,"full_width":true,"show_view_all":true,"view_all_style":"outline","enable_desktop_slider":false,"color_scheme":"accent-1","image_ratio":"square","show_secondary_image":false,"show_vendor":false,"show_rating":false,"enable_quick_add":true,"columns_mobile":"2","swipe_on_mobile":false,"padding_top":36,"padding_bottom":36,"card_skin":"tactical"}},"multicolumn":{"type":"multicolumn","blocks":{"column1":{"type":"column","settings":{"image":"shopify://shop_images/Gatorz-1.png","title":"Gatorz Eyewear","text":"<p>Crafting high-velocity impact-resistant lenses, to pair with the durable billet aluminum frames, is just one of the many ways Gatorz pushes the envelope on performance eyewear, including ANSI 87.1 Z, MILSPEC Ballistic (ideal on the job, at the range and for everyday carry) and Optimized Polarized lens options that don’t obscure digital screens.</p>","link_label":"Shop Gatorz","link":"shopify://collections/gatorz"}},"column2":{"type":"column","settings":{"image":"shopify://shop_images/image.jpg","title":"ESS Eye Pro","text":"<p>Established in 1998, ESS creates advanced eye protection systems for military, law enforcement, fire/rescue and shooting sport markets. ESS is the only authorized eyewear provider to the United States Marine Corps, is a leading supplier to all other branches of the U.S. DoD, and is sold in over 100 countries. ESS proudly stands behind its products with unparalleled sustainment programs.</p>","link_label":"Shop ESS","link":"shopify://collections/ess"}},"column3":{"type":"column","settings":{"image":"shopify://shop_images/Revision_210b9e86-fc0b-4267-9cfa-e8281afe1de9.png","title":"Revision Military","text":"<p>Revision is a solution provider specializing in ballistic and laser protective eyewear. Utilizing robust design and development expertise and experience combined with significant investment in efficient high-volume manufacturing and vertical integration to drive a fundamental and powerful objective: delivering protective eyewear solutions that save lives.</p>","link_label":"Shop Revision","link":"shopify://collections/revision"}}},"block_order":["column1","column2","column3"],"settings":{"title":"","heading_size":"h1","image_width":"full","image_ratio":"adapt","columns_desktop":3,"column_alignment":"center","background_style":"none","button_label":"","button_link":"","color_scheme":"accent-1","columns_mobile":"1","swipe_on_mobile":false,"padding_top":36,"padding_bottom":36}},"video":{"type":"video","settings":{"heading":"","heading_size":"h1","cover_image":"shopify://shop_images/Gatorz_Cover.webp","video_url":"https://youtu.be/8TR_z7lsepw","description":"","full_width":true,"color_scheme":"accent-1","padding_top":36,"padding_bottom":36}}},"order":["image_banner","featured_collection","rich_text","featured_collection_pKawwp","5d7ff3c9-05d5-4533-9b1b-209fd34f069e","featured_collection_tLqpCY","featured_collection_GeNpUQ","featured_collection_H7n3GH","multicolumn","video"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "image_banner": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Authorized Government Eyewear",
+            "heading_split_enabled": true,
+            "heading_part_a": "TACTICAL VISION",
+            "heading_part_b": "FIELD PROVEN",
+            "heading_split_newline": true,
+            "heading_split_spacing": -20,
+            "heading_split_spacing_mobile": 0,
+            "heading_split_color_a": "#E8D7B8",
+            "heading_split_color_b": "#A98D60",
+            "heading_size": "h0"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Military-grade eyewear engineered for extreme conditions. Built to withstand the toughest environments while maintaining superior optical clarity.</p>",
+            "text_style": "body"
+          }
+        },
+        "button": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "DEPLOY NOW →",
+            "button_link_1": "shopify://collections/all",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text",
+        "button"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/Gatorz_Tactical_Magnum_1_Large_5686f90e-9c48-4189-ac4c-3d6176f89366.jpg",
+        "image_overlay_opacity": 40,
+        "image_height": "large",
+        "adapt_height_first_image": false,
+        "desktop_content_position": "middle-left",
+        "show_text_box": false,
+        "desktop_content_alignment": "left",
+        "color_scheme": "inverse",
+        "mobile_content_alignment": "left",
+        "stack_images_on_mobile": false,
+        "show_text_below": false,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "feature_content_max_width": 700,
+        "feature_content_width_mode": "content",
+        "feature_text_max_width": 640,
+        "feature_overlay_color": "#000000",
+        "feature_heading_color": "",
+        "feature_text_color": "",
+        "feature_heading_font_choice": "impact",
+        "feature_heading_font_family": "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+        "feature_body_font_family": "",
+        "feature_heading_font_size_desktop": 72,
+        "feature_heading_font_size_mobile": 32,
+        "feature_body_font_size_desktop": 22,
+        "feature_body_font_size_mobile": 14,
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_size": 24,
+        "corner_accent_offset_x": 0,
+        "corner_accent_offset_y": 0,
+        "corner_accent_random_rotation": false,
+        "corner_accent_rotation_min": -12,
+        "corner_accent_rotation_max": 12
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Featured Gatorz",
+        "heading_size": "h0",
+        "heading_alignment": "center",
+        "description": "",
+        "show_description": true,
+        "description_style": "body",
+        "collection": "featured",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "full_width": true,
+        "show_view_all": true,
+        "view_all_style": "outline",
+        "enable_desktop_slider": false,
+        "color_scheme": "accent-1",
+        "card_skin": "tactical",
+        "image_ratio": "adapt",
+        "card_image_fit": "contain",
+        "show_secondary_image": true,
+        "show_vendor": true,
+        "show_rating": false,
+        "enable_quick_add": true,
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "border_accent_top": "shopify://shop_images/border-top-accent.png",
+        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_image_all": "shopify://shop_images/rivet.png",
+        "corner_accent_size": 34,
+        "corner_accent_offset_x": 15,
+        "corner_accent_offset_y": 15,
+        "corner_accent_random_rotation": true,
+        "corner_accent_rotation_min": -45,
+        "corner_accent_rotation_max": 45
+      }
+    },
+    "rich_text": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "<p>Supporting Military and Law Enforcement</p>",
+            "heading_size": "h1"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p><br/>Whether you're in the field, on base, or supporting critical operations, <strong>GovEyewear</strong> delivers mission-ready protection backed by experience and service. We specialize in <strong>TAA-compliant</strong>, <strong>MILSPEC ballistic-rated</strong>, and <strong>ANSI Z87.1-certified</strong> eyewear designed to meet the operational demands of military, law enforcement, and federal end users.<br/>Our curated selection includes laser-protective lenses, anti-fog coatings, photochromic transitions, and low-profile tactical frames engineered for helmets, comms gear, and harsh environments. We partner with top-tier manufacturers like <strong>Gatorz</strong>, <strong>ESS</strong>, and <strong>Revision</strong> to ensure your eyewear meets or exceeds government standards.<br/>Tested and Battle Ready.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "accent-1",
+        "full_width": true,
+        "section_background_color": "#111821",
+        "background_image": "shopify://shop_images/arocep-logo-black-bg-distressed.png",
+        "fixed_background_image": true,
+        "background_overlay_opacity": 0,
+        "padding_top": 200,
+        "padding_bottom": 200,
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_size": 24,
+        "corner_accent_offset_x": 0,
+        "corner_accent_offset_y": 0,
+        "corner_accent_random_rotation": false,
+        "corner_accent_rotation_min": -12,
+        "corner_accent_rotation_max": 12
+      }
+    },
+    "featured_collection_pKawwp": {
+      "type": "featured-collection",
+      "name": "t:sections.featured-collection.presets.name",
+      "settings": {
+        "title": "Featured Revision",
+        "heading_size": "h0",
+        "heading_alignment": "center",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "featured-revision",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "full_width": true,
+        "show_view_all": true,
+        "view_all_style": "outline",
+        "enable_desktop_slider": false,
+        "color_scheme": "accent-1",
+        "card_skin": "tactical",
+        "image_ratio": "adapt",
+        "card_image_fit": "contain",
+        "show_secondary_image": true,
+        "show_vendor": true,
+        "show_rating": false,
+        "enable_quick_add": true,
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "border_accent_top": "shopify://shop_images/border-top-accent.png",
+        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
+        "border_accent_height": 100,
+        "corner_accent_image_mode": "all",
+        "corner_accent_image_all": "shopify://shop_images/rivet.png",
+        "corner_accent_size": 30,
+        "corner_accent_offset_x": 10,
+        "corner_accent_offset_y": 10,
+        "corner_accent_random_rotation": true,
+        "corner_accent_rotation_min": -45,
+        "corner_accent_rotation_max": 45
+      }
+    },
+    "5d7ff3c9-05d5-4533-9b1b-209fd34f069e": {
+      "type": "image-banner",
+      "blocks": {
+        "template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "Federal Contract Holder",
+            "heading_split_enabled": false,
+            "heading_part_a": "",
+            "heading_part_b": "",
+            "heading_split_newline": true,
+            "heading_split_spacing": 0,
+            "heading_split_spacing_mobile": 0,
+            "heading_split_color_a": "",
+            "heading_split_color_b": "",
+            "heading_size": "h0"
+          }
+        },
+        "template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Does your agency require purchasing through federal contract vehicles? View our eyewear listing on GSA Advantage! and FedMall.</p>",
+            "text_style": "subtitle"
+          }
+        },
+        "template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-2": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "GSA Advantage!",
+            "button_link_1": "https://www.gsaadvantage.gov/advantage/ws/search/advantage_search?q=0:8arocep%20federal&q=24:5AROCEP%20FEDERAL&q=0:0eyewear&searchType=1&db=0",
+            "button_style_secondary_1": true,
+            "button_label_2": "FedMall",
+            "button_link_2": "https://www.restricted.fedmall.mil/webapp/wcs/stores/servlet/en/fedmall#Close",
+            "button_style_secondary_2": true
+          }
+        }
+      },
+      "block_order": [
+        "template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-0",
+        "template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-1",
+        "template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-2"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/stars-of-the-american-flag.jpg",
+        "image_overlay_opacity": 40,
+        "image_height": "medium",
+        "adapt_height_first_image": false,
+        "desktop_content_position": "middle-center",
+        "show_text_box": true,
+        "desktop_content_alignment": "center",
+        "color_scheme": "accent-1",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": true,
+        "show_text_below": true,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "feature_content_max_width": 700,
+        "feature_content_width_mode": "content",
+        "feature_text_max_width": 640,
+        "feature_overlay_color": "#000000",
+        "feature_heading_color": "",
+        "feature_text_color": "",
+        "feature_heading_font_choice": "impact",
+        "feature_heading_font_family": "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+        "feature_body_font_family": "",
+        "feature_heading_font_size_desktop": 44,
+        "feature_heading_font_size_mobile": 26,
+        "feature_body_font_size_desktop": 20,
+        "feature_body_font_size_mobile": 14,
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_size": 30,
+        "corner_accent_offset_x": 9,
+        "corner_accent_offset_y": 10,
+        "corner_accent_random_rotation": true,
+        "corner_accent_rotation_min": -19,
+        "corner_accent_rotation_max": 45
+      }
+    },
+    "featured_collection_tLqpCY": {
+      "type": "featured-collection",
+      "name": "t:sections.featured-collection.presets.name",
+      "settings": {
+        "title": "Featured ESS",
+        "heading_size": "h0",
+        "heading_alignment": "center",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "featured-ess",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "full_width": true,
+        "show_view_all": true,
+        "view_all_style": "outline",
+        "enable_desktop_slider": false,
+        "color_scheme": "accent-1",
+        "card_skin": "tactical",
+        "image_ratio": "adapt",
+        "card_image_fit": "contain",
+        "show_secondary_image": true,
+        "show_vendor": true,
+        "show_rating": false,
+        "enable_quick_add": true,
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "border_accent_top": "shopify://shop_images/border-top-accent.png",
+        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
+        "border_accent_height": 89,
+        "corner_accent_image_mode": "all",
+        "corner_accent_image_all": "shopify://shop_images/rivet.png",
+        "corner_accent_size": 30,
+        "corner_accent_offset_x": 10,
+        "corner_accent_offset_y": 10,
+        "corner_accent_random_rotation": true,
+        "corner_accent_rotation_min": -45,
+        "corner_accent_rotation_max": 45
+      }
+    },
+    "featured_collection_GeNpUQ": {
+      "type": "featured-collection",
+      "name": "t:sections.featured-collection.presets.name",
+      "settings": {
+        "title": "Featured Fast Metal",
+        "heading_size": "h0",
+        "heading_alignment": "center",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "featured-fast-metal-1",
+        "products_to_show": 8,
+        "columns_desktop": 4,
+        "full_width": true,
+        "show_view_all": true,
+        "view_all_style": "outline",
+        "enable_desktop_slider": true,
+        "color_scheme": "accent-1",
+        "card_skin": "tactical",
+        "image_ratio": "square",
+        "card_image_fit": "contain",
+        "show_secondary_image": true,
+        "show_vendor": true,
+        "show_rating": false,
+        "enable_quick_add": true,
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "border_accent_top": "shopify://shop_images/border-top-accent.png",
+        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_image_all": "shopify://shop_images/rivet.png",
+        "corner_accent_size": 30,
+        "corner_accent_offset_x": 10,
+        "corner_accent_offset_y": 10,
+        "corner_accent_random_rotation": true,
+        "corner_accent_rotation_min": -45,
+        "corner_accent_rotation_max": 45
+      }
+    },
+    "featured_collection_H7n3GH": {
+      "type": "featured-collection",
+      "name": "t:sections.featured-collection.presets.name",
+      "settings": {
+        "title": "Featured Bollé",
+        "heading_size": "h0",
+        "heading_alignment": "center",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "featured-bolle",
+        "products_to_show": 6,
+        "columns_desktop": 4,
+        "full_width": true,
+        "show_view_all": true,
+        "view_all_style": "outline",
+        "enable_desktop_slider": true,
+        "color_scheme": "accent-1",
+        "card_skin": "tactical",
+        "image_ratio": "square",
+        "card_image_fit": "contain",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "enable_quick_add": true,
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "border_accent_top": "shopify://shop_images/border-top-accent.png",
+        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_image_all": "shopify://shop_images/rivet.png",
+        "corner_accent_size": 30,
+        "corner_accent_offset_x": 10,
+        "corner_accent_offset_y": 10,
+        "corner_accent_random_rotation": true,
+        "corner_accent_rotation_min": -45,
+        "corner_accent_rotation_max": 45
+      }
+    },
+    "multicolumn": {
+      "type": "multicolumn",
+      "blocks": {
+        "column1": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/Gatorz-1.png",
+            "title": "Gatorz Eyewear",
+            "text": "<p>Crafting high-velocity impact-resistant lenses, to pair with the durable billet aluminum frames, is just one of the many ways Gatorz pushes the envelope on performance eyewear, including ANSI 87.1 Z, MILSPEC Ballistic (ideal on the job, at the range and for everyday carry) and Optimized Polarized lens options that don’t obscure digital screens.</p>",
+            "link_label": "Shop Gatorz",
+            "link": "shopify://collections/gatorz"
+          }
+        },
+        "column2": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/image.jpg",
+            "title": "ESS Eye Pro",
+            "text": "<p>Established in 1998, ESS creates advanced eye protection systems for military, law enforcement, fire/rescue and shooting sport markets. ESS is the only authorized eyewear provider to the United States Marine Corps, is a leading supplier to all other branches of the U.S. DoD, and is sold in over 100 countries. ESS proudly stands behind its products with unparalleled sustainment programs.</p>",
+            "link_label": "Shop ESS",
+            "link": "shopify://collections/ess"
+          }
+        },
+        "column3": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/Revision_210b9e86-fc0b-4267-9cfa-e8281afe1de9.png",
+            "title": "Revision Military",
+            "text": "<p>Revision is a solution provider specializing in ballistic and laser protective eyewear. Utilizing robust design and development expertise and experience combined with significant investment in efficient high-volume manufacturing and vertical integration to drive a fundamental and powerful objective: delivering protective eyewear solutions that save lives.</p>",
+            "link_label": "Shop Revision",
+            "link": "shopify://collections/revision"
+          }
+        }
+      },
+      "block_order": [
+        "column1",
+        "column2",
+        "column3"
+      ],
+      "settings": {
+        "title": "",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "columns_desktop": 3,
+        "column_alignment": "center",
+        "background_style": "none",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "accent-1",
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "border_accent_top": "shopify://shop_images/border-top-accent.png",
+        "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
+        "border_accent_height": 100,
+        "corner_accent_image_mode": "all",
+        "corner_accent_image_all": "shopify://shop_images/rivet.png",
+        "corner_accent_size": 30,
+        "corner_accent_offset_x": 10,
+        "corner_accent_offset_y": 10,
+        "corner_accent_random_rotation": true,
+        "corner_accent_rotation_min": -45,
+        "corner_accent_rotation_max": 45
+      }
+    },
+    "video": {
+      "type": "video",
+      "settings": {
+        "heading": "",
+        "heading_size": "h1",
+        "cover_image": "shopify://shop_images/Gatorz_Cover.webp",
+        "video_url": "https://youtu.be/8TR_z7lsepw",
+        "description": "",
+        "full_width": true,
+        "color_scheme": "accent-1",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_size": 24,
+        "corner_accent_offset_x": 0,
+        "corner_accent_offset_y": 0,
+        "corner_accent_random_rotation": false,
+        "corner_accent_rotation_min": -12,
+        "corner_accent_rotation_max": 12
+      }
+    }
+  },
+  "order": [
+    "image_banner",
+    "featured_collection",
+    "rich_text",
+    "featured_collection_pKawwp",
+    "5d7ff3c9-05d5-4533-9b1b-209fd34f069e",
+    "featured_collection_tLqpCY",
+    "featured_collection_GeNpUQ",
+    "featured_collection_H7n3GH",
+    "multicolumn",
+    "video"
+  ]
+}
