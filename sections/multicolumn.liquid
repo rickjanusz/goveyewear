@@ -113,7 +113,6 @@
   {% endif %}
 
   .multicolumn-{{ section.id }} .multicolumn-card__info .link {
-    margin-top: auto;
     align-self: stretch;
     display: inline-flex;
     align-items: center;
@@ -125,6 +124,10 @@
     border: 1px solid currentColor;
     text-decoration: none;
     text-align: center;
+  }
+
+  .multicolumn-{{ section.id }} .multicolumn-card__spacer {
+    flex: 1 0 3rem;
   }
 
   .multicolumn-{{ section.id }} .multicolumn-card__info .icon-wrap {
@@ -222,6 +225,7 @@
                   <div class="rte">{{ block.settings.text }}</div>
                 {%- endif -%}
                 {%- if block.settings.link_label != blank -%}
+                  <div class="multicolumn-card__spacer" aria-hidden="true"></div>
                   <a class="link animate-arrow" {% if block.settings.link == blank %}role="link" aria-disabled="true"{% else %}href="{{ block.settings.link }}"{% endif %}>{{ block.settings.link_label | escape }}<span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</span></a>
                 {%- endif -%}
               </div>
