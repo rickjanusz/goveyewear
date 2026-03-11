@@ -52,22 +52,23 @@ if (!window.GovEyewearImageBannerParallax) {
         let offsetY = 0;
         let baseX = 0;
         let baseY = 0;
+        const baseOffset = this.speed * 1.5;
 
         switch (this.direction) {
           case 'down':
-            baseY = -this.speed;
+            baseY = -baseOffset;
             offsetY = offset;
             break;
           case 'left':
-            baseX = this.speed;
+            baseX = baseOffset;
             offsetX = -offset;
             break;
           case 'right':
-            baseX = -this.speed;
+            baseX = -baseOffset;
             offsetX = offset;
             break;
           default:
-            baseY = this.speed;
+            baseY = baseOffset;
             offsetY = -offset;
             break;
         }
