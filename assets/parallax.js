@@ -43,38 +43,28 @@ if (!window.GovEyewearImageBannerParallax) {
           return;
         }
 
-        const rect = this.element.getBoundingClientRect();
-        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-        const progress = ((viewportHeight - rect.top) / (viewportHeight + rect.height)) - 0.5;
-        const offset = Math.max(-this.speed, Math.min(this.speed, progress * this.speed * 2));
-
+        const parallaxFactor = this.speed / 1000;
+        const offset = (this.element.offsetTop - window.pageYOffset) * parallaxFactor;
         let offsetX = 0;
         let offsetY = 0;
-        let baseX = 0;
-        let baseY = 0;
-        const baseOffset = this.speed * 1.5;
 
         switch (this.direction) {
           case 'down':
-            baseY = -baseOffset;
-            offsetY = offset;
+            offsetY = -offset;
             break;
           case 'left':
-            baseX = baseOffset;
-            offsetX = -offset;
-            break;
-          case 'right':
-            baseX = -baseOffset;
             offsetX = offset;
             break;
+          case 'right':
+            offsetX = -offset;
+            break;
           default:
-            baseY = baseOffset;
-            offsetY = -offset;
+            offsetY = offset;
             break;
         }
 
-        this.element.style.setProperty('--parallax-offset-x', `${(baseX + offsetX).toFixed(2)}px`);
-        this.element.style.setProperty('--parallax-offset-y', `${(baseY + offsetY).toFixed(2)}px`);
+        this.element.style.setProperty('--parallax-offset-x', `${offsetX.toFixed(2)}px`);
+        this.element.style.setProperty('--parallax-offset-y', `${offsetY.toFixed(2)}px`);
       }
 
       reset() {
