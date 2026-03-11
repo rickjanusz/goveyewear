@@ -9,6 +9,7 @@ if (!window.GovEyewearImageBannerParallax) {
         this.media = element.querySelector('.banner__media');
         this.image = this.media ? this.media.querySelector('img') : null;
         this.speed = Number(element.dataset.parallaxStrength || 24);
+        this.direction = element.dataset.parallaxDirection || 'up';
         this.inView = false;
         this.rafId = null;
 
@@ -47,11 +48,31 @@ if (!window.GovEyewearImageBannerParallax) {
         const progress = ((viewportHeight - rect.top) / (viewportHeight + rect.height)) - 0.5;
         const offset = Math.max(-this.speed, Math.min(this.speed, progress * this.speed * 2));
 
-        this.element.style.setProperty('--parallax-offset', `${offset.toFixed(2)}px`);
+        let offsetX = 0;
+        let offsetY = 0;
+
+        switch (this.direction) {
+          case 'down':
+            offsetY = offset;
+            break;
+          case 'left':
+            offsetX = -offset;
+            break;
+          case 'right':
+            offsetX = offset;
+            break;
+          default:
+            offsetY = -offset;
+            break;
+        }
+
+        this.element.style.setProperty('--parallax-offset-x', `${offsetX.toFixed(2)}px`);
+        this.element.style.setProperty('--parallax-offset-y', `${offsetY.toFixed(2)}px`);
       }
 
       reset() {
-        this.element.style.setProperty('--parallax-offset', '0px');
+        this.element.style.setProperty('--parallax-offset-x', '0px');
+        this.element.style.setProperty('--parallax-offset-y', '0px');
       }
 
       isActive() {

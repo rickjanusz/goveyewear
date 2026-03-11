@@ -42,7 +42,8 @@
   }
 
   #Banner-{{ section.id }}.banner--parallax {
-    --parallax-offset: 0px;
+    --parallax-offset-x: 0px;
+    --parallax-offset-y: 0px;
     --parallax-bleed: 12rem;
   }
 
@@ -53,7 +54,7 @@
   #Banner-{{ section.id }}.banner--parallax .banner__media img {
     top: calc(var(--parallax-bleed) * -0.5);
     height: calc(100% + var(--parallax-bleed));
-    transform: translate3d(0, var(--parallax-offset), 0) scale(1.08);
+    transform: translate3d(var(--parallax-offset-x), var(--parallax-offset-y), 0) scale(1.08);
     will-change: transform;
   }
 
@@ -168,7 +169,7 @@
 
 {%- endstyle -%}
 
-<div id="Banner-{{ section.id }}" data-image-banner-parallax data-parallax-strength="{{ section.settings.parallax_strength | default: 24 }}" class="banner section-{{ section.id }}-padding banner--content-align-{{ section.settings.desktop_content_alignment }} banner--content-align-mobile-{{ section.settings.mobile_content_alignment }} banner--{{ section.settings.image_height }}{% if section.settings.stack_images_on_mobile and section.settings.image != blank and section.settings.image_2 != blank %} banner--stacked{% endif %}{% if section.settings.adapt_height_first_image and section.settings.image != blank %} banner--adapt{% endif %}{% if section.settings.show_text_below %} banner--mobile-bottom{%- endif -%}{% if section.settings.show_text_box == false %} banner--desktop-transparent{% endif %}{% if section.settings.enable_parallax and section.settings.image != blank and section.settings.image_2 == blank %} banner--parallax{% endif %}">
+<div id="Banner-{{ section.id }}" data-image-banner-parallax data-parallax-strength="{{ section.settings.parallax_strength | default: 24 }}" data-parallax-direction="{{ section.settings.parallax_direction | default: 'up' }}" class="banner section-{{ section.id }}-padding banner--content-align-{{ section.settings.desktop_content_alignment }} banner--content-align-mobile-{{ section.settings.mobile_content_alignment }} banner--{{ section.settings.image_height }}{% if section.settings.stack_images_on_mobile and section.settings.image != blank and section.settings.image_2 != blank %} banner--stacked{% endif %}{% if section.settings.adapt_height_first_image and section.settings.image != blank %} banner--adapt{% endif %}{% if section.settings.show_text_below %} banner--mobile-bottom{%- endif -%}{% if section.settings.show_text_box == false %} banner--desktop-transparent{% endif %}{% if section.settings.enable_parallax and section.settings.image != blank and section.settings.image_2 == blank %} banner--parallax{% endif %}">
   {%- if section.settings.image != blank -%}
     <div class="banner__media media{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}">
       {%-liquid
@@ -330,11 +331,36 @@
       "type": "range",
       "id": "parallax_strength",
       "min": 8,
-      "max": 60,
-      "step": 1,
+      "max": 140,
+      "step": 2,
       "unit": "px",
       "label": "Parallax strength",
-      "default": 24,
+      "default": 40,
+      "visible_if": "{{ section.settings.enable_parallax }}"
+    },
+    {
+      "type": "radio",
+      "id": "parallax_direction",
+      "label": "Parallax direction",
+      "options": [
+        {
+          "value": "up",
+          "label": "Up ↑"
+        },
+        {
+          "value": "down",
+          "label": "Down ↓"
+        },
+        {
+          "value": "left",
+          "label": "Left ←"
+        },
+        {
+          "value": "right",
+          "label": "Right →"
+        }
+      ],
+      "default": "up",
       "visible_if": "{{ section.settings.enable_parallax }}"
     },
     {
