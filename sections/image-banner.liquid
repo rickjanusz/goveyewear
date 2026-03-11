@@ -53,11 +53,12 @@
   }
 
   #Banner-{{ section.id }}.banner--parallax .banner__media img {
-    top: calc(var(--parallax-bleed-y) * -0.5);
-    left: calc(var(--parallax-bleed-x) * -0.5);
-    width: calc(100% + var(--parallax-bleed-x));
-    height: calc(100% + var(--parallax-bleed-y));
-    transform: translate3d(var(--parallax-offset-x), var(--parallax-offset-y), 0) scale(1.08);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translate3d(var(--parallax-offset-x), var(--parallax-offset-y), 0)
+      scale(calc(1.08 + ({{ section.settings.parallax_strength | default: 40 }} / 600)));
     will-change: transform;
   }
 
