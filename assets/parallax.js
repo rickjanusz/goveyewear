@@ -53,16 +53,16 @@ if (!window.GovEyewearImageBannerParallax) {
 
         switch (this.direction) {
           case 'down':
-            offsetY = offset;
+            offsetY = -offset;
             break;
           case 'left':
-            offsetX = -offset;
-            break;
-          case 'right':
             offsetX = offset;
             break;
+          case 'right':
+            offsetX = -offset;
+            break;
           default:
-            offsetY = -offset;
+            offsetY = offset;
             break;
         }
 
