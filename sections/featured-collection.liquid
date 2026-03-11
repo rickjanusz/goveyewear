@@ -48,14 +48,22 @@
     text-align: {{ section.settings.heading_alignment | default: 'left' }};
   }
 
+  .section-{{ section.id }}-heading .title {
+    font-size: {{ section.settings.title_size_mobile }}px;
+    line-height: {{ section.settings.title_line_height | divided_by: 100.0 }};
+  }
+
+  .section-{{ section.id }}-heading .collection__description {
+    font-size: {{ section.settings.description_size_mobile }}px;
+    line-height: {{ section.settings.description_line_height | divided_by: 100.0 }};
+  }
+
   {%- if use_custom_featured_collection_typography -%}
     .section-{{ section.id }}-heading .title {
       color: {{ section.settings.title_color }};
       font-family: {{ section.settings.title_font.family }}, {{ section.settings.title_font.fallback_families }};
       font-style: {{ section.settings.title_font.style }};
       font-weight: {{ section.settings.title_font.weight }};
-      font-size: {{ section.settings.title_size_mobile }}px;
-      line-height: {{ section.settings.title_line_height | divided_by: 100.0 }};
     }
 
     .section-{{ section.id }}-heading .collection__description {
@@ -63,8 +71,6 @@
       font-family: {{ section.settings.description_font.family }}, {{ section.settings.description_font.fallback_families }};
       font-style: {{ section.settings.description_font.style }};
       font-weight: {{ section.settings.description_font.weight }};
-      font-size: {{ section.settings.description_size_mobile }}px;
-      line-height: {{ section.settings.description_line_height | divided_by: 100.0 }};
     }
 
     .section-{{ section.id }}-heading .collection__description p {
@@ -78,15 +84,13 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
 
-    {%- if use_custom_featured_collection_typography -%}
-      .section-{{ section.id }}-heading .title {
-        font-size: {{ section.settings.title_size }}px;
-      }
+    .section-{{ section.id }}-heading .title {
+      font-size: {{ section.settings.title_size }}px;
+    }
 
-      .section-{{ section.id }}-heading .collection__description {
-        font-size: {{ section.settings.description_size }}px;
-      }
-    {%- endif -%}
+    .section-{{ section.id }}-heading .collection__description {
+      font-size: {{ section.settings.description_size }}px;
+    }
   }
 {%- endstyle -%}
 
@@ -196,13 +200,15 @@
       "type": "font_picker",
       "id": "title_font",
       "default": "archivo_black_n4",
-      "label": "Title font"
+      "label": "Title font",
+      "visible_if": "{{ section.settings.enable_custom_typography }}"
     },
     {
       "type": "color",
       "id": "title_color",
       "default": "#e8d7b8",
-      "label": "Title color"
+      "label": "Title color",
+      "visible_if": "{{ section.settings.enable_custom_typography }}"
     },
     {
       "type": "range",
@@ -273,13 +279,15 @@
       "type": "font_picker",
       "id": "description_font",
       "default": "archivo_n4",
-      "label": "Description font"
+      "label": "Description font",
+      "visible_if": "{{ section.settings.enable_custom_typography }}"
     },
     {
       "type": "color",
       "id": "description_color",
       "default": "#a98d60",
-      "label": "Description color"
+      "label": "Description color",
+      "visible_if": "{{ section.settings.enable_custom_typography }}"
     },
     {
       "type": "range",
