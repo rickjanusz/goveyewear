@@ -50,24 +50,30 @@ if (!window.GovEyewearImageBannerParallax) {
 
         let offsetX = 0;
         let offsetY = 0;
+        let baseX = 0;
+        let baseY = 0;
 
         switch (this.direction) {
           case 'down':
+            baseY = -this.speed;
             offsetY = offset;
             break;
           case 'left':
+            baseX = this.speed;
             offsetX = -offset;
             break;
           case 'right':
+            baseX = -this.speed;
             offsetX = offset;
             break;
           default:
+            baseY = this.speed;
             offsetY = -offset;
             break;
         }
 
-        this.element.style.setProperty('--parallax-offset-x', `${offsetX.toFixed(2)}px`);
-        this.element.style.setProperty('--parallax-offset-y', `${offsetY.toFixed(2)}px`);
+        this.element.style.setProperty('--parallax-offset-x', `${(baseX + offsetX).toFixed(2)}px`);
+        this.element.style.setProperty('--parallax-offset-y', `${(baseY + offsetY).toFixed(2)}px`);
       }
 
       reset() {
