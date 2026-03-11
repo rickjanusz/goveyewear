@@ -80,7 +80,7 @@
   }
 {%- endstyle -%}
 
-<div class="section-{{ section.id }}-padding">
+<div class="section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient">
   {% comment %} Sort is the first tabbable element when filter type is vertical {% endcomment %}
 
 {% render 'section-border-accent' %}
@@ -407,6 +407,19 @@
   "name": "t:sections.main-collection-product-grid.name",
   "class": "section",
   "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1",
+      "options": [
+        { "value": "accent-1", "label": "Accent 1" },
+        { "value": "accent-2", "label": "Accent 2" },
+        { "value": "background-1", "label": "Background 1" },
+        { "value": "background-2", "label": "Background 2" },
+        { "value": "inverse", "label": "Inverse" }
+      ]
+    },
     {
       "type": "range",
       "id": "products_per_page",
