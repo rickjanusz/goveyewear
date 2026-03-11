@@ -15,9 +15,11 @@
 - Announce target theme ID before running any push command.
 
 ## Settings Sync Protocol
+- Pull the target theme first before making any code edits or pushes.
 - If user says they changed admin/theme settings, pull first before making code edits.
 - `config/settings_data.json` and `config/settings_schema.json` can carry merchant config; do not overwrite blindly.
 - Sync first, then edit.
+- Commit the settings sync before making additional changes.
 
 ## Scope Rules
 - Prefer small, localized, component-level edits.
