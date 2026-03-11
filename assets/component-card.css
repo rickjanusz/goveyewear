@@ -285,6 +285,10 @@
   width: 100%;
 }
 
+.card__vendor {
+  margin-bottom: 0.6rem;
+}
+
 .card-information > * {
   line-height: calc(1 + 0.4 / var(--font-body-scale));
   color: rgb(var(--color-foreground));
@@ -292,6 +296,7 @@
 
 .card-information > .price {
   color: rgb(var(--color-foreground));
+  text-align: left;
 }
 
 .card-information > .rating {
@@ -363,8 +368,10 @@
 .collection.collection--card-skin-tactical .card-information > .price {
   color: rgb(var(--color-base-accent-2));
   margin-top: 0.9rem;
+  text-align: left;
 }
 
+.collection.collection--card-skin-tactical .card__vendor,
 .collection.collection--card-skin-tactical .card-information .caption-with-letter-spacing {
   color: rgba(var(--color-base-accent-2), 0.75);
   text-transform: uppercase;
