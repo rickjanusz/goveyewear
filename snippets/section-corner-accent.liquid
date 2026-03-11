@@ -12,12 +12,29 @@
   assign image_tr = section.settings.corner_accent_image_top_right
   assign image_bl = section.settings.corner_accent_image_bottom_left
   assign image_br = section.settings.corner_accent_image_bottom_right
+  assign fallback_image_all_file = fallback_corner_accent_image_all | remove: 'shopify://shop_images/'
+  assign fallback_image_tl_file = fallback_corner_accent_image_top_left | remove: 'shopify://shop_images/'
+  assign fallback_image_tr_file = fallback_corner_accent_image_top_right | remove: 'shopify://shop_images/'
+  assign fallback_image_bl_file = fallback_corner_accent_image_bottom_left | remove: 'shopify://shop_images/'
+  assign fallback_image_br_file = fallback_corner_accent_image_bottom_right | remove: 'shopify://shop_images/'
 
   if corner_mode == 'all'
-    assign image_tl = image_all
-    assign image_tr = image_all
-    assign image_bl = image_all
-    assign image_br = image_all
+    if image_all != blank
+      assign image_tl = image_all
+      assign image_tr = image_all
+      assign image_bl = image_all
+      assign image_br = image_all
+    elsif fallback_image_all_file != blank
+      assign image_tl = fallback_image_all_file
+      assign image_tr = fallback_image_all_file
+      assign image_bl = fallback_image_all_file
+      assign image_br = fallback_image_all_file
+    endif
+  else
+    assign image_tl = image_tl | default: fallback_image_tl_file
+    assign image_tr = image_tr | default: fallback_image_tr_file
+    assign image_bl = image_bl | default: fallback_image_bl_file
+    assign image_br = image_br | default: fallback_image_br_file
   endif
 -%}
 
@@ -64,7 +81,7 @@
     <span
       class="section-corner-accent section-corner-accent--top-left{% if random_rotation %} section-corner-accent--random{% endif %}"
       aria-hidden="true"
-      style="background-image:url('{{ image_tl | image_url: width: 240 }}');"
+      style="background-image:url('{% if section.settings.corner_accent_image_all != blank or section.settings.corner_accent_image_top_left != blank %}{{ image_tl | image_url: width: 240 }}{% else %}{{ image_tl | file_url }}{% endif %}');"
     ></span>
   {%- endif -%}
 
@@ -72,7 +89,7 @@
     <span
       class="section-corner-accent section-corner-accent--top-right{% if random_rotation %} section-corner-accent--random{% endif %}"
       aria-hidden="true"
-      style="background-image:url('{{ image_tr | image_url: width: 240 }}');"
+      style="background-image:url('{% if section.settings.corner_accent_image_all != blank or section.settings.corner_accent_image_top_right != blank %}{{ image_tr | image_url: width: 240 }}{% else %}{{ image_tr | file_url }}{% endif %}');"
     ></span>
   {%- endif -%}
 
@@ -80,7 +97,7 @@
     <span
       class="section-corner-accent section-corner-accent--bottom-left{% if random_rotation %} section-corner-accent--random{% endif %}"
       aria-hidden="true"
-      style="background-image:url('{{ image_bl | image_url: width: 240 }}');"
+      style="background-image:url('{% if section.settings.corner_accent_image_all != blank or section.settings.corner_accent_image_bottom_left != blank %}{{ image_bl | image_url: width: 240 }}{% else %}{{ image_bl | file_url }}{% endif %}');"
     ></span>
   {%- endif -%}
 
@@ -88,7 +105,7 @@
     <span
       class="section-corner-accent section-corner-accent--bottom-right{% if random_rotation %} section-corner-accent--random{% endif %}"
       aria-hidden="true"
-      style="background-image:url('{{ image_br | image_url: width: 240 }}');"
+      style="background-image:url('{% if section.settings.corner_accent_image_all != blank or section.settings.corner_accent_image_bottom_right != blank %}{{ image_br | image_url: width: 240 }}{% else %}{{ image_br | file_url }}{% endif %}');"
     ></span>
   {%- endif -%}
 

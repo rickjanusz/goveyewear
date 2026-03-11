@@ -1,4 +1,15 @@
-{%- if section.settings.border_accent_top != blank or section.settings.border_accent_bottom != blank -%}
+{%- liquid
+  assign border_accent_top = section.settings.border_accent_top
+  assign border_accent_bottom = section.settings.border_accent_bottom
+  assign fallback_border_accent_top_file = fallback_border_accent_top | remove: 'shopify://shop_images/'
+  assign fallback_border_accent_bottom_file = fallback_border_accent_bottom | remove: 'shopify://shop_images/'
+-%}
+
+{%- if border_accent_top != blank
+  or border_accent_bottom != blank
+  or fallback_border_accent_top != blank
+  or fallback_border_accent_bottom != blank
+-%}
   {%- assign border_accent_height = section.settings.border_accent_height | default: 60 | plus: 0 -%}
   {%- style -%}
     #shopify-section-{{ section.id }} {
@@ -22,8 +33,10 @@
 
     #shopify-section-{{ section.id }}::before {
       top: 0;
-      {%- if section.settings.border_accent_top != blank -%}
-        background-image: url('{{ section.settings.border_accent_top | image_url: width: 1920 }}');
+      {%- if border_accent_top != blank -%}
+        background-image: url('{{ border_accent_top | image_url: width: 1920 }}');
+      {%- elsif fallback_border_accent_top_file != blank -%}
+        background-image: url('{{ fallback_border_accent_top_file | file_url }}');
       {%- else -%}
         display: none;
       {%- endif -%}
@@ -31,8 +44,10 @@
 
     #shopify-section-{{ section.id }}::after {
       bottom: 0;
-      {%- if section.settings.border_accent_bottom != blank -%}
-        background-image: url('{{ section.settings.border_accent_bottom | image_url: width: 1920 }}');
+      {%- if border_accent_bottom != blank -%}
+        background-image: url('{{ border_accent_bottom | image_url: width: 1920 }}');
+      {%- elsif fallback_border_accent_bottom_file != blank -%}
+        background-image: url('{{ fallback_border_accent_bottom_file | file_url }}');
       {%- else -%}
         display: none;
       {%- endif -%}
@@ -41,4 +56,10 @@
   {%- endstyle -%}
 {%- endif -%}
 
-{% render 'section-corner-accent' %}
+{% render 'section-corner-accent',
+  fallback_corner_accent_image_all: fallback_corner_accent_image_all,
+  fallback_corner_accent_image_top_left: fallback_corner_accent_image_top_left,
+  fallback_corner_accent_image_top_right: fallback_corner_accent_image_top_right,
+  fallback_corner_accent_image_bottom_left: fallback_corner_accent_image_bottom_left,
+  fallback_corner_accent_image_bottom_right: fallback_corner_accent_image_bottom_right
+%}
