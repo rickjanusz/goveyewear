@@ -144,6 +144,7 @@
           </div>
         </div>
         {%- if show_quick_add -%}
+          <div class="card__separator" aria-hidden="true"></div>
           <div class="quick-add">
             {%- assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id -%}
             {%- if card_product.variants.size == 1 -%}

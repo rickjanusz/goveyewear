@@ -201,38 +201,5 @@ quick-add-modal .product-form__buttons {
 }
 
 .card__content .quick-add {
-  position: relative;
-  margin-top: 1.8rem;
-  padding-top: 2.2rem;
-}
-
-.card__content .card-information + .quick-add::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1.6rem;
-  background-image:
-    radial-gradient(circle, currentColor 0 1px, transparent 1.5px),
-    radial-gradient(circle, currentColor 0 1px, transparent 1.5px),
-    radial-gradient(circle, currentColor 0 1px, transparent 1.5px),
-    linear-gradient(currentColor, currentColor);
-  background-size:
-    0.4rem 0.4rem,
-    0.4rem 0.4rem,
-    0.4rem 0.4rem,
-    100% 1px;
-  background-position:
-    calc(50% - 1rem) 0.3rem,
-    50% 0.3rem,
-    calc(50% + 1rem) 0.3rem,
-    center 100%;
-  background-repeat:
-    no-repeat,
-    no-repeat,
-    no-repeat,
-    no-repeat;
-  color: rgba(var(--color-button), 0.72);
-  pointer-events: none;
+  margin-top: 0;
 }
