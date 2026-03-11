@@ -39,6 +39,17 @@
     border-radius: {{ section.settings.card_border_radius }}px;
     overflow: hidden;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .multicolumn-{{ section.id }} .multicolumn-list__item {
+    height: 100%;
+  }
+
+  .multicolumn-{{ section.id }} .multicolumn-card__image-wrapper {
+    flex: 0 0 auto;
   }
 
   .multicolumn-{{ section.id }} .multicolumn-card__rivet {
@@ -80,7 +91,7 @@
     text-align: {{ section.settings.card_text_alignment }};
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex: 1 1 auto;
   }
 
   .multicolumn-{{ section.id }} .multicolumn-card__info h3 {
@@ -128,6 +139,28 @@
 
   .multicolumn-{{ section.id }} .multicolumn-card__spacer {
     flex: 1 0 3rem;
+  }
+
+  .multicolumn-{{ section.id }} .multicolumn-card__separator {
+    position: relative;
+    width: 100%;
+    margin: 0 0 1.8rem;
+    border-top: 1px solid currentColor;
+    opacity: 0.45;
+  }
+
+  .multicolumn-{{ section.id }} .multicolumn-card__separator::after {
+    content: '• • •';
+    position: absolute;
+    top: -0.9rem;
+    left: 50%;
+    padding: 0 0.8rem;
+    transform: translateX(-50%);
+    background: {{ section.settings.card_background_color }};
+    font-size: 1rem;
+    line-height: 1;
+    letter-spacing: 0.45rem;
+    opacity: 1;
   }
 
   .multicolumn-{{ section.id }} .multicolumn-card__info .icon-wrap {
@@ -226,6 +259,7 @@
                 {%- endif -%}
                 {%- if block.settings.link_label != blank -%}
                   <div class="multicolumn-card__spacer" aria-hidden="true"></div>
+                  <div class="multicolumn-card__separator" aria-hidden="true"></div>
                   <a class="link animate-arrow" {% if block.settings.link == blank %}role="link" aria-disabled="true"{% else %}href="{{ block.settings.link }}"{% endif %}>{{ block.settings.link_label | escape }}<span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</span></a>
                 {%- endif -%}
               </div>
