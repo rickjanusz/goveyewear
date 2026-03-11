@@ -114,13 +114,17 @@
 
   .multicolumn-{{ section.id }} .multicolumn-card__info .link {
     margin-top: auto;
-    align-self: flex-start;
+    align-self: stretch;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.8rem;
+    width: 100%;
+    box-sizing: border-box;
     padding: 1rem 1.4rem;
     border: 1px solid currentColor;
     text-decoration: none;
+    text-align: center;
   }
 
   .multicolumn-{{ section.id }} .multicolumn-card__info .icon-wrap {
