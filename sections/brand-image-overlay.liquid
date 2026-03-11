@@ -1,26 +1,46 @@
 {% render 'section-border-accent' %}
+<script src="{{ 'parallax.js' | asset_url }}" defer="defer"></script>
 
 {%- style -%}
   .brand-image-overlay-{{ section.id }} {
     position: relative;
     min-height: {{ section.settings.section_height }}px;
     background-color: {{ section.settings.background_color }};
-    background-image:
-      linear-gradient(
-        rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }}),
-        rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }})
-      )
-      {%- if section.settings.background_image != blank -%},
-      url('{{ section.settings.background_image | image_url: width: 2200 }}')
-      {%- endif -%};
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    {%- if section.settings.fixed_background -%}
-      background-attachment: fixed;
-    {%- endif -%}
     display: grid;
     align-items: stretch;
+    overflow: hidden;
+  }
+
+  .brand-image-overlay-{{ section.id }}.brand-image-overlay--parallax {
+    --parallax-offset-x: 0px;
+    --parallax-offset-y: 0px;
+    --parallax-scale: calc(1.08 + ({{ section.settings.parallax_strength | default: 40 }} / 600));
+  }
+
+  .brand-image-overlay-{{ section.id }} .brand-image-overlay__media,
+  .brand-image-overlay-{{ section.id }} .brand-image-overlay__overlay {
+    position: absolute;
+    inset: 0;
+  }
+
+  .brand-image-overlay-{{ section.id }} .brand-image-overlay__media {
+    overflow: hidden;
+  }
+
+  .brand-image-overlay-{{ section.id }} .brand-image-overlay__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .brand-image-overlay-{{ section.id }}.brand-image-overlay--parallax .brand-image-overlay__media img {
+    transform: translate3d(var(--parallax-offset-x), var(--parallax-offset-y), 0) scale(var(--parallax-scale));
+    will-change: transform;
+  }
+
+  .brand-image-overlay-{{ section.id }} .brand-image-overlay__overlay {
+    background: rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }});
+    pointer-events: none;
   }
 
   .brand-image-overlay-{{ section.id }} .brand-image-overlay__inner {
@@ -29,6 +49,8 @@
     min-height: inherit;
     display: grid;
     align-items: {{ section.settings.content_vertical }};
+    position: relative;
+    z-index: 1;
   }
 
   .brand-image-overlay-{{ section.id }} .brand-image-overlay__content-wrap {
@@ -65,9 +87,31 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  @media screen and (max-width: 749px) {
+    .brand-image-overlay-{{ section.id }}.brand-image-overlay--parallax .brand-image-overlay__media img {
+      transform: none;
+      will-change: auto;
+    }
+  }
 {%- endstyle -%}
 
-<section class="brand-image-overlay-{{ section.id }} color-{{ section.settings.color_scheme }} gradient">
+<section
+  class="brand-image-overlay-{{ section.id }} color-{{ section.settings.color_scheme }} gradient{% if section.settings.enable_parallax and section.settings.background_image != blank %} brand-image-overlay--parallax{% endif %}"
+  {% if section.settings.enable_parallax and section.settings.background_image != blank %}data-image-banner-parallax data-parallax-strength="{{ section.settings.parallax_strength | default: 40 }}" data-parallax-direction="{{ section.settings.parallax_direction | default: 'up' }}"{% endif %}
+>
+  {%- if section.settings.background_image != blank -%}
+    <div class="brand-image-overlay__media" data-parallax-media>
+      {{ section.settings.background_image | image_url: width: 2200 | image_tag:
+        loading: 'lazy',
+        widths: '750, 1100, 1500, 1780, 2200, 3000',
+        sizes: '100vw',
+        alt: section.settings.heading | escape,
+        class: 'brand-image-overlay__image'
+      }}
+    </div>
+  {%- endif -%}
+  <div class="brand-image-overlay__overlay"></div>
   <div class="page-width brand-image-overlay__inner">
     <div class="brand-image-overlay__content-wrap">
       <div class="brand-image-overlay__content">
@@ -133,6 +177,36 @@
       "id": "fixed_background",
       "label": "Fixed background",
       "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_parallax",
+      "label": "Enable parallax image (desktop)",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "parallax_strength",
+      "min": 8,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "label": "Parallax strength",
+      "default": 40,
+      "visible_if": "{{ section.settings.enable_parallax }}"
+    },
+    {
+      "type": "radio",
+      "id": "parallax_direction",
+      "label": "Parallax direction",
+      "options": [
+        { "value": "up", "label": "Up ↑" },
+        { "value": "down", "label": "Down ↓" },
+        { "value": "left", "label": "Left ←" },
+        { "value": "right", "label": "Right →" }
+      ],
+      "default": "up",
+      "visible_if": "{{ section.settings.enable_parallax }}"
     },
     {
       "type": "range",

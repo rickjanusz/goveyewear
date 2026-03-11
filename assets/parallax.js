@@ -6,8 +6,8 @@ if (!window.GovEyewearImageBannerParallax) {
     class BannerParallax {
       constructor(element) {
         this.element = element;
-        this.media = element.querySelector('.banner__media');
-        this.image = this.media ? this.media.querySelector('img') : null;
+        this.media = element.querySelector('[data-parallax-media]') || element.querySelector('.banner__media');
+        this.image = this.media ? this.media.querySelector('[data-parallax-target]') || this.media.querySelector('img') : null;
         this.speed = Number(element.dataset.parallaxStrength || 24);
         this.direction = element.dataset.parallaxDirection || 'up';
         this.inView = false;
@@ -74,7 +74,7 @@ if (!window.GovEyewearImageBannerParallax) {
 
       isActive() {
         return (
-          this.element.classList.contains('banner--parallax') &&
+          this.element.dataset.imageBannerParallax !== undefined &&
           window.innerWidth >= 750 &&
           !window.matchMedia('(prefers-reduced-motion: reduce)').matches
         );
