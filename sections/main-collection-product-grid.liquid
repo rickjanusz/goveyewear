@@ -35,7 +35,7 @@
     font-style: {{ section.settings.grid_preheader_font.style }};
     font-weight: {{ section.settings.grid_preheader_font.weight }};
     font-size: {{ section.settings.grid_preheader_size_mobile }}px;
-    line-height: 1.2;
+    line-height: {{ section.settings.grid_preheader_line_height | divided_by: 100.0 }};
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
@@ -47,7 +47,7 @@
     font-style: {{ section.settings.grid_heading_font.style }};
     font-weight: {{ section.settings.grid_heading_font.weight }};
     font-size: {{ section.settings.grid_heading_size_mobile }}px;
-    line-height: 1.05;
+    line-height: {{ section.settings.grid_heading_line_height | divided_by: 100.0 }};
   }
 
   .product-grid-header-{{ section.id }} .product-grid-header__subheader {
@@ -57,7 +57,7 @@
     font-style: {{ section.settings.grid_subheader_font.style }};
     font-weight: {{ section.settings.grid_subheader_font.weight }};
     font-size: {{ section.settings.grid_subheader_size_mobile }}px;
-    line-height: 1.45;
+    line-height: {{ section.settings.grid_subheader_line_height | divided_by: 100.0 }};
   }
 
   @media screen and (min-width: 750px) {
@@ -501,6 +501,16 @@
       "default": "#8B7355"
     },
     {
+      "type": "range",
+      "id": "grid_preheader_line_height",
+      "min": 80,
+      "max": 220,
+      "step": 5,
+      "unit": "%",
+      "default": 120,
+      "label": "Preheader line height"
+    },
+    {
       "type": "font_picker",
       "id": "grid_heading_font",
       "label": "Header font",
@@ -533,6 +543,16 @@
       "default": "#D4C5A8"
     },
     {
+      "type": "range",
+      "id": "grid_heading_line_height",
+      "min": 80,
+      "max": 220,
+      "step": 5,
+      "unit": "%",
+      "default": 105,
+      "label": "Header line height"
+    },
+    {
       "type": "font_picker",
       "id": "grid_subheader_font",
       "label": "Subheader font",
@@ -563,6 +583,16 @@
       "id": "grid_subheader_color",
       "label": "Subheader color",
       "default": "#D4C5A8"
+    },
+    {
+      "type": "range",
+      "id": "grid_subheader_line_height",
+      "min": 80,
+      "max": 220,
+      "step": 5,
+      "unit": "%",
+      "default": 145,
+      "label": "Subheader line height"
     },
     {
       "type": "select",
