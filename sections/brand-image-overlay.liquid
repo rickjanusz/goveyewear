@@ -102,11 +102,12 @@
 >
   {%- if section.settings.background_image != blank -%}
     <div class="brand-image-overlay__media" data-parallax-media>
+      {%- assign overlay_image_alt = section.settings.heading | escape -%}
       {{ section.settings.background_image | image_url: width: 2200 | image_tag:
         loading: 'lazy',
         widths: '750, 1100, 1500, 1780, 2200, 3000',
         sizes: '100vw',
-        alt: section.settings.heading | escape,
+        alt: overlay_image_alt,
         class: 'brand-image-overlay__image'
       }}
     </div>
