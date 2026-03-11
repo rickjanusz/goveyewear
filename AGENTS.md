@@ -1,5 +1,10 @@
 # GovEyewear Theme Agent Rules
 
+## Canonical Workspace (Mandatory)
+- Canonical working repo path: `/Users/p/Code/GovEyewear/Site`
+- Do not use `/Users/p/Documents/_Arocep/__ theme/goveyewear` for edits, pulls, pushes, or commits.
+- If a session starts in the old `Documents` copy, switch immediately to the canonical `Code` repo before doing any work.
+
 ## Branch & Release Model (Mandatory)
 - Source of truth is this local Git repo linked to Shopify GitHub integration.
 - Never work directly on `main`.
