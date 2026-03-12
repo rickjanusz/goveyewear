@@ -11,7 +11,6 @@
 
   .brand-video-{{ section.id }} .brand-video__media {
     width: 100%;
-    position: relative;
   }
 
   .brand-video-{{ section.id }} .brand-video__embed,
@@ -30,20 +29,6 @@
 
   .brand-video-{{ section.id }} .brand-video__file {
     background: transparent;
-  }
-
-  .brand-video-{{ section.id }} .brand-video__button-wrap {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .brand-video-{{ section.id }} .brand-video__button {
-    pointer-events: auto;
   }
 
   @media screen and (min-width: 750px) {
@@ -83,17 +68,6 @@
     {%- else -%}
       {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
     {%- endif -%}
-
-    {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
-      <div class="brand-video__button-wrap">
-        <a
-          class="brand-video__button button{% if section.settings.button_style_secondary %} button--secondary{% endif %}"
-          href="{{ section.settings.button_link }}"
-        >
-          {{ section.settings.button_label | escape }}
-        </a>
-      </div>
-    {%- endif -%}
   </div>
 </section>
 
@@ -131,26 +105,6 @@
       "type": "image_picker",
       "id": "cover_image",
       "label": "Fallback image"
-    },
-    {
-      "type": "header",
-      "content": "Overlay button"
-    },
-    {
-      "type": "text",
-      "id": "button_label",
-      "label": "Button label"
-    },
-    {
-      "type": "url",
-      "id": "button_link",
-      "label": "Button link"
-    },
-    {
-      "type": "checkbox",
-      "id": "button_style_secondary",
-      "label": "Use secondary button style",
-      "default": false
     },
     {
       "type": "range",

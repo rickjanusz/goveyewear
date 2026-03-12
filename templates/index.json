@@ -24,14 +24,28 @@
             "heading_split_spacing_mobile": 0,
             "heading_split_color_a": "#e8d7b8",
             "heading_split_color_b": "#a98d60",
-            "heading_size": "h0"
+            "heading_size": "h0",
+            "enable_heading_shadow": false,
+            "heading_shadow_color": "#000000",
+            "heading_shadow_opacity": 0,
+            "heading_shadow_blur": 0,
+            "heading_shadow_offset_x": 0,
+            "heading_shadow_offset_y": 0,
+            "heading_blend_mode": "normal"
           }
         },
         "text": {
           "type": "text",
           "settings": {
             "text": "<p>Military-grade eyewear engineered for extreme conditions. Built to withstand the toughest environments while maintaining superior optical clarity.</p>",
-            "text_style": "body"
+            "text_style": "body",
+            "enable_text_shadow": false,
+            "text_shadow_color": "#000000",
+            "text_shadow_opacity": 0,
+            "text_shadow_blur": 0,
+            "text_shadow_offset_x": 0,
+            "text_shadow_offset_y": 0,
+            "text_blend_mode": "normal"
           }
         },
         "button": {
@@ -104,13 +118,13 @@
         "heading_size": "h0",
         "heading_alignment": "center",
         "description": "<p>YOUR VISION, OUR MISSION.</p>",
+        "show_description": true,
+        "description_style": "body",
         "description_font": "archivo_n4",
         "description_color": "#a98d60",
         "description_size": 30,
         "description_size_mobile": 16,
         "description_line_height": 150,
-        "show_description": true,
-        "description_style": "body",
         "collection": "featured",
         "products_to_show": 8,
         "columns_desktop": 4,
@@ -199,13 +213,13 @@
         "heading_size": "h0",
         "heading_alignment": "center",
         "description": "<p>ONE LENS. TOTAL CLARITY.</p>",
+        "show_description": false,
+        "description_style": "body",
         "description_font": "archivo_n4",
         "description_color": "#a98d60",
         "description_size": 30,
         "description_size_mobile": 16,
         "description_line_height": 150,
-        "show_description": false,
-        "description_style": "body",
         "collection": "featured-revision",
         "products_to_show": 8,
         "columns_desktop": 4,
@@ -253,14 +267,28 @@
             "heading_split_spacing_mobile": 0,
             "heading_split_color_a": "",
             "heading_split_color_b": "",
-            "heading_size": "h0"
+            "heading_size": "h0",
+            "enable_heading_shadow": false,
+            "heading_shadow_color": "#000000",
+            "heading_shadow_opacity": 0,
+            "heading_shadow_blur": 0,
+            "heading_shadow_offset_x": 0,
+            "heading_shadow_offset_y": 0,
+            "heading_blend_mode": "normal"
           }
         },
         "template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-1": {
           "type": "text",
           "settings": {
             "text": "<p>Does your agency require purchasing through federal contract vehicles? View our eyewear listing on GSA Advantage! and FedMall.</p>",
-            "text_style": "subtitle"
+            "text_style": "subtitle",
+            "enable_text_shadow": false,
+            "text_shadow_color": "#000000",
+            "text_shadow_opacity": 0,
+            "text_shadow_blur": 0,
+            "text_shadow_offset_x": 0,
+            "text_shadow_offset_y": 0,
+            "text_blend_mode": "normal"
           }
         },
         "template--16429256704250__5d7ff3c9-05d5-4533-9b1b-209fd34f069e-16745163808f7e4773-2": {
@@ -334,13 +362,13 @@
         "heading_size": "h0",
         "heading_alignment": "center",
         "description": "<p>BUILT FOR DUTY. WORN ANYWHERE.</p>",
+        "show_description": false,
+        "description_style": "body",
         "description_font": "archivo_n4",
         "description_color": "#a98d60",
         "description_size": 30,
         "description_size_mobile": 16,
         "description_line_height": 150,
-        "show_description": false,
-        "description_style": "body",
         "collection": "featured-ess",
         "products_to_show": 8,
         "columns_desktop": 4,
@@ -373,6 +401,25 @@
         "corner_accent_rotation_max": 45
       }
     },
+    "brand_video_QrAibb": {
+      "type": "brand-video",
+      "name": "Brand Video",
+      "settings": {
+        "color_scheme": "background-1",
+        "video": "shopify://files/videos/Gatorz_MAGNUM_Short_Intro.mp4",
+        "video_url": "",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_size": 24,
+        "corner_accent_offset_x": 0,
+        "corner_accent_offset_y": 0,
+        "corner_accent_random_rotation": false,
+        "corner_accent_rotation_min": -12,
+        "corner_accent_rotation_max": 12
+      }
+    },
     "featured_collection_GeNpUQ": {
       "type": "featured-collection",
       "name": "t:sections.featured-collection.presets.name",
@@ -387,13 +434,13 @@
         "heading_size": "h0",
         "heading_alignment": "center",
         "description": "",
+        "show_description": false,
+        "description_style": "body",
         "description_font": "archivo_n4",
         "description_color": "#a98d60",
         "description_size": 18,
         "description_size_mobile": 16,
         "description_line_height": 150,
-        "show_description": false,
-        "description_style": "body",
         "collection": "featured-fast-metal-1",
         "products_to_show": 4,
         "columns_desktop": 4,
@@ -440,13 +487,13 @@
         "heading_size": "h0",
         "heading_alignment": "center",
         "description": "",
+        "show_description": false,
+        "description_style": "body",
         "description_font": "archivo_n4",
         "description_color": "#a98d60",
         "description_size": 18,
         "description_size_mobile": 16,
         "description_line_height": 150,
-        "show_description": false,
-        "description_style": "body",
         "collection": "featured-bolle",
         "products_to_show": 8,
         "columns_desktop": 4,
@@ -486,8 +533,8 @@
           "type": "column",
           "settings": {
             "image": "shopify://shop_images/Gatorz-1.png",
-            "title": "Gatorz Eyewear",
-            "text": "<p>Crafting high-velocity impact-resistant lenses, to pair with the durable billet aluminum frames, is just one of the many ways Gatorz pushes the envelope on performance eyewear, including ANSI 87.1 Z, MILSPEC Ballistic (ideal on the job, at the range and for everyday carry) and Optimized Polarized lens options that don’t obscure digital screens.</p>",
+            "title": "",
+            "text": "",
             "link_label": "Shop Gatorz Now",
             "link": "shopify://collections/gatorz"
           }
@@ -496,8 +543,8 @@
           "type": "column",
           "settings": {
             "image": "shopify://shop_images/image.jpg",
-            "title": "ESS Eye Pro",
-            "text": "<p>Established in 1998, ESS creates advanced eye protection systems for military, law enforcement, fire/rescue and shooting sport markets. ESS is the only authorized eyewear provider to the United States Marine Corps, is a leading supplier to all other branches of the U.S. DoD, and is sold in over 100 countries. ESS proudly stands behind its products with unparalleled sustainment programs.</p>",
+            "title": "",
+            "text": "",
             "link_label": "Shop ESS Now",
             "link": "shopify://collections/ess"
           }
@@ -506,8 +553,8 @@
           "type": "column",
           "settings": {
             "image": "shopify://shop_images/revisionidgloss4crevs_10418017.jpg",
-            "title": "Revision Military",
-            "text": "<p>Revision is a solution provider specializing in ballistic and laser protective eyewear. Utilizing robust design and development expertise and experience combined with significant investment in efficient high-volume manufacturing and vertical integration to drive a fundamental and powerful objective: delivering protective eyewear solutions that save lives.</p>",
+            "title": "",
+            "text": "",
             "link_label": "Shop Revision Now",
             "link": "shopify://collections/revision"
           }
@@ -542,7 +589,6 @@
         "card_border_left_thickness": 0,
         "card_border_radius": 0,
         "enable_card_rivets": true,
-        "card_rivet_image": "shopify://shop_images/rivet.png",
         "card_rivet_size": 16,
         "card_rivet_offset_x": 5,
         "card_rivet_offset_y": 5,
@@ -573,11 +619,11 @@
     },
     "video": {
       "type": "video",
+      "disabled": true,
       "settings": {
         "heading": "",
         "heading_size": "h1",
-        "cover_image": "shopify://shop_images/Gatorz_Cover.webp",
-        "video_url": "https://youtu.be/8TR_z7lsepw",
+        "video_url": "",
         "description": "",
         "full_width": true,
         "color_scheme": "accent-1",
@@ -601,6 +647,7 @@
     "featured_collection_pKawwp",
     "5d7ff3c9-05d5-4533-9b1b-209fd34f069e",
     "featured_collection_tLqpCY",
+    "brand_video_QrAibb",
     "featured_collection_GeNpUQ",
     "featured_collection_H7n3GH",
     "multicolumn",

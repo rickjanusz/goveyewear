@@ -161,8 +161,6 @@
           "border_accent_top": "shopify://shop_images/border-top-accent.png",
           "border_accent_bottom": "shopify://shop_images/border-btm-accent.png",
           "border_accent_height": 62,
-          "header_rivet_left": "shopify://shop_images/river-duo-left.jpg",
-          "header_rivet_right": "shopify://shop_images/river-duo-right.jpg",
           "header_rivet_size": 84,
           "header_rivet_size_mobile": 18,
           "header_rivet_horizontal_offset": 0
