@@ -5,34 +5,8 @@
 {%- style -%}
   .brand-video-{{ section.id }} {
     position: relative;
-  }
-
-  .brand-video-{{ section.id }} .brand-video__inner {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
-  }
-
-  .brand-video-{{ section.id }} .brand-video__header {
-    text-align: {{ section.settings.header_alignment }};
-    margin-bottom: 2rem;
-  }
-
-  .brand-video-{{ section.id }} .brand-video__preheader {
-    margin: 0 0 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .brand-video-{{ section.id }} .brand-video__heading {
-    margin: 0 0 1rem;
-  }
-
-  .brand-video-{{ section.id }} .brand-video__subheader {
-    margin: 0 0 1rem;
-  }
-
-  .brand-video-{{ section.id }} .brand-video__paragraph {
-    margin: 0;
   }
 
   .brand-video-{{ section.id }} .brand-video__media {
@@ -58,7 +32,7 @@
   }
 
   @media screen and (min-width: 750px) {
-    .brand-video-{{ section.id }} .brand-video__inner {
+    .brand-video-{{ section.id }} {
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
@@ -66,25 +40,7 @@
 {%- endstyle -%}
 
 <section class="brand-video-{{ section.id }} color-{{ section.settings.color_scheme }} gradient">
-  <div class="page-width brand-video__inner">
-    {%- if section.settings.preheader != blank or section.settings.heading != blank or section.settings.subheader != blank or section.settings.paragraph != blank -%}
-      <header class="brand-video__header">
-        {%- if section.settings.preheader != blank -%}
-          <p class="brand-video__preheader caption">{{ section.settings.preheader | escape }}</p>
-        {%- endif -%}
-        {%- if section.settings.heading != blank -%}
-          <h2 class="brand-video__heading {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
-        {%- endif -%}
-        {%- if section.settings.subheader != blank -%}
-          <h3 class="brand-video__subheader {{ section.settings.subheading_size }}">{{ section.settings.subheader | escape }}</h3>
-        {%- endif -%}
-        {%- if section.settings.paragraph != blank -%}
-          <div class="brand-video__paragraph rte">{{ section.settings.paragraph }}</div>
-        {%- endif -%}
-      </header>
-    {%- endif -%}
-
-    <div class="brand-video__media">
+  <div class="brand-video__media">
     {%- if section.settings.video != blank -%}
       {{ section.settings.video | video_tag: class: 'brand-video__file', autoplay: true, loop: true, muted: true, controls: false }}
     {%- elsif section.settings.video_url != blank -%}
@@ -92,7 +48,7 @@
         <iframe
           class="brand-video__embed"
           src="https://www.youtube.com/embed/{{ section.settings.video_url.id }}?playsinline=1&rel=0&modestbranding=1"
-          title="{{ section.settings.heading | default: 'Brand video' | escape }}"
+          title="Brand video"
           loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
@@ -101,18 +57,17 @@
         <iframe
           class="brand-video__embed"
           src="https://player.vimeo.com/video/{{ section.settings.video_url.id }}"
-          title="{{ section.settings.heading | default: 'Brand video' | escape }}"
+          title="Brand video"
           loading="lazy"
           allow="autoplay; fullscreen; picture-in-picture"
           allowfullscreen
         ></iframe>
       {%- endif -%}
     {%- elsif section.settings.cover_image != blank -%}
-      {{ section.settings.cover_image | image_url: width: 1920 | image_tag: loading: 'lazy', widths: '375, 550, 750, 1100, 1500, 1920', alt: section.settings.heading, class: 'brand-video__fallback-image' }}
+      {{ section.settings.cover_image | image_url: width: 1920 | image_tag: loading: 'lazy', widths: '375, 550, 750, 1100, 1500, 1920', alt: 'Brand video', class: 'brand-video__fallback-image' }}
     {%- else -%}
       {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
     {%- endif -%}
-    </div>
   </div>
 </section>
 
@@ -133,60 +88,6 @@
         { "value": "background-1", "label": "Background 1" },
         { "value": "background-2", "label": "Background 2" },
         { "value": "inverse", "label": "Inverse" }
-      ]
-    },
-    {
-      "type": "text",
-      "id": "preheader",
-      "label": "Preheader"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Header",
-      "default": "Brand video"
-    },
-    {
-      "type": "text",
-      "id": "subheader",
-      "label": "Subheader"
-    },
-    {
-      "type": "richtext",
-      "id": "paragraph",
-      "label": "Paragraph"
-    },
-    {
-      "type": "select",
-      "id": "header_alignment",
-      "label": "Header alignment",
-      "default": "center",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "right", "label": "Right" }
-      ]
-    },
-    {
-      "type": "select",
-      "id": "heading_size",
-      "label": "Header size",
-      "default": "h1",
-      "options": [
-        { "value": "h2", "label": "Small" },
-        { "value": "h1", "label": "Medium" },
-        { "value": "h0", "label": "Large" }
-      ]
-    },
-    {
-      "type": "select",
-      "id": "subheading_size",
-      "label": "Subheader size",
-      "default": "h3",
-      "options": [
-        { "value": "h4", "label": "Small" },
-        { "value": "h3", "label": "Medium" },
-        { "value": "h2", "label": "Large" }
       ]
     },
     {
