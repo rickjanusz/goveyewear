@@ -469,10 +469,17 @@
       ]
     },
     {
+      "type": "checkbox",
+      "id": "show_grid_preheader_typography_controls",
+      "default": false,
+      "label": "Show preheader typography controls"
+    },
+    {
       "type": "font_picker",
       "id": "grid_preheader_font",
       "label": "Preheader font",
-      "default": "assistant_n4"
+      "default": "assistant_n4",
+      "visible_if": "{{ section.settings.show_grid_preheader_typography_controls }}"
     },
     {
       "type": "range",
@@ -482,7 +489,8 @@
       "step": 1,
       "unit": "px",
       "default": 14,
-      "label": "Preheader size"
+      "label": "Preheader size",
+      "visible_if": "{{ section.settings.show_grid_preheader_typography_controls }}"
     },
     {
       "type": "range",
@@ -492,13 +500,15 @@
       "step": 1,
       "unit": "px",
       "default": 12,
-      "label": "Preheader size (mobile)"
+      "label": "Preheader size (mobile)",
+      "visible_if": "{{ section.settings.show_grid_preheader_typography_controls }}"
     },
     {
       "type": "color",
       "id": "grid_preheader_color",
       "label": "Preheader color",
-      "default": "#8B7355"
+      "default": "#8B7355",
+      "visible_if": "{{ section.settings.show_grid_preheader_typography_controls }}"
     },
     {
       "type": "range",
@@ -508,13 +518,21 @@
       "step": 5,
       "unit": "%",
       "default": 120,
-      "label": "Preheader line height"
+      "label": "Preheader line height",
+      "visible_if": "{{ section.settings.show_grid_preheader_typography_controls }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_grid_heading_typography_controls",
+      "default": false,
+      "label": "Show header typography controls"
     },
     {
       "type": "font_picker",
       "id": "grid_heading_font",
       "label": "Header font",
-      "default": "assistant_n7"
+      "default": "assistant_n7",
+      "visible_if": "{{ section.settings.show_grid_heading_typography_controls }}"
     },
     {
       "type": "range",
@@ -524,7 +542,8 @@
       "step": 1,
       "unit": "px",
       "default": 44,
-      "label": "Header size"
+      "label": "Header size",
+      "visible_if": "{{ section.settings.show_grid_heading_typography_controls }}"
     },
     {
       "type": "range",
@@ -534,13 +553,15 @@
       "step": 1,
       "unit": "px",
       "default": 32,
-      "label": "Header size (mobile)"
+      "label": "Header size (mobile)",
+      "visible_if": "{{ section.settings.show_grid_heading_typography_controls }}"
     },
     {
       "type": "color",
       "id": "grid_heading_color",
       "label": "Header color",
-      "default": "#D4C5A8"
+      "default": "#D4C5A8",
+      "visible_if": "{{ section.settings.show_grid_heading_typography_controls }}"
     },
     {
       "type": "range",
@@ -550,13 +571,21 @@
       "step": 5,
       "unit": "%",
       "default": 105,
-      "label": "Header line height"
+      "label": "Header line height",
+      "visible_if": "{{ section.settings.show_grid_heading_typography_controls }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_grid_subheader_typography_controls",
+      "default": false,
+      "label": "Show subheader typography controls"
     },
     {
       "type": "font_picker",
       "id": "grid_subheader_font",
       "label": "Subheader font",
-      "default": "assistant_n4"
+      "default": "assistant_n4",
+      "visible_if": "{{ section.settings.show_grid_subheader_typography_controls }}"
     },
     {
       "type": "range",
@@ -566,7 +595,8 @@
       "step": 1,
       "unit": "px",
       "default": 18,
-      "label": "Subheader size"
+      "label": "Subheader size",
+      "visible_if": "{{ section.settings.show_grid_subheader_typography_controls }}"
     },
     {
       "type": "range",
@@ -576,13 +606,15 @@
       "step": 1,
       "unit": "px",
       "default": 16,
-      "label": "Subheader size (mobile)"
+      "label": "Subheader size (mobile)",
+      "visible_if": "{{ section.settings.show_grid_subheader_typography_controls }}"
     },
     {
       "type": "color",
       "id": "grid_subheader_color",
       "label": "Subheader color",
-      "default": "#D4C5A8"
+      "default": "#D4C5A8",
+      "visible_if": "{{ section.settings.show_grid_subheader_typography_controls }}"
     },
     {
       "type": "range",
@@ -592,7 +624,8 @@
       "step": 5,
       "unit": "%",
       "default": 145,
-      "label": "Subheader line height"
+      "label": "Subheader line height",
+      "visible_if": "{{ section.settings.show_grid_subheader_typography_controls }}"
     },
     {
       "type": "select",

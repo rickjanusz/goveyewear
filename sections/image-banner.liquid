@@ -603,14 +603,16 @@
       "label": "Feature image overlay color"
     },
     {
-      "type": "color",
-      "id": "feature_heading_color",
-      "label": "Feature heading color"
+      "type": "checkbox",
+      "id": "show_feature_heading_typography_controls",
+      "default": false,
+      "label": "Show feature heading typography controls"
     },
     {
       "type": "color",
-      "id": "feature_text_color",
-      "label": "Feature body text color"
+      "id": "feature_heading_color",
+      "label": "Feature heading color",
+      "visible_if": "{{ section.settings.show_feature_heading_typography_controls }}"
     },
     {
       "type": "select",
@@ -622,19 +624,33 @@
         { "value": "theme_heading", "label": "Theme heading font" },
         { "value": "theme_body", "label": "Theme body font" },
         { "value": "custom", "label": "Custom font family" }
-      ]
+      ],
+      "visible_if": "{{ section.settings.show_feature_heading_typography_controls }}"
     },
     {
       "type": "text",
       "id": "feature_heading_font_family",
       "label": "Feature heading font family",
       "default": "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
-      "visible_if": "{{ section.settings.feature_heading_font_choice == 'custom' }}"
+      "visible_if": "{{ section.settings.show_feature_heading_typography_controls and section.settings.feature_heading_font_choice == 'custom' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_feature_body_typography_controls",
+      "default": false,
+      "label": "Show feature body typography controls"
+    },
+    {
+      "type": "color",
+      "id": "feature_text_color",
+      "label": "Feature body text color",
+      "visible_if": "{{ section.settings.show_feature_body_typography_controls }}"
     },
     {
       "type": "text",
       "id": "feature_body_font_family",
-      "label": "Feature body font family"
+      "label": "Feature body font family",
+      "visible_if": "{{ section.settings.show_feature_body_typography_controls }}"
     },
     {
       "type": "range",
@@ -644,7 +660,8 @@
       "step": 2,
       "unit": "px",
       "default": 72,
-      "label": "Feature heading size (desktop)"
+      "label": "Feature heading size (desktop)",
+      "visible_if": "{{ section.settings.show_feature_heading_typography_controls }}"
     },
     {
       "type": "range",
@@ -654,7 +671,8 @@
       "step": 2,
       "unit": "px",
       "default": 46,
-      "label": "Feature heading size (mobile)"
+      "label": "Feature heading size (mobile)",
+      "visible_if": "{{ section.settings.show_feature_heading_typography_controls }}"
     },
     {
       "type": "range",
@@ -664,7 +682,8 @@
       "step": 1,
       "unit": "px",
       "default": 28,
-      "label": "Feature body size (desktop)"
+      "label": "Feature body size (desktop)",
+      "visible_if": "{{ section.settings.show_feature_body_typography_controls }}"
     },
     {
       "type": "range",
@@ -674,7 +693,8 @@
       "step": 1,
       "unit": "px",
       "default": 22,
-      "label": "Feature body size (mobile)"
+      "label": "Feature body size (mobile)",
+      "visible_if": "{{ section.settings.show_feature_body_typography_controls }}"
     },
     {
       "type": "image_picker",

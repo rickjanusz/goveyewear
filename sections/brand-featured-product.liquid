@@ -172,16 +172,24 @@
       "label": "Preheader"
     },
     {
+      "type": "checkbox",
+      "id": "show_preheader_typography_controls",
+      "default": false,
+      "label": "Show preheader typography controls"
+    },
+    {
       "type": "font_picker",
       "id": "preheader_font",
       "default": "assistant_n4",
-      "label": "Preheader font"
+      "label": "Preheader font",
+      "visible_if": "{{ section.settings.show_preheader_typography_controls }}"
     },
     {
       "type": "color",
       "id": "preheader_color",
       "default": "#8b7355",
-      "label": "Preheader color"
+      "label": "Preheader color",
+      "visible_if": "{{ section.settings.show_preheader_typography_controls }}"
     },
     {
       "type": "range",
@@ -191,7 +199,8 @@
       "step": 1,
       "unit": "px",
       "default": 12,
-      "label": "Preheader size"
+      "label": "Preheader size",
+      "visible_if": "{{ section.settings.show_preheader_typography_controls }}"
     },
     {
       "type": "range",
@@ -201,7 +210,8 @@
       "step": 1,
       "unit": "px",
       "default": 12,
-      "label": "Preheader size mobile"
+      "label": "Preheader size mobile",
+      "visible_if": "{{ section.settings.show_preheader_typography_controls }}"
     },
     {
       "type": "range",
@@ -210,7 +220,8 @@
       "max": 200,
       "step": 5,
       "default": 120,
-      "label": "Preheader line height"
+      "label": "Preheader line height",
+      "visible_if": "{{ section.settings.show_preheader_typography_controls }}"
     },
     {
       "type": "text",
@@ -219,16 +230,24 @@
       "default": "Featured product"
     },
     {
+      "type": "checkbox",
+      "id": "show_heading_typography_controls",
+      "default": false,
+      "label": "Show header typography controls"
+    },
+    {
       "type": "font_picker",
       "id": "heading_font",
       "default": "assistant_n7",
-      "label": "Header font"
+      "label": "Header font",
+      "visible_if": "{{ section.settings.show_heading_typography_controls }}"
     },
     {
       "type": "color",
       "id": "heading_color",
       "default": "#121212",
-      "label": "Header color"
+      "label": "Header color",
+      "visible_if": "{{ section.settings.show_heading_typography_controls }}"
     },
     {
       "type": "range",
@@ -238,7 +257,8 @@
       "step": 1,
       "unit": "px",
       "default": 48,
-      "label": "Header size"
+      "label": "Header size",
+      "visible_if": "{{ section.settings.show_heading_typography_controls }}"
     },
     {
       "type": "range",
@@ -248,7 +268,8 @@
       "step": 1,
       "unit": "px",
       "default": 36,
-      "label": "Header size mobile"
+      "label": "Header size mobile",
+      "visible_if": "{{ section.settings.show_heading_typography_controls }}"
     },
     {
       "type": "range",
@@ -257,7 +278,8 @@
       "max": 200,
       "step": 5,
       "default": 105,
-      "label": "Header line height"
+      "label": "Header line height",
+      "visible_if": "{{ section.settings.show_heading_typography_controls }}"
     },
     {
       "type": "text",
@@ -265,16 +287,24 @@
       "label": "Subheader"
     },
     {
+      "type": "checkbox",
+      "id": "show_subheader_typography_controls",
+      "default": false,
+      "label": "Show subheader typography controls"
+    },
+    {
       "type": "font_picker",
       "id": "subheader_font",
       "default": "assistant_n7",
-      "label": "Subheader font"
+      "label": "Subheader font",
+      "visible_if": "{{ section.settings.show_subheader_typography_controls }}"
     },
     {
       "type": "color",
       "id": "subheader_color",
       "default": "#121212",
-      "label": "Subheader color"
+      "label": "Subheader color",
+      "visible_if": "{{ section.settings.show_subheader_typography_controls }}"
     },
     {
       "type": "range",
@@ -284,7 +314,8 @@
       "step": 1,
       "unit": "px",
       "default": 24,
-      "label": "Subheader size"
+      "label": "Subheader size",
+      "visible_if": "{{ section.settings.show_subheader_typography_controls }}"
     },
     {
       "type": "range",
@@ -294,7 +325,8 @@
       "step": 1,
       "unit": "px",
       "default": 20,
-      "label": "Subheader size mobile"
+      "label": "Subheader size mobile",
+      "visible_if": "{{ section.settings.show_subheader_typography_controls }}"
     },
     {
       "type": "range",
@@ -303,7 +335,8 @@
       "max": 220,
       "step": 5,
       "default": 120,
-      "label": "Subheader line height"
+      "label": "Subheader line height",
+      "visible_if": "{{ section.settings.show_subheader_typography_controls }}"
     },
     {
       "type": "richtext",
@@ -311,16 +344,24 @@
       "label": "Paragraph"
     },
     {
+      "type": "checkbox",
+      "id": "show_paragraph_typography_controls",
+      "default": false,
+      "label": "Show paragraph typography controls"
+    },
+    {
       "type": "font_picker",
       "id": "paragraph_font",
       "default": "assistant_n4",
-      "label": "Paragraph font"
+      "label": "Paragraph font",
+      "visible_if": "{{ section.settings.show_paragraph_typography_controls }}"
     },
     {
       "type": "color",
       "id": "paragraph_color",
       "default": "#121212",
-      "label": "Paragraph color"
+      "label": "Paragraph color",
+      "visible_if": "{{ section.settings.show_paragraph_typography_controls }}"
     },
     {
       "type": "range",
@@ -330,7 +371,8 @@
       "step": 1,
       "unit": "px",
       "default": 16,
-      "label": "Paragraph size"
+      "label": "Paragraph size",
+      "visible_if": "{{ section.settings.show_paragraph_typography_controls }}"
     },
     {
       "type": "range",
@@ -340,7 +382,8 @@
       "step": 1,
       "unit": "px",
       "default": 16,
-      "label": "Paragraph size mobile"
+      "label": "Paragraph size mobile",
+      "visible_if": "{{ section.settings.show_paragraph_typography_controls }}"
     },
     {
       "type": "range",
@@ -349,7 +392,8 @@
       "max": 240,
       "step": 5,
       "default": 150,
-      "label": "Paragraph line height"
+      "label": "Paragraph line height",
+      "visible_if": "{{ section.settings.show_paragraph_typography_controls }}"
     },
     {
       "type": "select",

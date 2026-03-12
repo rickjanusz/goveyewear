@@ -203,18 +203,24 @@
       "label": "Enable custom typography and colors"
     },
     {
+      "type": "checkbox",
+      "id": "show_title_typography_controls",
+      "default": false,
+      "label": "Show title typography controls"
+    },
+    {
       "type": "font_picker",
       "id": "title_font",
       "default": "archivo_black_n4",
       "label": "Title font",
-      "visible_if": "{{ section.settings.enable_custom_typography }}"
+      "visible_if": "{{ section.settings.show_title_typography_controls }}"
     },
     {
       "type": "color",
       "id": "title_color",
       "default": "#e8d7b8",
       "label": "Title color",
-      "visible_if": "{{ section.settings.enable_custom_typography }}"
+      "visible_if": "{{ section.settings.show_title_typography_controls }}"
     },
     {
       "type": "range",
@@ -224,7 +230,8 @@
       "step": 1,
       "unit": "px",
       "default": 64,
-      "label": "Title size"
+      "label": "Title size",
+      "visible_if": "{{ section.settings.show_title_typography_controls }}"
     },
     {
       "type": "range",
@@ -234,7 +241,8 @@
       "step": 1,
       "unit": "px",
       "default": 36,
-      "label": "Title size mobile"
+      "label": "Title size mobile",
+      "visible_if": "{{ section.settings.show_title_typography_controls }}"
     },
     {
       "type": "range",
@@ -243,7 +251,8 @@
       "max": 200,
       "step": 5,
       "default": 70,
-      "label": "Title line height"
+      "label": "Title line height",
+      "visible_if": "{{ section.settings.show_title_typography_controls }}"
     },
     {
       "type": "select",
@@ -263,7 +272,8 @@
         }
       ],
       "default": "h1",
-      "label": "t:sections.all.heading_size.label"
+      "label": "t:sections.all.heading_size.label",
+      "visible_if": "{{ section.settings.show_title_typography_controls }}"
     },
     {
       "type": "select",
@@ -274,7 +284,8 @@
         { "value": "left", "label": "Left" },
         { "value": "center", "label": "Center" },
         { "value": "right", "label": "Right" }
-      ]
+      ],
+      "visible_if": "{{ section.settings.show_title_typography_controls }}"
     },
     {
       "type": "richtext",
@@ -282,18 +293,24 @@
       "label": "t:sections.featured-collection.settings.description.label"
     },
     {
+      "type": "checkbox",
+      "id": "show_description_typography_controls",
+      "default": false,
+      "label": "Show description typography controls"
+    },
+    {
       "type": "font_picker",
       "id": "description_font",
       "default": "archivo_n4",
       "label": "Description font",
-      "visible_if": "{{ section.settings.enable_custom_typography }}"
+      "visible_if": "{{ section.settings.show_description_typography_controls }}"
     },
     {
       "type": "color",
       "id": "description_color",
       "default": "#a98d60",
       "label": "Description color",
-      "visible_if": "{{ section.settings.enable_custom_typography }}"
+      "visible_if": "{{ section.settings.show_description_typography_controls }}"
     },
     {
       "type": "range",
@@ -303,7 +320,8 @@
       "step": 1,
       "unit": "px",
       "default": 18,
-      "label": "Description size"
+      "label": "Description size",
+      "visible_if": "{{ section.settings.show_description_typography_controls }}"
     },
     {
       "type": "range",
@@ -313,7 +331,8 @@
       "step": 1,
       "unit": "px",
       "default": 16,
-      "label": "Description size mobile"
+      "label": "Description size mobile",
+      "visible_if": "{{ section.settings.show_description_typography_controls }}"
     },
     {
       "type": "range",
@@ -322,7 +341,8 @@
       "max": 240,
       "step": 5,
       "default": 150,
-      "label": "Description line height"
+      "label": "Description line height",
+      "visible_if": "{{ section.settings.show_description_typography_controls }}"
     },
     {
       "type": "checkbox",
