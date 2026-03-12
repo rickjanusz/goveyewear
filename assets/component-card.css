@@ -347,11 +347,11 @@
   border: 0.1rem solid rgba(var(--color-base-accent-2), 0.32);
 }
 
-.collection.collection--card-skin-tactical .card__media .media {
+.collection.collection--card-skin-tactical .card__media {
   position: relative;
 }
 
-.collection.collection--card-skin-tactical .card__media .media::after {
+.collection.collection--card-skin-tactical .card__media::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -449,7 +449,7 @@
 }
 
 @media screen and (hover: hover) {
-  .collection.collection--card-skin-tactical .card:hover .card__media .media::after {
+  .collection.collection--card-skin-tactical .card:hover .card__media::after {
     box-shadow: inset 0 0 0 10px #2a2a2a;
   }
 
