@@ -31,32 +31,6 @@
   if use_custom_featured_collection_typography != true and is_brand_collection_template
     assign use_custom_featured_collection_typography = true
   endif
-
-  assign content_group_block = blank
-  assign preheader_block = blank
-  assign heading_block = blank
-  assign text_block = blank
-  assign buttons_block = blank
-
-  for block in section.blocks
-    case block.type
-      when 'content_group'
-        assign content_group_block = block
-      when 'preheader'
-        assign preheader_block = block
-      when 'heading'
-        assign heading_block = block
-      when 'text'
-        assign text_block = block
-      when 'buttons'
-        assign buttons_block = block
-    endcase
-  endfor
-
-  assign has_block_content = false
-  if content_group_block != blank or preheader_block != blank or heading_block != blank or text_block != blank or buttons_block != blank
-    assign has_block_content = true
-  endif
 -%}
 
 {%- style -%}
@@ -74,85 +48,12 @@
     text-align: {{ section.settings.heading_alignment | default: 'left' }};
   }
 
-  .section-{{ section.id }}-content-shell {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-  }
-
-  .section-{{ section.id }}-content-shell--top {
-    align-items: flex-start;
-  }
-
-  .section-{{ section.id }}-content-shell--middle {
-    align-items: center;
-  }
-
-  .section-{{ section.id }}-content-shell--bottom {
-    align-items: flex-end;
-  }
-
-  .section-{{ section.id }}-content-group {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    width: 100%;
-  }
-
-  .section-{{ section.id }}-content-group--width-content {
-    max-width: var(--featured-collection-content-max-width, 64rem);
-  }
-
-  .section-{{ section.id }}-content-group--width-full {
-    max-width: none;
-  }
-
-  .section-{{ section.id }}-content-group .collection__buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 0.5rem;
-  }
-
-  .section-{{ section.id }}-content-group .collection__buttons--center {
-    justify-content: center;
-  }
-
-  .section-{{ section.id }}-content-group .collection__buttons--right {
-    justify-content: flex-end;
-  }
-
-  .section-{{ section.id }}-heading .collection__preheader,
-  .section-{{ section.id }}-content-group .collection__preheader {
-    margin: 0;
-    color: {{ section.settings.description_color }};
-    font-family: {{ section.settings.description_font.family }}, {{ section.settings.description_font.fallback_families }};
-    font-style: {{ section.settings.description_font.style }};
-    font-weight: {{ section.settings.description_font.weight }};
-    font-size: {{ section.settings.description_size_mobile }}px;
-    line-height: {{ section.settings.description_line_height | divided_by: 100.0 }};
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
   .section-{{ section.id }}-heading .title {
     font-size: {{ section.settings.title_size_mobile }}px;
     line-height: {{ section.settings.title_line_height | divided_by: 100.0 }};
   }
 
-  .section-{{ section.id }}-content-group .title {
-    margin: 0;
-    font-size: {{ section.settings.title_size_mobile }}px;
-    line-height: {{ section.settings.title_line_height | divided_by: 100.0 }};
-  }
-
   .section-{{ section.id }}-heading .collection__description {
-    font-size: {{ section.settings.description_size_mobile }}px;
-    line-height: {{ section.settings.description_line_height | divided_by: 100.0 }};
-  }
-
-  .section-{{ section.id }}-content-group .collection__description {
-    margin: 0;
     font-size: {{ section.settings.description_size_mobile }}px;
     line-height: {{ section.settings.description_line_height | divided_by: 100.0 }};
   }
@@ -175,58 +76,7 @@
     .section-{{ section.id }}-heading .collection__description p {
       color: inherit;
     }
-
-    .section-{{ section.id }}-content-group .title {
-      color: {{ section.settings.title_color }};
-      font-family: {{ section.settings.title_font.family }}, {{ section.settings.title_font.fallback_families }};
-      font-style: {{ section.settings.title_font.style }};
-      font-weight: {{ section.settings.title_font.weight }};
-    }
-
-    .section-{{ section.id }}-content-group .collection__description,
-    .section-{{ section.id }}-content-group .collection__preheader {
-      color: {{ section.settings.description_color }};
-      font-family: {{ section.settings.description_font.family }}, {{ section.settings.description_font.fallback_families }};
-      font-style: {{ section.settings.description_font.style }};
-      font-weight: {{ section.settings.description_font.weight }};
-    }
-
-    .section-{{ section.id }}-content-group .collection__description p {
-      color: inherit;
-    }
   {%- endif -%}
-
-  .section-{{ section.id }}-content-group--align-left {
-    text-align: left;
-  }
-
-  .section-{{ section.id }}-content-group--align-center {
-    text-align: center;
-  }
-
-  .section-{{ section.id }}-content-group--align-right {
-    text-align: right;
-  }
-
-  .section-{{ section.id }}-content-shell--left {
-    justify-content: flex-start;
-  }
-
-  .section-{{ section.id }}-content-shell--center {
-    justify-content: center;
-  }
-
-  .section-{{ section.id }}-content-shell--right {
-    justify-content: flex-end;
-  }
-
-  {%- for block in section.blocks -%}
-    {%- if block.type == 'content_group' -%}
-      .section-{{ section.id }}-content-group--block-{{ block.id }} {
-        --featured-collection-content-max-width: {{ block.settings.content_max_width | default: 680 }}px;
-      }
-    {%- endif -%}
-  {%- endfor -%}
 
   @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
@@ -238,16 +88,7 @@
       font-size: {{ section.settings.title_size }}px;
     }
 
-    .section-{{ section.id }}-content-group .title {
-      font-size: {{ section.settings.title_size }}px;
-    }
-
     .section-{{ section.id }}-heading .collection__description {
-      font-size: {{ section.settings.description_size }}px;
-    }
-
-    .section-{{ section.id }}-content-group .collection__description,
-    .section-{{ section.id }}-content-group .collection__preheader {
       font-size: {{ section.settings.description_size }}px;
     }
   }
@@ -275,114 +116,20 @@
 
 <div class="color-{{ section.settings.color_scheme }} isolate gradient">
   <div class="collection section-{{ section.id }}-padding collection--card-skin-{{ section.settings.card_skin }}{% if section.settings.full_width %} collection--full-width{% endif %}">
-      {%- if has_block_content -%}
-        <div class="collection__title title-wrapper title-wrapper--no-top-margin page-width{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% endif %}{% if show_desktop_slider %} collection__title--desktop-slider{% endif %}">
-          {%- if content_group_block != blank -%}
-            {%- liquid
-              assign content_group_width_mode = content_group_block.settings.width_mode | default: 'content'
-              assign content_group_horizontal = content_group_block.settings.content_horizontal | default: 'left'
-              assign content_group_vertical = content_group_block.settings.content_vertical | default: 'middle'
-              assign content_group_text_alignment = content_group_block.settings.text_alignment | default: 'left'
-              assign content_group_has_buttons = false
-              if content_group_block.settings.button_label_1 != blank or content_group_block.settings.button_label_2 != blank
-                assign content_group_has_buttons = true
-              endif
-            -%}
-            <div class="section-{{ section.id }}-content-shell section-{{ section.id }}-content-shell--{{ content_group_horizontal }} section-{{ section.id }}-content-shell--{{ content_group_vertical }}" {{ content_group_block.shopify_attributes }}>
-              <div class="section-{{ section.id }}-content-group section-{{ section.id }}-content-group--block-{{ content_group_block.id }} section-{{ section.id }}-content-group--width-{{ content_group_width_mode }} section-{{ section.id }}-content-group--align-{{ content_group_text_alignment }}">
-                {%- if content_group_block.settings.preheader != blank -%}
-                  <p class="collection__preheader">{{ content_group_block.settings.preheader | escape }}</p>
-                {%- endif -%}
-                {%- if content_group_block.settings.heading != blank -%}
-                  <h2 class="title {{ section.settings.heading_size }}">{{ content_group_block.settings.heading }}</h2>
-                {%- endif -%}
-                {%- if content_group_block.settings.text != blank -%}
-                  <div class="collection__description {{ section.settings.description_style }}">
-                    {{ content_group_block.settings.text }}
-                  </div>
-                {%- endif -%}
-                {%- if content_group_has_buttons -%}
-                  <div class="collection__buttons collection__buttons--{{ content_group_text_alignment }}">
-                    {%- if content_group_block.settings.button_label_1 != blank -%}
-                      <a
-                        {% if content_group_block.settings.button_link_1 == blank %}role="link" aria-disabled="true"{% else %}href="{{ content_group_block.settings.button_link_1 }}"{% endif %}
-                        class="button{% if content_group_block.settings.button_style_secondary_1 %} button--secondary{% endif %}"
-                      >
-                        {{- content_group_block.settings.button_label_1 | escape -}}
-                      </a>
-                    {%- endif -%}
-                    {%- if content_group_block.settings.button_label_2 != blank -%}
-                      <a
-                        {% if content_group_block.settings.button_link_2 == blank %}role="link" aria-disabled="true"{% else %}href="{{ content_group_block.settings.button_link_2 }}"{% endif %}
-                        class="button{% if content_group_block.settings.button_style_secondary_2 %} button--secondary{% endif %}"
-                      >
-                        {{- content_group_block.settings.button_label_2 | escape -}}
-                      </a>
-                    {%- endif -%}
-                  </div>
-                {%- endif -%}
-              </div>
-            </div>
-          {%- else -%}
-            {%- liquid
-              assign buttons_block_has_buttons = false
-              if buttons_block != blank
-                if buttons_block.settings.button_label_1 != blank or buttons_block.settings.button_label_2 != blank
-                  assign buttons_block_has_buttons = true
-                endif
-              endif
-            -%}
-            <div class="section-{{ section.id }}-heading">
-              {%- if preheader_block != blank and preheader_block.settings.preheader != blank -%}
-                <p class="collection__preheader" {{ preheader_block.shopify_attributes }}>{{ preheader_block.settings.preheader | escape }}</p>
-              {%- endif -%}
-              {%- if heading_block != blank and heading_block.settings.heading != blank -%}
-                <h2 class="title {{ section.settings.heading_size }}" {{ heading_block.shopify_attributes }}>{{ heading_block.settings.heading }}</h2>
-              {%- endif -%}
-              {%- if text_block != blank and text_block.settings.text != blank -%}
-                <div class="collection__description {{ section.settings.description_style }}" {{ text_block.shopify_attributes }}>
-                  {{ text_block.settings.text }}
-                </div>
-              {%- endif -%}
-              {%- if buttons_block_has_buttons -%}
-                <div class="collection__buttons collection__buttons--{{ section.settings.heading_alignment }}" {{ buttons_block.shopify_attributes }}>
-                  {%- if buttons_block.settings.button_label_1 != blank -%}
-                    <a
-                      {% if buttons_block.settings.button_link_1 == blank %}role="link" aria-disabled="true"{% else %}href="{{ buttons_block.settings.button_link_1 }}"{% endif %}
-                      class="button{% if buttons_block.settings.button_style_secondary_1 %} button--secondary{% endif %}"
-                    >
-                      {{- buttons_block.settings.button_label_1 | escape -}}
-                    </a>
-                  {%- endif -%}
-                  {%- if buttons_block.settings.button_label_2 != blank -%}
-                    <a
-                      {% if buttons_block.settings.button_link_2 == blank %}role="link" aria-disabled="true"{% else %}href="{{ buttons_block.settings.button_link_2 }}"{% endif %}
-                      class="button{% if buttons_block.settings.button_style_secondary_2 %} button--secondary{% endif %}"
-                    >
-                      {{- buttons_block.settings.button_label_2 | escape -}}
-                    </a>
-                  {%- endif -%}
-                </div>
-              {%- endif -%}
-            </div>
-          {%- endif -%}
-        </div>
-      {%- else -%}
-        <div class="collection__title title-wrapper title-wrapper--no-top-margin page-width section-{{ section.id }}-heading{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% endif %}{% if show_desktop_slider %} collection__title--desktop-slider{% endif %}">
-          {%- if section.settings.title != blank -%}
-            <h2 class="title {{ section.settings.heading_size }}">{{ section.settings.title | escape }}</h2>
-          {%- endif -%}
-          {%- if section.settings.description != blank or section.settings.show_description and section.settings.collection.description != empty -%}
-            <div class="collection__description {{ section.settings.description_style }}">
-              {%- if section.settings.description != blank -%}
-                {{ section.settings.description }}
-              {%- elsif section.settings.show_description -%}
-                {{ section.settings.collection.description }}
-              {%- endif -%}
-            </div>
-          {%- endif -%}
-        </div>
-      {%- endif -%}
+      <div class="collection__title title-wrapper title-wrapper--no-top-margin page-width section-{{ section.id }}-heading{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% endif %}{% if show_desktop_slider %} collection__title--desktop-slider{% endif %}">
+        {%- if section.settings.title != blank -%}
+          <h2 class="title {{ section.settings.heading_size }}">{{ section.settings.title | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank or section.settings.show_description and section.settings.collection.description != empty -%}
+          <div class="collection__description {{ section.settings.description_style }}">
+            {%- if section.settings.description != blank -%}
+              {{ section.settings.description }}
+            {%- elsif section.settings.show_description -%}
+              {{ section.settings.collection.description }}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
 
     <slider-component class="slider-mobile-gutter{% if section.settings.full_width %} slider-component-full-width{% endif %}{% if show_mobile_slider == false %} page-width{% endif %}{% if show_desktop_slider == false and section.settings.full_width == false %} page-width-desktop{% endif %}{% if show_desktop_slider %} slider-component-desktop{% endif %}">
       <ul id="Slider-{{ section.id }}" class="grid product-grid contains-card{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid--{{ section.settings.columns_desktop }}-col-desktop{% if section.settings.collection == blank %} grid--2-col-tablet-down{% else %} grid--{{ section.settings.columns_mobile }}-col-tablet-down{% endif %}{% if show_mobile_slider or show_desktop_slider %} slider{% if show_desktop_slider %} slider--desktop{% endif %}{% if show_mobile_slider %} slider--tablet grid--peek{% endif %}{% endif %}" role="list" aria-label="{{ 'sections.featured_collection.slider' | t }}">
@@ -971,202 +718,9 @@
       "label": "Rotation max"
     }
     ],
-  "blocks": [
-    {
-      "type": "content_group",
-      "name": "Content group",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "text",
-          "id": "preheader",
-          "label": "Preheader"
-        },
-        {
-          "type": "inline_richtext",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Featured collection"
-        },
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": "Text"
-        },
-        {
-          "type": "header",
-          "content": "Buttons"
-        },
-        {
-          "type": "text",
-          "id": "button_label_1",
-          "label": "First button label"
-        },
-        {
-          "type": "url",
-          "id": "button_link_1",
-          "label": "First button link"
-        },
-        {
-          "type": "checkbox",
-          "id": "button_style_secondary_1",
-          "default": false,
-          "label": "Use secondary style for first button"
-        },
-        {
-          "type": "text",
-          "id": "button_label_2",
-          "label": "Second button label"
-        },
-        {
-          "type": "url",
-          "id": "button_link_2",
-          "label": "Second button link"
-        },
-        {
-          "type": "checkbox",
-          "id": "button_style_secondary_2",
-          "default": true,
-          "label": "Use secondary style for second button"
-        },
-        {
-          "type": "header",
-          "content": "Content width"
-        },
-        {
-          "type": "select",
-          "id": "width_mode",
-          "label": "Width mode",
-          "default": "content",
-          "options": [
-            { "value": "content", "label": "Content width" },
-            { "value": "full", "label": "Full width" }
-          ]
-        },
-        {
-          "type": "range",
-          "id": "content_max_width",
-          "min": 280,
-          "max": 1200,
-          "step": 20,
-          "unit": "px",
-          "default": 680,
-          "label": "Content max width"
-        },
-        {
-          "type": "header",
-          "content": "Content alignment"
-        },
-        {
-          "type": "select",
-          "id": "content_vertical",
-          "label": "Vertical alignment",
-          "default": "middle",
-          "options": [
-            { "value": "top", "label": "Top" },
-            { "value": "middle", "label": "Middle" },
-            { "value": "bottom", "label": "Bottom" }
-          ]
-        },
-        {
-          "type": "text_alignment",
-          "id": "content_horizontal",
-          "label": "Horizontal alignment",
-          "default": "left"
-        },
-        {
-          "type": "text_alignment",
-          "id": "text_alignment",
-          "label": "Text alignment",
-          "default": "left"
-        }
-      ]
-    },
-    {
-      "type": "preheader",
-      "name": "Preheader",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "text",
-          "id": "preheader",
-          "label": "Preheader"
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "name": "Heading",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "inline_richtext",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Featured collection"
-        }
-      ]
-    },
-    {
-      "type": "text",
-      "name": "Text",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": "Text"
-        }
-      ]
-    },
-    {
-      "type": "buttons",
-      "name": "Buttons",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "text",
-          "id": "button_label_1",
-          "label": "First button label"
-        },
-        {
-          "type": "url",
-          "id": "button_link_1",
-          "label": "First button link"
-        },
-        {
-          "type": "checkbox",
-          "id": "button_style_secondary_1",
-          "default": false,
-          "label": "Use secondary style for first button"
-        },
-        {
-          "type": "text",
-          "id": "button_label_2",
-          "label": "Second button label"
-        },
-        {
-          "type": "url",
-          "id": "button_link_2",
-          "label": "Second button link"
-        },
-        {
-          "type": "checkbox",
-          "id": "button_style_secondary_2",
-          "default": true,
-          "label": "Use secondary style for second button"
-        }
-      ]
-    }
-  ],
   "presets": [
     {
-      "name": "t:sections.featured-collection.presets.name",
-      "blocks": [
-        {
-          "type": "content_group"
-        }
-      ]
+      "name": "t:sections.featured-collection.presets.name"
     }
   ]
 }
