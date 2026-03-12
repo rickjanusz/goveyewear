@@ -146,12 +146,28 @@
     }
   {%- endif -%}
 
+  #Banner-{{ section.id }} .banner__heading,
+  #Banner-{{ section.id }} .banner__heading span {
+    text-shadow: {{ section.settings.feature_heading_shadow_offset_x | default: 0 }}px
+      {{ section.settings.feature_heading_shadow_offset_y | default: 0 }}px
+      {{ section.settings.feature_heading_shadow_blur | default: 0 }}px
+      {{ section.settings.feature_heading_shadow_color | default: '#000000' | color_modify: 'alpha', section.settings.feature_heading_shadow_opacity | default: 0 | divided_by: 100.0 }};
+  }
+
   {%- if section.settings.feature_text_color != blank -%}
     #Banner-{{ section.id }} .banner__text,
     #Banner-{{ section.id }} .banner__text span {
       color: {{ section.settings.feature_text_color }};
     }
   {%- endif -%}
+
+  #Banner-{{ section.id }} .banner__text,
+  #Banner-{{ section.id }} .banner__text span {
+    text-shadow: {{ section.settings.feature_text_shadow_offset_x | default: 0 }}px
+      {{ section.settings.feature_text_shadow_offset_y | default: 0 }}px
+      {{ section.settings.feature_text_shadow_blur | default: 0 }}px
+      {{ section.settings.feature_text_shadow_color | default: '#000000' | color_modify: 'alpha', section.settings.feature_text_shadow_opacity | default: 0 | divided_by: 100.0 }};
+  }
 
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
@@ -575,8 +591,100 @@
     },
     {
       "type": "color",
+      "id": "feature_heading_shadow_color",
+      "default": "#000000",
+      "label": "Feature heading shadow color"
+    },
+    {
+      "type": "range",
+      "id": "feature_heading_shadow_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 0,
+      "label": "Feature heading shadow opacity"
+    },
+    {
+      "type": "range",
+      "id": "feature_heading_shadow_blur",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Feature heading shadow size"
+    },
+    {
+      "type": "range",
+      "id": "feature_heading_shadow_offset_x",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Feature heading shadow offset X"
+    },
+    {
+      "type": "range",
+      "id": "feature_heading_shadow_offset_y",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Feature heading shadow offset Y"
+    },
+    {
+      "type": "color",
       "id": "feature_text_color",
       "label": "Feature body text color"
+    },
+    {
+      "type": "color",
+      "id": "feature_text_shadow_color",
+      "default": "#000000",
+      "label": "Feature body shadow color"
+    },
+    {
+      "type": "range",
+      "id": "feature_text_shadow_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 0,
+      "label": "Feature body shadow opacity"
+    },
+    {
+      "type": "range",
+      "id": "feature_text_shadow_blur",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Feature body shadow size"
+    },
+    {
+      "type": "range",
+      "id": "feature_text_shadow_offset_x",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Feature body shadow offset X"
+    },
+    {
+      "type": "range",
+      "id": "feature_text_shadow_offset_y",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Feature body shadow offset Y"
     },
     {
       "type": "select",
