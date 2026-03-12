@@ -68,6 +68,9 @@
   .brand-featured-product-{{ section.id }} .brand-featured-product__card {
     max-width: {{ section.settings.card_max_width }}px;
     margin: 0 auto;
+  }
+
+  .brand-featured-product-{{ section.id }} .brand-featured-product__feature {
     {% if section.settings.enable_background_image and section.settings.background_image != blank %}
       background-image: url('{{ section.settings.background_image | image_url: width: 2400 }}');
       background-repeat: no-repeat;
@@ -76,13 +79,7 @@
     {% endif %}
   }
 
-  .brand-featured-product-{{ section.id }} .brand-featured-product__card--has-background .card-wrapper,
-  .brand-featured-product-{{ section.id }} .brand-featured-product__card--has-background .card,
-  .brand-featured-product-{{ section.id }} .brand-featured-product__card--has-background .card__content {
-    background: transparent;
-  }
-
-  .brand-featured-product-{{ section.id }} .brand-featured-product__card--hide-product-image .card__inner {
+  .brand-featured-product-{{ section.id }} .brand-featured-product__feature--hide-product-image .card__inner {
     display: none;
   }
 
@@ -129,21 +126,23 @@
       </header>
     {%- endif -%}
 
-    <div class="brand-featured-product__card{% if section.settings.hide_product_image %} brand-featured-product__card--hide-product-image{% endif %}{% if section.settings.enable_background_image and section.settings.background_image != blank %} brand-featured-product__card--has-background{% endif %}">
-      {%- if section.settings.product != blank -%}
-        {% render 'card-product',
-          card_product: section.settings.product,
-          media_aspect_ratio: section.settings.image_ratio,
-          card_image_fit: section.settings.card_image_fit,
-          show_secondary_image: section.settings.show_secondary_image,
-          show_vendor: section.settings.show_vendor,
-          show_rating: section.settings.show_rating,
-          show_quick_add: section.settings.show_quick_add,
-          section_id: section.id
-        %}
-      {%- else -%}
-        {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
-      {%- endif -%}
+    <div class="brand-featured-product__feature{% if section.settings.hide_product_image %} brand-featured-product__feature--hide-product-image{% endif %}{% if section.settings.enable_background_image and section.settings.background_image != blank %} brand-featured-product__feature--has-background{% endif %}">
+      <div class="brand-featured-product__card">
+        {%- if section.settings.product != blank -%}
+          {% render 'card-product',
+            card_product: section.settings.product,
+            media_aspect_ratio: section.settings.image_ratio,
+            card_image_fit: section.settings.card_image_fit,
+            show_secondary_image: section.settings.show_secondary_image,
+            show_vendor: section.settings.show_vendor,
+            show_rating: section.settings.show_rating,
+            show_quick_add: section.settings.show_quick_add,
+            section_id: section.id
+          %}
+        {%- else -%}
+          {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
+        {%- endif -%}
+      </div>
     </div>
   </div>
 </section>
