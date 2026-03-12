@@ -238,11 +238,12 @@
         {%- case block.type -%}
           {%- when 'heading' -%}
             {%- if block.settings.enable_heading_shadow or block.settings.heading_blend_mode != 'normal' -%}
+              {%- assign heading_shadow_alpha = block.settings.heading_shadow_opacity | default: 0 | divided_by: 100.0 -%}
               <style>
                 #Banner-{{ section.id }} .banner__heading--{{ block.id }},
                 #Banner-{{ section.id }} .banner__heading--{{ block.id }} span {
                   {% if block.settings.enable_heading_shadow %}
-                    text-shadow: {{ block.settings.heading_shadow_offset_x | default: 0 }}px {{ block.settings.heading_shadow_offset_y | default: 0 }}px {{ block.settings.heading_shadow_blur | default: 0 }}px {{ block.settings.heading_shadow_color | color_modify: 'alpha', block.settings.heading_shadow_opacity | default: 0 | divided_by: 100.0 }};
+                    text-shadow: {{ block.settings.heading_shadow_offset_x | default: 0 }}px {{ block.settings.heading_shadow_offset_y | default: 0 }}px {{ block.settings.heading_shadow_blur | default: 0 }}px {{ block.settings.heading_shadow_color | default: '#000000' | color_modify: 'alpha', heading_shadow_alpha }};
                   {% endif %}
                   {% if block.settings.heading_blend_mode != 'normal' %}
                     mix-blend-mode: {{ block.settings.heading_blend_mode }};
@@ -271,11 +272,12 @@
             </h2>
           {%- when 'text' -%}
             {%- if block.settings.enable_text_shadow or block.settings.text_blend_mode != 'normal' -%}
+              {%- assign text_shadow_alpha = block.settings.text_shadow_opacity | default: 0 | divided_by: 100.0 -%}
               <style>
                 #Banner-{{ section.id }} .banner__text--{{ block.id }},
                 #Banner-{{ section.id }} .banner__text--{{ block.id }} * {
                   {% if block.settings.enable_text_shadow %}
-                    text-shadow: {{ block.settings.text_shadow_offset_x | default: 0 }}px {{ block.settings.text_shadow_offset_y | default: 0 }}px {{ block.settings.text_shadow_blur | default: 0 }}px {{ block.settings.text_shadow_color | color_modify: 'alpha', block.settings.text_shadow_opacity | default: 0 | divided_by: 100.0 }};
+                    text-shadow: {{ block.settings.text_shadow_offset_x | default: 0 }}px {{ block.settings.text_shadow_offset_y | default: 0 }}px {{ block.settings.text_shadow_blur | default: 0 }}px {{ block.settings.text_shadow_color | default: '#000000' | color_modify: 'alpha', text_shadow_alpha }};
                   {% endif %}
                   {% if block.settings.text_blend_mode != 'normal' %}
                     mix-blend-mode: {{ block.settings.text_blend_mode }};
