@@ -45,11 +45,20 @@
   }
 
   .multicolumn-{{ section.id }} .multicolumn-list__item {
+    display: flex;
     height: 100%;
+  }
+
+  .multicolumn-{{ section.id }} .multicolumn-list {
+    align-items: stretch;
   }
 
   .multicolumn-{{ section.id }} .multicolumn-card__image-wrapper {
     flex: 0 0 auto;
+  }
+
+  .multicolumn-{{ section.id }} .multicolumn-card {
+    width: 100%;
   }
 
   .multicolumn-{{ section.id }} .multicolumn-card__rivet {
