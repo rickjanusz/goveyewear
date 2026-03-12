@@ -349,6 +349,10 @@
   "tag": "section",
   "settings": [
     {
+      "type": "header",
+      "content": "Content"
+    },
+    {
       "type": "text",
       "id": "title",
       "default": "Multicolumn",
@@ -375,6 +379,10 @@
       "label": "t:sections.all.heading_size.label"
     },
     {
+      "type": "header",
+      "content": "Section heading typography"
+    },
+    {
       "type": "color",
       "id": "heading_color",
       "label": "Section heading color"
@@ -390,6 +398,10 @@
       "id": "heading_alignment",
       "default": "left",
       "label": "Section heading alignment"
+    },
+    {
+      "type": "header",
+      "content": "Column typography"
     },
     {
       "type": "color",
@@ -429,6 +441,10 @@
       "type": "color",
       "id": "card_link_color",
       "label": "Column link color"
+    },
+    {
+      "type": "header",
+      "content": "Card appearance"
     },
     {
       "type": "color",
@@ -511,6 +527,10 @@
       "label": "Card border radius"
     },
     {
+      "type": "header",
+      "content": "Card rivets"
+    },
+    {
       "type": "checkbox",
       "id": "enable_card_rivets",
       "default": false,
@@ -554,6 +574,10 @@
       "default": 5,
       "label": "Card rivet vertical offset",
       "visible_if": "{{ section.settings.enable_card_rivets }}"
+    },
+    {
+      "type": "header",
+      "content": "Media and layout"
     },
     {
       "type": "select",
@@ -681,7 +705,7 @@
     },
     {
       "type": "header",
-      "content": "t:sections.multicolumn.settings.header_mobile.content"
+      "content": "Mobile"
     },
     {
       "type": "select",
@@ -728,8 +752,11 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
-    }
-,
+    },
+    {
+      "type": "header",
+      "content": "Section accents"
+    },
     {
       "type": "image_picker",
       "id": "border_accent_top",
@@ -749,11 +776,10 @@
       "unit": "px",
       "default": 60,
       "label": "Border Accent Height"
-    }
-,
+    },
     {
       "type": "header",
-      "content": "Corner Accents"
+      "content": "Corner accents"
     },
     {
       "type": "select",

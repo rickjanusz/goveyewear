@@ -191,6 +191,10 @@
   "class": "section",
   "settings": [
     {
+      "type": "header",
+      "content": "Content"
+    },
+    {
       "type": "text",
       "id": "title",
       "default": "Featured collection",
@@ -201,6 +205,14 @@
       "id": "enable_custom_typography",
       "default": false,
       "label": "Enable custom typography and colors"
+    },
+    {
+      "type": "header",
+      "content": "Title typography"
+    },
+    {
+      "type": "paragraph",
+      "content": "Use these controls to style the section title. Custom font and color only apply when custom typography is enabled."
     },
     {
       "type": "font_picker",
@@ -282,6 +294,40 @@
       "label": "t:sections.featured-collection.settings.description.label"
     },
     {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "t:sections.featured-collection.settings.show_description.label",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "description_style",
+      "label": "t:sections.featured-collection.settings.description_style.label",
+      "options": [
+        {
+          "value": "body",
+          "label": "t:sections.featured-collection.settings.description_style.options__1.label"
+        },
+        {
+          "value": "subtitle",
+          "label": "t:sections.featured-collection.settings.description_style.options__2.label"
+        },
+        {
+          "value": "uppercase",
+          "label": "t:sections.featured-collection.settings.description_style.options__3.label"
+        }
+      ],
+      "default": "body"
+    },
+    {
+      "type": "header",
+      "content": "Description typography"
+    },
+    {
+      "type": "paragraph",
+      "content": "Use these controls to style the optional description. Custom font and color only apply when custom typography is enabled."
+    },
+    {
       "type": "font_picker",
       "id": "description_font",
       "default": "archivo_n4",
@@ -325,30 +371,8 @@
       "label": "Description line height"
     },
     {
-      "type": "checkbox",
-      "id": "show_description",
-      "label": "t:sections.featured-collection.settings.show_description.label",
-      "default": false
-    },
-    {
-      "type": "select",
-      "id": "description_style",
-      "label": "t:sections.featured-collection.settings.description_style.label",
-      "options": [
-        {
-          "value": "body",
-          "label": "t:sections.featured-collection.settings.description_style.options__1.label"
-        },
-        {
-          "value": "subtitle",
-          "label": "t:sections.featured-collection.settings.description_style.options__2.label"
-        },
-        {
-          "value": "uppercase",
-          "label": "t:sections.featured-collection.settings.description_style.options__3.label"
-        }
-      ],
-      "default": "body"
+      "type": "header",
+      "content": "Collection source and layout"
     },
     {
       "type": "collection",
@@ -441,6 +465,10 @@
       "info": "t:sections.all.colors.has_cards_info"
     },
     {
+      "type": "header",
+      "content": "Product card appearance"
+    },
+    {
       "type": "select",
       "id": "card_skin",
       "label": "Card skin",
@@ -517,7 +545,7 @@
     },
     {
       "type": "header",
-      "content": "t:sections.featured-collection.settings.header_mobile.content"
+      "content": "Mobile"
     },
     {
       "type": "select",
@@ -564,8 +592,11 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 52
-    }
-,
+    },
+    {
+      "type": "header",
+      "content": "Section accents"
+    },
     {
       "type": "image_picker",
       "id": "border_accent_top",
@@ -585,11 +616,10 @@
       "unit": "px",
       "default": 60,
       "label": "Border Accent Height"
-    }
-,
+    },
     {
       "type": "header",
-      "content": "Corner Accents"
+      "content": "Corner accents"
     },
     {
       "type": "select",
