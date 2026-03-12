@@ -35,6 +35,28 @@
     margin: 0;
   }
 
+  .brand-video-{{ section.id }} .brand-video__media {
+    width: 100%;
+  }
+
+  .brand-video-{{ section.id }} .brand-video__embed,
+  .brand-video-{{ section.id }} .brand-video__file,
+  .brand-video-{{ section.id }} .brand-video__fallback-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    border: 0;
+  }
+
+  .brand-video-{{ section.id }} .brand-video__file,
+  .brand-video-{{ section.id }} .brand-video__fallback-image {
+    height: auto;
+  }
+
+  .brand-video-{{ section.id }} .brand-video__file {
+    background: transparent;
+  }
+
   @media screen and (min-width: 750px) {
     .brand-video-{{ section.id }} .brand-video__inner {
       padding-top: {{ section.settings.padding_top }}px;
@@ -62,31 +84,35 @@
       </header>
     {%- endif -%}
 
-    {%- if section.settings.video_url != blank -%}
+    <div class="brand-video__media">
+    {%- if section.settings.video != blank -%}
+      {{ section.settings.video | video_tag: class: 'brand-video__file', autoplay: true, loop: true, muted: true, controls: false }}
+    {%- elsif section.settings.video_url != blank -%}
       {%- if section.settings.video_url.type == 'youtube' -%}
         <iframe
+          class="brand-video__embed"
           src="https://www.youtube.com/embed/{{ section.settings.video_url.id }}?playsinline=1&rel=0&modestbranding=1"
           title="{{ section.settings.heading | default: 'Brand video' | escape }}"
           loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
-          style="width:100%;aspect-ratio:16/9;border:0;display:block;"
         ></iframe>
       {%- elsif section.settings.video_url.type == 'vimeo' -%}
         <iframe
+          class="brand-video__embed"
           src="https://player.vimeo.com/video/{{ section.settings.video_url.id }}"
           title="{{ section.settings.heading | default: 'Brand video' | escape }}"
           loading="lazy"
           allow="autoplay; fullscreen; picture-in-picture"
           allowfullscreen
-          style="width:100%;aspect-ratio:16/9;border:0;display:block;"
         ></iframe>
       {%- endif -%}
     {%- elsif section.settings.cover_image != blank -%}
-      {{ section.settings.cover_image | image_url: width: 1920 | image_tag: loading: 'lazy', widths: '375, 550, 750, 1100, 1500, 1920', alt: section.settings.heading, style: 'width:100%;height:auto;display:block;' }}
+      {{ section.settings.cover_image | image_url: width: 1920 | image_tag: loading: 'lazy', widths: '375, 550, 750, 1100, 1500, 1920', alt: section.settings.heading, class: 'brand-video__fallback-image' }}
     {%- else -%}
       {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
     {%- endif -%}
+    </div>
   </div>
 </section>
 
@@ -164,10 +190,15 @@
       ]
     },
     {
+      "type": "video",
+      "id": "video",
+      "label": "Hosted video"
+    },
+    {
       "type": "video_url",
       "id": "video_url",
       "accept": ["youtube", "vimeo"],
-      "label": "Video URL"
+      "label": "External video URL"
     },
     {
       "type": "image_picker",
