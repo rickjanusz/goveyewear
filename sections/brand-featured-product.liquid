@@ -68,6 +68,22 @@
   .brand-featured-product-{{ section.id }} .brand-featured-product__card {
     max-width: {{ section.settings.card_max_width }}px;
     margin: 0 auto;
+    {% if section.settings.enable_background_image and section.settings.background_image != blank %}
+      background-image: url('{{ section.settings.background_image | image_url: width: 2400 }}');
+      background-repeat: no-repeat;
+      background-position: {{ section.settings.background_image_position }};
+      background-size: {{ section.settings.background_image_fit }};
+    {% endif %}
+  }
+
+  .brand-featured-product-{{ section.id }} .brand-featured-product__card--has-background .card-wrapper,
+  .brand-featured-product-{{ section.id }} .brand-featured-product__card--has-background .card,
+  .brand-featured-product-{{ section.id }} .brand-featured-product__card--has-background .card__content {
+    background: transparent;
+  }
+
+  .brand-featured-product-{{ section.id }} .brand-featured-product__card--hide-product-image .card__inner {
+    display: none;
   }
 
   @media screen and (min-width: 750px) {
@@ -113,7 +129,7 @@
       </header>
     {%- endif -%}
 
-    <div class="brand-featured-product__card">
+    <div class="brand-featured-product__card{% if section.settings.hide_product_image %} brand-featured-product__card--hide-product-image{% endif %}{% if section.settings.enable_background_image and section.settings.background_image != blank %} brand-featured-product__card--has-background{% endif %}">
       {%- if section.settings.product != blank -%}
         {% render 'card-product',
           card_product: section.settings.product,
@@ -373,6 +389,53 @@
       "type": "product",
       "id": "product",
       "label": "Product"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_product_image",
+      "label": "Hide product image",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_background_image",
+      "label": "Enable background image",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.enable_background_image }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit",
+      "label": "Background image fit",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "visible_if": "{{ section.settings.enable_background_image }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_position",
+      "label": "Background image position",
+      "default": "center center",
+      "options": [
+        { "value": "left top", "label": "Top left" },
+        { "value": "center top", "label": "Top center" },
+        { "value": "right top", "label": "Top right" },
+        { "value": "left center", "label": "Middle left" },
+        { "value": "center center", "label": "Middle center" },
+        { "value": "right center", "label": "Middle right" },
+        { "value": "left bottom", "label": "Bottom left" },
+        { "value": "center bottom", "label": "Bottom center" },
+        { "value": "right bottom", "label": "Bottom right" }
+      ],
+      "visible_if": "{{ section.settings.enable_background_image }}"
     },
     {
       "type": "range",
