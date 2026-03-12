@@ -31,6 +31,15 @@
 - Avoid sweeping theme-wide changes unless user explicitly asks.
 - Prefer file-scoped pushes (`--only`) when practical.
 
+## Implementation Standard
+- No shortcuts.
+- No hacks.
+- No inline styles.
+- No stacking partial fixes.
+- If something is wrong, trace the actual failure point.
+- Clean up prior bad code as part of the fix.
+- Prefer durable, scoped, maintainable implementations over fast patches.
+
 ## Documentation Rule
 - Document shipped changes in `CHANGELOG.md` when present, otherwise provide a concise PR-style change summary in final handoff.
 
