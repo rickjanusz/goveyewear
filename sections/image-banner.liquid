@@ -146,28 +146,12 @@
     }
   {%- endif -%}
 
-  #Banner-{{ section.id }} .banner__heading,
-  #Banner-{{ section.id }} .banner__heading span {
-    text-shadow: {{ section.settings.feature_heading_shadow_offset_x | default: 0 }}px
-      {{ section.settings.feature_heading_shadow_offset_y | default: 0 }}px
-      {{ section.settings.feature_heading_shadow_blur | default: 0 }}px
-      {{ section.settings.feature_heading_shadow_color | default: '#000000' | color_modify: 'alpha', section.settings.feature_heading_shadow_opacity | default: 0 | divided_by: 100.0 }};
-  }
-
   {%- if section.settings.feature_text_color != blank -%}
     #Banner-{{ section.id }} .banner__text,
     #Banner-{{ section.id }} .banner__text span {
       color: {{ section.settings.feature_text_color }};
     }
   {%- endif -%}
-
-  #Banner-{{ section.id }} .banner__text,
-  #Banner-{{ section.id }} .banner__text span {
-    text-shadow: {{ section.settings.feature_text_shadow_offset_x | default: 0 }}px
-      {{ section.settings.feature_text_shadow_offset_y | default: 0 }}px
-      {{ section.settings.feature_text_shadow_blur | default: 0 }}px
-      {{ section.settings.feature_text_shadow_color | default: '#000000' | color_modify: 'alpha', section.settings.feature_text_shadow_opacity | default: 0 | divided_by: 100.0 }};
-  }
 
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
@@ -253,7 +237,11 @@
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when 'heading' -%}
-            <h2 class="banner__heading {{ block.settings.heading_size }}" {{ block.shopify_attributes }}>
+            <h2
+              class="banner__heading {{ block.settings.heading_size }}"
+              style="{% if block.settings.enable_heading_shadow %}text-shadow: {{ block.settings.heading_shadow_offset_x | default: 0 }}px {{ block.settings.heading_shadow_offset_y | default: 0 }}px {{ block.settings.heading_shadow_blur | default: 0 }}px {{ block.settings.heading_shadow_color | default: '#000000' | color_modify: 'alpha', block.settings.heading_shadow_opacity | default: 0 | divided_by: 100.0 }};{% endif %}{% if block.settings.heading_blend_mode != 'normal' %} mix-blend-mode: {{ block.settings.heading_blend_mode }};{% endif %}"
+              {{ block.shopify_attributes }}
+            >
               {%- if block.settings.heading_split_enabled -%}
                 {%- if block.settings.heading_part_a != blank -%}
                   <span class="hl-a" {% if block.settings.heading_split_color_a != blank %}style="color: {{ block.settings.heading_split_color_a }};"{% endif %}>{{ block.settings.heading_part_a | escape }}</span>
@@ -270,7 +258,11 @@
               {%- endif -%}
             </h2>
           {%- when 'text' -%}
-            <div class="banner__text {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
+            <div
+              class="banner__text {{ block.settings.text_style }}"
+              style="{% if block.settings.enable_text_shadow %}text-shadow: {{ block.settings.text_shadow_offset_x | default: 0 }}px {{ block.settings.text_shadow_offset_y | default: 0 }}px {{ block.settings.text_shadow_blur | default: 0 }}px {{ block.settings.text_shadow_color | default: '#000000' | color_modify: 'alpha', block.settings.text_shadow_opacity | default: 0 | divided_by: 100.0 }};{% endif %}{% if block.settings.text_blend_mode != 'normal' %} mix-blend-mode: {{ block.settings.text_blend_mode }};{% endif %}"
+              {{ block.shopify_attributes }}
+            >
               {{ block.settings.text }}
             </div>
           {%- when 'buttons' -%}
@@ -591,100 +583,8 @@
     },
     {
       "type": "color",
-      "id": "feature_heading_shadow_color",
-      "default": "#000000",
-      "label": "Feature heading shadow color"
-    },
-    {
-      "type": "range",
-      "id": "feature_heading_shadow_opacity",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "default": 0,
-      "label": "Feature heading shadow opacity"
-    },
-    {
-      "type": "range",
-      "id": "feature_heading_shadow_blur",
-      "min": 0,
-      "max": 40,
-      "step": 1,
-      "unit": "px",
-      "default": 0,
-      "label": "Feature heading shadow size"
-    },
-    {
-      "type": "range",
-      "id": "feature_heading_shadow_offset_x",
-      "min": -20,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": 0,
-      "label": "Feature heading shadow offset X"
-    },
-    {
-      "type": "range",
-      "id": "feature_heading_shadow_offset_y",
-      "min": -20,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": 0,
-      "label": "Feature heading shadow offset Y"
-    },
-    {
-      "type": "color",
       "id": "feature_text_color",
       "label": "Feature body text color"
-    },
-    {
-      "type": "color",
-      "id": "feature_text_shadow_color",
-      "default": "#000000",
-      "label": "Feature body shadow color"
-    },
-    {
-      "type": "range",
-      "id": "feature_text_shadow_opacity",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "default": 0,
-      "label": "Feature body shadow opacity"
-    },
-    {
-      "type": "range",
-      "id": "feature_text_shadow_blur",
-      "min": 0,
-      "max": 40,
-      "step": 1,
-      "unit": "px",
-      "default": 0,
-      "label": "Feature body shadow size"
-    },
-    {
-      "type": "range",
-      "id": "feature_text_shadow_offset_x",
-      "min": -20,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": 0,
-      "label": "Feature body shadow offset X"
-    },
-    {
-      "type": "range",
-      "id": "feature_text_shadow_offset_y",
-      "min": -20,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": 0,
-      "label": "Feature body shadow offset Y"
     },
     {
       "type": "select",
@@ -961,6 +861,84 @@
           ],
           "default": "h1",
           "label": "t:sections.all.heading_size.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_heading_shadow",
+          "default": false,
+          "label": "Enable heading shadow"
+        },
+        {
+          "type": "color",
+          "id": "heading_shadow_color",
+          "default": "#000000",
+          "label": "Heading shadow color",
+          "visible_if": "{{ block.settings.enable_heading_shadow }}"
+        },
+        {
+          "type": "range",
+          "id": "heading_shadow_opacity",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 0,
+          "label": "Heading shadow opacity",
+          "visible_if": "{{ block.settings.enable_heading_shadow }}"
+        },
+        {
+          "type": "range",
+          "id": "heading_shadow_blur",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "default": 0,
+          "label": "Heading shadow size",
+          "visible_if": "{{ block.settings.enable_heading_shadow }}"
+        },
+        {
+          "type": "range",
+          "id": "heading_shadow_offset_x",
+          "min": -20,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 0,
+          "label": "Heading shadow offset X",
+          "visible_if": "{{ block.settings.enable_heading_shadow }}"
+        },
+        {
+          "type": "range",
+          "id": "heading_shadow_offset_y",
+          "min": -20,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 0,
+          "label": "Heading shadow offset Y",
+          "visible_if": "{{ block.settings.enable_heading_shadow }}"
+        },
+        {
+          "type": "select",
+          "id": "heading_blend_mode",
+          "label": "Heading blend mode",
+          "default": "normal",
+          "options": [
+            { "value": "normal", "label": "Normal" },
+            { "value": "multiply", "label": "Multiply" },
+            { "value": "screen", "label": "Screen" },
+            { "value": "overlay", "label": "Overlay" },
+            { "value": "darken", "label": "Darken" },
+            { "value": "lighten", "label": "Lighten" },
+            { "value": "color-dodge", "label": "Color dodge" },
+            { "value": "color-burn", "label": "Color burn" },
+            { "value": "hard-light", "label": "Hard light" },
+            { "value": "soft-light", "label": "Soft light" },
+            { "value": "difference", "label": "Difference" },
+            { "value": "exclusion", "label": "Exclusion" }
+          ],
+          "visible_if": "{{ block.settings.enable_heading_shadow }}"
         }
       ]
     },
@@ -994,6 +972,84 @@
           ],
           "default": "body",
           "label": "t:sections.image-banner.blocks.text.settings.text_style.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_text_shadow",
+          "default": false,
+          "label": "Enable text shadow"
+        },
+        {
+          "type": "color",
+          "id": "text_shadow_color",
+          "default": "#000000",
+          "label": "Text shadow color",
+          "visible_if": "{{ block.settings.enable_text_shadow }}"
+        },
+        {
+          "type": "range",
+          "id": "text_shadow_opacity",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 0,
+          "label": "Text shadow opacity",
+          "visible_if": "{{ block.settings.enable_text_shadow }}"
+        },
+        {
+          "type": "range",
+          "id": "text_shadow_blur",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "default": 0,
+          "label": "Text shadow size",
+          "visible_if": "{{ block.settings.enable_text_shadow }}"
+        },
+        {
+          "type": "range",
+          "id": "text_shadow_offset_x",
+          "min": -20,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 0,
+          "label": "Text shadow offset X",
+          "visible_if": "{{ block.settings.enable_text_shadow }}"
+        },
+        {
+          "type": "range",
+          "id": "text_shadow_offset_y",
+          "min": -20,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 0,
+          "label": "Text shadow offset Y",
+          "visible_if": "{{ block.settings.enable_text_shadow }}"
+        },
+        {
+          "type": "select",
+          "id": "text_blend_mode",
+          "label": "Text blend mode",
+          "default": "normal",
+          "options": [
+            { "value": "normal", "label": "Normal" },
+            { "value": "multiply", "label": "Multiply" },
+            { "value": "screen", "label": "Screen" },
+            { "value": "overlay", "label": "Overlay" },
+            { "value": "darken", "label": "Darken" },
+            { "value": "lighten", "label": "Lighten" },
+            { "value": "color-dodge", "label": "Color dodge" },
+            { "value": "color-burn", "label": "Color burn" },
+            { "value": "hard-light", "label": "Hard light" },
+            { "value": "soft-light", "label": "Soft light" },
+            { "value": "difference", "label": "Difference" },
+            { "value": "exclusion", "label": "Exclusion" }
+          ],
+          "visible_if": "{{ block.settings.enable_text_shadow }}"
         }
       ]
     },
