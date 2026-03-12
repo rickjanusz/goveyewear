@@ -283,6 +283,10 @@
               assign content_group_horizontal = content_group_block.settings.content_horizontal | default: 'left'
               assign content_group_vertical = content_group_block.settings.content_vertical | default: 'middle'
               assign content_group_text_alignment = content_group_block.settings.text_alignment | default: 'left'
+              assign content_group_has_buttons = false
+              if content_group_block.settings.button_label_1 != blank or content_group_block.settings.button_label_2 != blank
+                assign content_group_has_buttons = true
+              endif
             -%}
             <div class="section-{{ section.id }}-content-shell section-{{ section.id }}-content-shell--{{ content_group_horizontal }} section-{{ section.id }}-content-shell--{{ content_group_vertical }}" {{ content_group_block.shopify_attributes }}>
               <div class="section-{{ section.id }}-content-group section-{{ section.id }}-content-group--block-{{ content_group_block.id }} section-{{ section.id }}-content-group--width-{{ content_group_width_mode }} section-{{ section.id }}-content-group--align-{{ content_group_text_alignment }}">
@@ -297,7 +301,7 @@
                     {{ content_group_block.settings.text }}
                   </div>
                 {%- endif -%}
-                {%- if content_group_block.settings.button_label_1 != blank or content_group_block.settings.button_label_2 != blank -%}
+                {%- if content_group_has_buttons -%}
                   <div class="collection__buttons collection__buttons--{{ content_group_text_alignment }}">
                     {%- if content_group_block.settings.button_label_1 != blank -%}
                       <a
@@ -320,6 +324,14 @@
               </div>
             </div>
           {%- else -%}
+            {%- liquid
+              assign buttons_block_has_buttons = false
+              if buttons_block != blank
+                if buttons_block.settings.button_label_1 != blank or buttons_block.settings.button_label_2 != blank
+                  assign buttons_block_has_buttons = true
+                endif
+              endif
+            -%}
             <div class="section-{{ section.id }}-heading">
               {%- if preheader_block != blank and preheader_block.settings.preheader != blank -%}
                 <p class="collection__preheader" {{ preheader_block.shopify_attributes }}>{{ preheader_block.settings.preheader | escape }}</p>
@@ -332,7 +344,7 @@
                   {{ text_block.settings.text }}
                 </div>
               {%- endif -%}
-              {%- if buttons_block != blank and (buttons_block.settings.button_label_1 != blank or buttons_block.settings.button_label_2 != blank) -%}
+              {%- if buttons_block_has_buttons -%}
                 <div class="collection__buttons collection__buttons--{{ section.settings.heading_alignment }}" {{ buttons_block.shopify_attributes }}>
                   {%- if buttons_block.settings.button_label_1 != blank -%}
                     <a
