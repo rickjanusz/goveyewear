@@ -348,8 +348,17 @@
 }
 
 .collection.collection--card-skin-tactical .card__media .media {
+  position: relative;
+}
+
+.collection.collection--card-skin-tactical .card__media .media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
   box-shadow: inset 0 0 0 0 #2a2a2a;
   transition: box-shadow 0.25s ease;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .collection.collection--card-skin-tactical .card > .card__content {
@@ -440,7 +449,7 @@
 }
 
 @media screen and (hover: hover) {
-  .collection.collection--card-skin-tactical .card:hover .card__media .media {
+  .collection.collection--card-skin-tactical .card:hover .card__media .media::after {
     box-shadow: inset 0 0 0 10px #2a2a2a;
   }
 
