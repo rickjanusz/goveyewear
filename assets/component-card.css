@@ -347,10 +347,6 @@
   border: 0.1rem solid rgba(var(--color-base-accent-2), 0.32);
 }
 
-.collection.collection--card-skin-tactical .card__media {
-  position: relative;
-}
-
 .collection.collection--card-skin-tactical .card__media::after {
   content: '';
   position: absolute;
