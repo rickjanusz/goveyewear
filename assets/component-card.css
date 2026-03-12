@@ -351,6 +351,7 @@
   background: rgb(var(--color-base-accent-1));
   border-top: 0.1rem solid rgba(var(--color-base-accent-2), 0.2);
   padding: 1.2rem 1.6rem 1.6rem;
+  transition: background-color var(--duration-default) ease;
 }
 
 .collection.collection--card-skin-tactical .card__heading a {
@@ -430,6 +431,17 @@
   letter-spacing: 0.45rem;
   padding-left: 0.45rem;
   background: rgb(var(--color-base-accent-1));
+  transition: background-color var(--duration-default) ease;
+}
+
+@media screen and (hover: hover) {
+  .collection.collection--card-skin-tactical .card:hover > .card__content {
+    background-color: #2a2a2a;
+  }
+
+  .collection.collection--card-skin-tactical .card:hover .card__separator::after {
+    background-color: #2a2a2a;
+  }
 }
 
 @media screen and (max-width: 989px) {
