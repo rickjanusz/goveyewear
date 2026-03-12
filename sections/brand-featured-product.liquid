@@ -70,7 +70,7 @@
     margin: 0 auto;
   }
 
-  .brand-featured-product-{{ section.id }} .brand-featured-product__feature {
+  .brand-featured-product-{{ section.id }} {
     {% if section.settings.enable_background_image and section.settings.background_image != blank %}
       background-image: url('{{ section.settings.background_image | image_url: width: 2400 }}');
       background-repeat: no-repeat;
@@ -107,7 +107,7 @@
   }
 {%- endstyle -%}
 
-<section class="brand-featured-product-{{ section.id }} color-{{ section.settings.color_scheme }} gradient">
+<section class="brand-featured-product-{{ section.id }} color-{{ section.settings.color_scheme }} gradient{% if section.settings.enable_background_image and section.settings.background_image != blank %} brand-featured-product--has-background{% endif %}">
   <div class="page-width section-{{ section.id }}-padding">
     {%- if section.settings.preheader != blank or section.settings.heading != blank or section.settings.subheader != blank or section.settings.paragraph != blank -%}
       <header class="brand-featured-product__header">
@@ -126,7 +126,7 @@
       </header>
     {%- endif -%}
 
-    <div class="brand-featured-product__feature{% if section.settings.hide_product_image %} brand-featured-product__feature--hide-product-image{% endif %}{% if section.settings.enable_background_image and section.settings.background_image != blank %} brand-featured-product__feature--has-background{% endif %}">
+    <div class="brand-featured-product__feature{% if section.settings.hide_product_image %} brand-featured-product__feature--hide-product-image{% endif %}">
       <div class="brand-featured-product__card">
         {%- if section.settings.product != blank -%}
           {% render 'card-product',
