@@ -43,6 +43,11 @@
 ## Documentation Rule
 - Document shipped changes in `CHANGELOG.md` when present, otherwise provide a concise PR-style change summary in final handoff.
 
+## Section Architecture Rule
+- Don’t solve the symptom first.
+- First inspect whether the section model is wrong.
+- Separate content controls from presentation controls before adding more settings.
+
 ## Skill Usage
 - Use `shopify-staging-release` skill from:
   - `.codex/skills/shopify-staging-release/SKILL.md`
