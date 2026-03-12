@@ -300,48 +300,6 @@
   </div>
 </div>
 
-<script>
-  (() => {
-    const sectionId = 'shopify-section-{{ section.id }}';
-    const section = document.getElementById(sectionId);
-    if (!section) return;
-
-    const selectors = '.multicolumn-{{ section.id }} .multicolumn-card.content-container';
-    const equalize = () => {
-      const cards = Array.from(section.querySelectorAll(selectors));
-      if (!cards.length) return;
-
-      cards.forEach((card) => {
-        card.style.minHeight = '';
-      });
-
-      const maxHeight = cards.reduce((height, card) => Math.max(height, card.offsetHeight), 0);
-      cards.forEach((card) => {
-        card.style.minHeight = `${maxHeight}px`;
-      });
-    };
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', equalize, { once: true });
-    } else {
-      equalize();
-    }
-
-    let resizeFrame;
-    const onResize = () => {
-      window.cancelAnimationFrame(resizeFrame);
-      resizeFrame = window.requestAnimationFrame(equalize);
-    };
-
-    window.addEventListener('resize', onResize);
-
-    if ('ResizeObserver' in window) {
-      const observer = new ResizeObserver(onResize);
-      section.querySelectorAll(selectors).forEach((card) => observer.observe(card));
-    }
-  })();
-</script>
-
 {% schema %}
 {
   "name": "t:sections.multicolumn.name",
