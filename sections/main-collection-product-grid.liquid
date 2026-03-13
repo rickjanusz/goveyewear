@@ -18,6 +18,18 @@
   {{ section.settings.grid_heading_font | font_face: font_display: 'swap' }}
   {{ section.settings.grid_subheader_font | font_face: font_display: 'swap' }}
 
+  {%- liquid
+    assign brand_template_suffixes = 'brand,gatorz,fast_metal,revision,ess,bolle'
+    assign is_brand_collection_template = false
+    if request.page_type == 'collection' and template.suffix != blank
+      assign wrapped_suffix = ',' | append: template.suffix | append: ','
+      assign wrapped_brand_suffixes = ',' | append: brand_template_suffixes | append: ','
+      if wrapped_brand_suffixes contains wrapped_suffix
+        assign is_brand_collection_template = true
+      endif
+    endif
+  -%}
+
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -59,6 +71,20 @@
     font-size: {{ section.settings.grid_subheader_size_mobile }}px;
     line-height: {{ section.settings.grid_subheader_line_height | divided_by: 100.0 }};
   }
+
+  {%- if is_brand_collection_template -%}
+    .section-{{ section.id }}-padding .slider-button {
+      color: rgba(var(--color-base-accent-2), 0.78);
+    }
+
+    .section-{{ section.id }}-padding .slider-button:not([disabled]):hover {
+      color: rgb(var(--color-base-accent-2));
+    }
+
+    .section-{{ section.id }}-padding .slider-button[disabled] .icon {
+      color: rgba(var(--color-base-accent-2), 0.3);
+    }
+  {%- endif -%}
 
   @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
