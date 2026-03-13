@@ -78,13 +78,27 @@
     }
   {%- endif -%}
 
-  {%- if is_brand_collection_template -%}
+  {%- liquid
+    assign uses_tan_slider_controls = false
+    assign tan_slider_color_schemes = ',accent-1,background-2,inverse,'
+    assign wrapped_color_scheme = ',' | append: section.settings.color_scheme | append: ','
+    if is_brand_collection_template and tan_slider_color_schemes contains wrapped_color_scheme
+      assign uses_tan_slider_controls = true
+    endif
+  -%}
+
+  {%- if uses_tan_slider_controls -%}
     .section-{{ section.id }}-padding .slider-button {
       color: rgba(var(--color-base-accent-2), 0.78);
     }
 
     .section-{{ section.id }}-padding .slider-button:not([disabled]):hover {
       color: rgb(var(--color-base-accent-2));
+    }
+
+    .section-{{ section.id }}-padding .slider-counter,
+    .section-{{ section.id }}-padding .slider-counter span {
+      color: rgba(var(--color-base-accent-2), 0.78);
     }
 
     .section-{{ section.id }}-padding .slider-button[disabled] .icon {
