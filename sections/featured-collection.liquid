@@ -63,6 +63,7 @@
     position: relative;
     display: inline-flex;
     justify-content: center;
+    z-index: 4;
   }
 
   .section-{{ section.id }}-view-all-trigger {
@@ -143,6 +144,7 @@
       margin-bottom: -1.6rem;
     }
 
+    .section-{{ section.id }}-view-all-wrap--has-menu.is-open .section-{{ section.id }}-view-all-menu,
     .section-{{ section.id }}-view-all-wrap--has-menu:hover .section-{{ section.id }}-view-all-menu,
     .section-{{ section.id }}-view-all-wrap--has-menu:focus-within .section-{{ section.id }}-view-all-menu {
       display: block;
@@ -160,7 +162,7 @@
       background: rgb(var(--color-background));
       box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.18);
       text-align: left;
-      z-index: 3;
+      z-index: 10;
     }
 
     .section-{{ section.id }}-view-all-menu-grid {
@@ -363,7 +365,7 @@
             {{ 'sections.featured_collection.view_all' | t }}
           </a>
           {%- if section.settings.view_all_mega_menu != blank and section.settings.view_all_mega_menu.links.size > 0 -%}
-            <div class="section-{{ section.id }}-view-all-menu color-{{ section.settings.color_scheme }} gradient" role="navigation" aria-label="{{ section.settings.view_all_mega_menu.title | escape }}" data-featured-collection-mega-menu>
+            <div class="section-{{ section.id }}-view-all-menu color-{{ section.settings.color_scheme }} gradient" role="navigation" aria-label="{{ section.settings.view_all_mega_menu.title | escape }}" data-featured-collection-mega-menu data-open-on-hover="true">
               <div class="section-{{ section.id }}-view-all-menu-grid">
                 <div class="section-{{ section.id }}-view-all-menu-frames" role="list">
                   {%- for childlink in section.settings.view_all_mega_menu.links -%}

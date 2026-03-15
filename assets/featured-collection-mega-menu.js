@@ -1,6 +1,7 @@
 class FeaturedCollectionMegaMenu {
   constructor(container) {
     this.container = container;
+    this.wrapper = container.closest('[class*="view-all-wrap"]');
     this.triggers = Array.from(container.querySelectorAll('[data-mega-menu-trigger]'));
     this.panels = Array.from(container.querySelectorAll('[data-mega-menu-panel]'));
 
@@ -11,10 +12,39 @@ class FeaturedCollectionMegaMenu {
   }
 
   bindEvents() {
+    if (this.wrapper) {
+      this.wrapper.addEventListener('mouseenter', () => this.open());
+      this.wrapper.addEventListener('mouseleave', () => this.close());
+      this.wrapper.addEventListener('focusin', () => this.open());
+      this.wrapper.addEventListener('focusout', (event) => {
+        if (!this.wrapper.contains(event.relatedTarget)) {
+          this.close();
+        }
+      });
+    }
+
     this.triggers.forEach((trigger) => {
-      trigger.addEventListener('mouseenter', () => this.activate(trigger.dataset.megaMenuTrigger));
-      trigger.addEventListener('focus', () => this.activate(trigger.dataset.megaMenuTrigger));
+      trigger.addEventListener('mouseenter', () => {
+        this.open();
+        this.activate(trigger.dataset.megaMenuTrigger);
+      });
+      trigger.addEventListener('focus', () => {
+        this.open();
+        this.activate(trigger.dataset.megaMenuTrigger);
+      });
     });
+  }
+
+  open() {
+    if (this.wrapper) {
+      this.wrapper.classList.add('is-open');
+    }
+  }
+
+  close() {
+    if (this.wrapper) {
+      this.wrapper.classList.remove('is-open');
+    }
   }
 
   activate(targetId) {
