@@ -62,11 +62,15 @@
   .section-{{ section.id }}-view-all-wrap {
     position: relative;
     display: inline-flex;
+    align-items: center;
     justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
     overflow: visible;
   }
 
-  .section-{{ section.id }}-view-all-trigger {
+  .section-{{ section.id }}-view-all-trigger,
+  .section-{{ section.id }}-view-all-detail-trigger {
     position: relative;
     z-index: 1;
   }
@@ -508,13 +512,12 @@
             class="section-{{ section.id }}-view-all-trigger {% if section.settings.view_all_style == 'link' %}link underlined-link{% elsif section.settings.view_all_style == 'solid' %}button{% else %}button button--secondary{% endif %}"
             aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title }}"
           >
-            {%- if section.settings.view_all_mega_menu != blank and section.settings.view_all_mega_menu.handle == 'gatorz-shop-by-frame' -%}
-              Full Collection Detail
-            {%- else -%}
-              {{ 'sections.featured_collection.view_all' | t }}
-            {%- endif -%}
+            {{ 'sections.featured_collection.view_all' | t }}
           </a>
           {%- if section.settings.view_all_mega_menu != blank and section.settings.view_all_mega_menu.links.size > 0 -%}
+            <button type="button" class="section-{{ section.id }}-view-all-detail-trigger button button--secondary" data-mega-menu-open>
+              Full Collection Detail
+            </button>
             <div class="section-{{ section.id }}-view-all-menu" role="dialog" aria-modal="true" aria-label="{{ section.settings.view_all_mega_menu.title | escape }}" data-featured-collection-mega-menu data-open-on-hover="true">
               <div class="section-{{ section.id }}-view-all-menu-shell">
                 <div class="section-{{ section.id }}-view-all-menu-topbar">

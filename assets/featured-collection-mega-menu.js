@@ -2,49 +2,97 @@ class FeaturedCollectionMegaMenu {
   constructor(container) {
     this.container = container;
     this.wrapper = container.closest('[class*="view-all-wrap"]');
+    this.trigger = this.wrapper ? this.wrapper.querySelector('[data-mega-menu-open]') : null;
+    this.shell = container.querySelector('[class*="view-all-menu-shell"]');
     this.triggers = Array.from(container.querySelectorAll('[data-mega-menu-trigger]'));
     this.panels = Array.from(container.querySelectorAll('[data-mega-menu-panel]'));
+    this.stages = Array.from(container.querySelectorAll('[data-mega-menu-stage]'));
+    this.backButtons = Array.from(container.querySelectorAll('[data-mega-menu-back]'));
+    this.closeButton = container.querySelector('[data-mega-menu-close]');
+    this.transitionToken = 0;
+    this.handleDocumentKeydown = this.handleDocumentKeydown.bind(this);
+    this.handleTriggerEnter = this.handleTriggerEnter.bind(this);
+    this.handleTriggerClick = this.handleTriggerClick.bind(this);
 
-    if (!this.triggers.length || !this.panels.length) return;
+    if (!this.wrapper || !this.trigger || !this.triggers.length || !this.panels.length) return;
 
+    this.mountToBody();
     this.bindEvents();
     this.activate(this.triggers[0].dataset.megaMenuTrigger);
+    this.showFrames({ immediate: true });
+  }
+
+  mountToBody() {
+    if (this.container.parentElement !== document.body) {
+      document.body.appendChild(this.container);
+    }
   }
 
   bindEvents() {
-    if (this.wrapper) {
-      this.wrapper.addEventListener('mouseenter', () => this.open());
-      this.wrapper.addEventListener('mouseleave', () => this.close());
-      this.wrapper.addEventListener('focusin', () => this.open());
-      this.wrapper.addEventListener('focusout', (event) => {
-        if (!this.wrapper.contains(event.relatedTarget)) {
-          this.close();
-        }
-      });
-    }
+    this.trigger.addEventListener('mouseenter', this.handleTriggerEnter);
+    this.trigger.addEventListener('focus', this.handleTriggerEnter);
+    this.trigger.addEventListener('click', this.handleTriggerClick);
 
     this.triggers.forEach((trigger) => {
       trigger.addEventListener('mouseenter', () => {
-        this.open();
         this.activate(trigger.dataset.megaMenuTrigger);
       });
       trigger.addEventListener('focus', () => {
-        this.open();
         this.activate(trigger.dataset.megaMenuTrigger);
       });
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        this.showVersions(trigger.dataset.megaMenuTrigger);
+      });
     });
+
+    this.backButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        this.showFrames();
+      });
+    });
+
+    if (this.closeButton) {
+      this.closeButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        this.close();
+      });
+    }
+  }
+
+  handleTriggerEnter(event) {
+    if (event.type === 'mouseenter' && window.innerWidth < 990) return;
+    this.open();
+  }
+
+  handleTriggerClick(event) {
+    if (window.innerWidth >= 990) {
+      event.preventDefault();
+      this.open();
+      return;
+    }
+  }
+
+  handleDocumentKeydown(event) {
+    if (event.key === 'Escape' && this.wrapper.classList.contains('is-open')) {
+      this.close();
+    }
   }
 
   open() {
-    if (this.wrapper) {
-      this.wrapper.classList.add('is-open');
-    }
+    this.wrapper.classList.add('is-open');
+    this.container.classList.add('is-open');
+    document.body.classList.add('overflow-hidden');
+    document.addEventListener('keydown', this.handleDocumentKeydown);
   }
 
   close() {
-    if (this.wrapper) {
-      this.wrapper.classList.remove('is-open');
-    }
+    this.wrapper.classList.remove('is-open');
+    this.container.classList.remove('is-open');
+    document.body.classList.remove('overflow-hidden');
+    document.removeEventListener('keydown', this.handleDocumentKeydown);
+    this.showFrames({ immediate: true });
   }
 
   activate(targetId) {
@@ -55,6 +103,86 @@ class FeaturedCollectionMegaMenu {
     this.panels.forEach((panel) => {
       panel.classList.toggle('is-active', panel.dataset.megaMenuPanel === targetId);
     });
+  }
+
+  showFrames(options = {}) {
+    this.transitionToStage('frames', options);
+  }
+
+  showVersions(targetId) {
+    this.activate(targetId);
+    this.transitionToStage(targetId);
+  }
+
+  transitionToStage(targetKey, { immediate = false } = {}) {
+    const currentStage = this.stages.find((stage) => stage.classList.contains('is-active'));
+    const nextStage = this.resolveStage(targetKey);
+
+    if (!nextStage) return;
+
+    if (immediate || currentStage === nextStage || !currentStage) {
+      this.setActiveStage(nextStage);
+      return;
+    }
+
+    const token = ++this.transitionToken;
+    const currentCards = Array.from(currentStage.querySelectorAll('[class*="view-all-menu-card"]'));
+    const nextCards = Array.from(nextStage.querySelectorAll('[class*="view-all-menu-card"]'));
+    const currentDuration = this.transitionDuration(currentCards.length);
+    const overlapDelay = Math.min(currentDuration, 60);
+
+    currentStage.classList.add('is-transitioning-out');
+
+    window.setTimeout(() => {
+      if (this.transitionToken !== token) return;
+
+      currentStage.classList.remove('is-active', 'is-transitioning-out');
+      currentCards.forEach((card) => card.classList.remove('is-visible'));
+
+      nextStage.classList.add('is-active', 'is-transitioning-in');
+      nextCards.forEach((card) => card.classList.remove('is-visible'));
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (this.transitionToken !== token) return;
+          nextCards.forEach((card) => card.classList.add('is-visible'));
+        });
+      });
+
+      window.setTimeout(() => {
+        if (this.transitionToken !== token) return;
+        nextStage.classList.remove('is-transitioning-in');
+      }, this.transitionDuration(nextCards.length));
+    }, overlapDelay);
+
+    window.setTimeout(() => {
+      if (this.transitionToken !== token) return;
+      currentStage.classList.remove('is-active', 'is-transitioning-out');
+      currentCards.forEach((card) => card.classList.remove('is-visible'));
+    }, currentDuration);
+  }
+
+  resolveStage(targetKey) {
+    if (targetKey === 'frames') {
+      return this.stages.find((stage) => stage.dataset.megaMenuStage === 'frames');
+    }
+
+    return this.stages.find((stage) => stage.dataset.megaMenuVersions === targetKey);
+  }
+
+  setActiveStage(nextStage) {
+    this.stages.forEach((stage) => {
+      stage.classList.toggle('is-active', stage === nextStage);
+      stage.classList.remove('is-transitioning-in', 'is-transitioning-out');
+      stage.querySelectorAll('[class*="view-all-menu-card"]').forEach((card) => {
+        card.classList.toggle('is-visible', stage === nextStage);
+      });
+    });
+  }
+
+  transitionDuration(cardCount) {
+    if (!cardCount) return 0;
+    return Math.max((cardCount - 1) * 28 + 110, 110);
   }
 }
 
