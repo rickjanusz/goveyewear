@@ -12,8 +12,10 @@ class FeaturedCollectionMegaMenu {
     this.defaultTitle = this.titleElement ? this.titleElement.textContent.trim() : '';
     this.closeButton = container.querySelector('[data-mega-menu-close]');
     this.transitionToken = 0;
+    this._hoverTimer = null;
     this.handleDocumentKeydown = this.handleDocumentKeydown.bind(this);
     this.handleTriggerEnter = this.handleTriggerEnter.bind(this);
+    this.handleTriggerLeave = this.handleTriggerLeave.bind(this);
     this.handleTriggerClick = this.handleTriggerClick.bind(this);
 
     if (!this.wrapper || !this.trigger || !this.triggers.length) return;
@@ -32,7 +34,9 @@ class FeaturedCollectionMegaMenu {
 
   bindEvents() {
     this.trigger.addEventListener('mouseenter', this.handleTriggerEnter);
+    this.trigger.addEventListener('mouseleave', this.handleTriggerLeave);
     this.trigger.addEventListener('focus', this.handleTriggerEnter);
+    this.trigger.addEventListener('blur', this.handleTriggerLeave);
     this.trigger.addEventListener('click', this.handleTriggerClick);
 
     this.triggers.forEach((trigger) => {
@@ -65,12 +69,35 @@ class FeaturedCollectionMegaMenu {
 
   handleTriggerEnter(event) {
     if (event.type === 'mouseenter' && window.innerWidth < 990) return;
-    this.open();
+    // Start the fill animation
+    this.trigger.classList.add('is-charging');
+    // Auto-open after 1 second if hover is sustained
+    this._hoverTimer = window.setTimeout(() => {
+      this._hoverTimer = null;
+      this.trigger.classList.remove('is-charging');
+      this.open();
+    }, 1000);
+  }
+
+  handleTriggerLeave(event) {
+    // Cancel the pending open and reset the fill animation
+    if (this._hoverTimer !== null) {
+      clearTimeout(this._hoverTimer);
+      this._hoverTimer = null;
+    }
+    // Force animation restart on next hover by removing and re-triggering
+    this.trigger.classList.remove('is-charging');
   }
 
   handleTriggerClick(event) {
     if (window.innerWidth >= 990) {
       event.preventDefault();
+      // Cancel any pending hover-open and clear the fill animation
+      if (this._hoverTimer !== null) {
+        clearTimeout(this._hoverTimer);
+        this._hoverTimer = null;
+      }
+      this.trigger.classList.remove('is-charging');
       this.open();
       return;
     }

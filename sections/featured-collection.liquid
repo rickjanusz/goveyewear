@@ -73,6 +73,33 @@
   .section-{{ section.id }}-view-all-detail-trigger {
     position: relative;
     z-index: 1;
+    overflow: hidden;
+  }
+
+  .section-{{ section.id }}-view-all-detail-trigger::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: currentColor;
+    opacity: 0.15;
+    transform: scaleX(0);
+    transform-origin: left center;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .section-{{ section.id }}-view-all-detail-trigger.is-charging::before {
+    animation: detail-trigger-fill 1s linear forwards;
+  }
+
+  @keyframes detail-trigger-fill {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  .section-{{ section.id }}-view-all-detail-trigger > * {
+    position: relative;
+    z-index: 1;
   }
 
   .section-{{ section.id }}-view-all-menu {
