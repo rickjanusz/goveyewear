@@ -163,7 +163,7 @@
       width: 100vw;
       height: 100dvh;
       min-height: 100dvh;
-      padding: 3.2rem 4rem 4rem;
+      padding: 0;
       border: 0;
       background: #ffffff;
       box-shadow: none;
@@ -176,15 +176,55 @@
     .section-{{ section.id }}-view-all-menu-shell {
       display: flex;
       flex-direction: column;
-      min-height: calc(100dvh - 7.2rem);
+      min-height: 100dvh;
       max-width: 192rem;
       margin: 0 auto;
     }
 
     .section-{{ section.id }}-view-all-menu-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 2rem;
+      min-height: 8.8rem;
+      padding: 2rem 4rem;
+      background: #ffffff;
+      border-bottom: 1px solid rgba(20, 20, 20, 0.14);
+    }
+
+    .section-{{ section.id }}-view-all-menu-topbar-start {
       display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .section-{{ section.id }}-view-all-menu-topbar-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .section-{{ section.id }}-view-all-menu-topbar-end {
+      display: flex;
+      align-items: center;
       justify-content: flex-end;
-      margin-bottom: 2.4rem;
+    }
+
+    .section-{{ section.id }}-view-all-menu-topbar-title {
+      margin: 0;
+      font-size: 1.8rem;
+      line-height: 1.2;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #141414;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .section-{{ section.id }}-view-all-menu-close {
@@ -211,6 +251,7 @@
       display: block;
       flex: 1 1 auto;
       min-height: 0;
+      padding: 0 4rem 4rem;
     }
 
     .section-{{ section.id }}-view-all-menu-frames {
@@ -319,12 +360,20 @@
     .section-{{ section.id }}-view-all-menu-back {
       display: inline-flex;
       align-items: center;
-      margin-bottom: 2rem;
       padding: 0;
       border: 0;
       background: transparent;
       color: #141414;
       cursor: pointer;
+      font-size: 1.4rem;
+      line-height: 1.2;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-{{ section.id }}-view-all-menu-back.is-hidden {
+      visibility: hidden;
+      pointer-events: none;
     }
 
     .section-{{ section.id }}-view-all-menu-back:hover,
@@ -333,10 +382,7 @@
     }
 
     .section-{{ section.id }}-view-all-menu-version-heading {
-      margin: 0 0 2rem;
-      font-size: 1.8rem;
-      line-height: 1.3;
-      color: #141414;
+      display: none;
     }
 
     .section-{{ section.id }}-view-all-menu-version-grid {
@@ -467,9 +513,19 @@
             <div class="section-{{ section.id }}-view-all-menu" role="dialog" aria-modal="true" aria-label="{{ section.settings.view_all_mega_menu.title | escape }}" data-featured-collection-mega-menu data-open-on-hover="true">
               <div class="section-{{ section.id }}-view-all-menu-shell">
                 <div class="section-{{ section.id }}-view-all-menu-topbar">
-                  <button type="button" class="section-{{ section.id }}-view-all-menu-close" data-mega-menu-close aria-label="Close menu">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+                  <div class="section-{{ section.id }}-view-all-menu-topbar-start">
+                    <button type="button" class="section-{{ section.id }}-view-all-menu-back is-hidden" data-mega-menu-back>
+                      Back to frames
+                    </button>
+                  </div>
+                  <div class="section-{{ section.id }}-view-all-menu-topbar-center">
+                    <p class="section-{{ section.id }}-view-all-menu-topbar-title" data-mega-menu-title>{{ section.settings.view_all_mega_menu.title | escape }}</p>
+                  </div>
+                  <div class="section-{{ section.id }}-view-all-menu-topbar-end">
+                    <button type="button" class="section-{{ section.id }}-view-all-menu-close" data-mega-menu-close aria-label="Close menu">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
                 </div>
                 <div class="section-{{ section.id }}-view-all-menu-grid">
                   <div class="section-{{ section.id }}-view-all-menu-frames" role="list">
@@ -514,9 +570,6 @@
                   </div>
                   {%- for childlink in section.settings.view_all_mega_menu.links -%}
                     <div class="section-{{ section.id }}-view-all-menu-stage section-{{ section.id }}-view-all-menu-stage--versions" data-mega-menu-stage="versions" data-mega-menu-versions="{{ section.id }}-{{ forloop.index }}">
-                      <button type="button" class="section-{{ section.id }}-view-all-menu-back" data-mega-menu-back>
-                        Back to frames
-                      </button>
                       <h3 class="section-{{ section.id }}-view-all-menu-version-heading">{{ childlink.title | escape }}</h3>
                       <div class="section-{{ section.id }}-view-all-menu-version-grid" role="list">
                         {%- liquid

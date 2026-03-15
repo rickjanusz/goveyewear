@@ -8,6 +8,8 @@ class FeaturedCollectionMegaMenu {
     this.panels = Array.from(container.querySelectorAll('[data-mega-menu-panel]'));
     this.stages = Array.from(container.querySelectorAll('[data-mega-menu-stage]'));
     this.backButtons = Array.from(container.querySelectorAll('[data-mega-menu-back]'));
+    this.titleElement = container.querySelector('[data-mega-menu-title]');
+    this.defaultTitle = this.titleElement ? this.titleElement.textContent.trim() : '';
     this.closeButton = container.querySelector('[data-mega-menu-close]');
     this.transitionToken = 0;
     this.handleDocumentKeydown = this.handleDocumentKeydown.bind(this);
@@ -106,11 +108,15 @@ class FeaturedCollectionMegaMenu {
   }
 
   showFrames(options = {}) {
+    this.updateChrome({ showBack: false, title: this.defaultTitle });
     this.transitionToStage('frames', options);
   }
 
   showVersions(targetId) {
+    const trigger = this.triggers.find((item) => item.dataset.megaMenuTrigger === targetId);
+    const title = trigger ? trigger.textContent.trim() : this.defaultTitle;
     this.activate(targetId);
+    this.updateChrome({ showBack: true, title });
     this.transitionToStage(targetId);
   }
 
@@ -178,6 +184,16 @@ class FeaturedCollectionMegaMenu {
         card.classList.toggle('is-visible', stage === nextStage);
       });
     });
+  }
+
+  updateChrome({ showBack, title }) {
+    this.backButtons.forEach((button) => {
+      button.classList.toggle('is-hidden', !showBack);
+    });
+
+    if (this.titleElement) {
+      this.titleElement.textContent = title || this.defaultTitle;
+    }
   }
 
   transitionDuration(cardCount) {
