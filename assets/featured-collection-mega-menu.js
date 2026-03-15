@@ -14,7 +14,7 @@ class FeaturedCollectionMegaMenu {
     this.handleTriggerEnter = this.handleTriggerEnter.bind(this);
     this.handleTriggerClick = this.handleTriggerClick.bind(this);
 
-    if (!this.wrapper || !this.trigger || !this.triggers.length || !this.panels.length) return;
+    if (!this.wrapper || !this.trigger || !this.triggers.length) return;
 
     this.mountToBody();
     this.bindEvents();
