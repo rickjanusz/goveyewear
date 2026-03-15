@@ -514,6 +514,11 @@
           >
             {{ 'sections.featured_collection.view_all' | t }}
           </a>
+          {%- if section.settings.detail_button_label != blank and section.settings.detail_button_link != blank -%}
+            <a href="{{ section.settings.detail_button_link }}" class="section-{{ section.id }}-view-all-detail-link button button--secondary">
+              {{ section.settings.detail_button_label | escape }}
+            </a>
+          {%- endif -%}
           {%- if section.settings.view_all_mega_menu != blank and section.settings.view_all_mega_menu.links.size > 0 -%}
             <button type="button" class="section-{{ section.id }}-view-all-detail-trigger button button--secondary" data-mega-menu-open>
               Full Collection Detail
@@ -934,7 +939,18 @@
       "type": "link_list",
       "id": "view_all_mega_menu",
       "label": "View all mega menu",
-      "info": "Shown on desktop when hovering over the View all button."
+      "info": "Shown on desktop when hovering over the Full Collection Detail button."
+    },
+    {
+      "type": "text",
+      "id": "detail_button_label",
+      "label": "Additional button label",
+      "default": "Shop Brand Page"
+    },
+    {
+      "type": "url",
+      "id": "detail_button_link",
+      "label": "Additional button link"
     },
     {
       "type": "checkbox",
