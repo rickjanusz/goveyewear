@@ -63,12 +63,12 @@
     position: relative;
     display: inline-flex;
     justify-content: center;
-    z-index: 4;
+    overflow: visible;
   }
 
   .section-{{ section.id }}-view-all-trigger {
     position: relative;
-    z-index: 2;
+    z-index: 1;
   }
 
   .section-{{ section.id }}-view-all-menu {
@@ -139,44 +139,138 @@
   }
 
   @media screen and (min-width: 990px) {
-    .section-{{ section.id }}-view-all-wrap--has-menu {
-      padding-bottom: 1.6rem;
-      margin-bottom: -1.6rem;
+    .section-{{ section.id }}-padding,
+    .section-{{ section.id }}-padding .collection__view-all {
+      overflow: visible;
     }
 
-    .section-{{ section.id }}-view-all-wrap--has-menu.is-open .section-{{ section.id }}-view-all-menu,
-    .section-{{ section.id }}-view-all-wrap--has-menu:hover .section-{{ section.id }}-view-all-menu,
-    .section-{{ section.id }}-view-all-wrap--has-menu:focus-within .section-{{ section.id }}-view-all-menu {
+    .section-{{ section.id }}-view-all-wrap--has-menu {
+      position: static;
+    }
+
+    .section-{{ section.id }}-view-all-menu.is-open {
       display: block;
     }
 
     .section-{{ section.id }}-view-all-menu {
-      position: absolute;
-      top: calc(100% + 1.6rem);
-      left: 50%;
+      position: fixed;
+      inset: 0;
       display: none;
-      width: min(132rem, calc(100vw - 8rem));
-      padding: 3.2rem;
-      transform: translateX(-50%);
-      border: 1px solid rgba(var(--color-foreground), 0.16);
-      background: rgb(var(--color-background));
-      box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.18);
+      width: 100vw;
+      height: 100dvh;
+      min-height: 100dvh;
+      padding: 3.2rem 4rem 4rem;
+      border: 0;
+      background: #ffffff;
+      box-shadow: none;
+      overflow-y: auto;
+      overscroll-behavior: contain;
       text-align: left;
-      z-index: 10;
+      z-index: 2147483647;
+    }
+
+    .section-{{ section.id }}-view-all-menu-shell {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100dvh - 7.2rem);
+      max-width: 192rem;
+      margin: 0 auto;
+    }
+
+    .section-{{ section.id }}-view-all-menu-topbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 2.4rem;
+    }
+
+    .section-{{ section.id }}-view-all-menu-close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 4.4rem;
+      height: 4.4rem;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #141414;
+      cursor: pointer;
+      font-size: 3rem;
+      line-height: 1;
+    }
+
+    .section-{{ section.id }}-view-all-menu-close:hover,
+    .section-{{ section.id }}-view-all-menu-close:focus-visible {
+      color: #141414;
     }
 
     .section-{{ section.id }}-view-all-menu-grid {
       display: grid;
       grid-template-columns: minmax(0, 3.5fr) minmax(24rem, 1.2fr);
-      gap: 0 3.2rem;
+      gap: 0 4rem;
+      flex: 1 1 auto;
+      min-height: 0;
     }
 
     .section-{{ section.id }}-view-all-menu-frames {
+      min-height: 0;
+      padding-right: 4rem;
+      border-right: 1px solid rgba(20, 20, 20, 0.2);
+    }
+
+    .section-{{ section.id }}-view-all-menu-stage {
+      display: none;
+      width: 100%;
+    }
+
+    .section-{{ section.id }}-view-all-menu-stage.is-active {
+      display: block;
+    }
+
+    .section-{{ section.id }}-view-all-menu-stage--frames.is-active {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 2.4rem 2rem;
-      padding-right: 3.2rem;
-      border-right: 1px solid rgba(var(--color-foreground), 0.16);
+      gap: 3.2rem 2.4rem;
+    }
+
+    .section-{{ section.id }}-view-all-menu-stage--versions.is-active {
+      display: block;
+    }
+
+    .section-{{ section.id }}-view-all-menu-card {
+      opacity: 1;
+      transform: scale(1);
+      transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+      will-change: opacity, transform;
+    }
+
+    .section-{{ section.id }}-view-all-menu-stage .section-{{ section.id }}-view-all-menu-card:nth-child(1) { transition-delay: 0s; }
+    .section-{{ section.id }}-view-all-menu-stage .section-{{ section.id }}-view-all-menu-card:nth-child(2) { transition-delay: 0.05s; }
+    .section-{{ section.id }}-view-all-menu-stage .section-{{ section.id }}-view-all-menu-card:nth-child(3) { transition-delay: 0.1s; }
+    .section-{{ section.id }}-view-all-menu-stage .section-{{ section.id }}-view-all-menu-card:nth-child(4) { transition-delay: 0.15s; }
+    .section-{{ section.id }}-view-all-menu-stage .section-{{ section.id }}-view-all-menu-card:nth-child(5) { transition-delay: 0.2s; }
+    .section-{{ section.id }}-view-all-menu-stage .section-{{ section.id }}-view-all-menu-card:nth-child(6) { transition-delay: 0.25s; }
+    .section-{{ section.id }}-view-all-menu-stage .section-{{ section.id }}-view-all-menu-card:nth-child(7) { transition-delay: 0.3s; }
+    .section-{{ section.id }}-view-all-menu-stage .section-{{ section.id }}-view-all-menu-card:nth-child(8) { transition-delay: 0.35s; }
+    .section-{{ section.id }}-view-all-menu-stage .section-{{ section.id }}-view-all-menu-card:nth-child(9) { transition-delay: 0.4s; }
+    .section-{{ section.id }}-view-all-menu-stage .section-{{ section.id }}-view-all-menu-card:nth-child(10) { transition-delay: 0.45s; }
+    .section-{{ section.id }}-view-all-menu-stage .section-{{ section.id }}-view-all-menu-card:nth-child(11) { transition-delay: 0.5s; }
+    .section-{{ section.id }}-view-all-menu-stage .section-{{ section.id }}-view-all-menu-card:nth-child(12) { transition-delay: 0.55s; }
+
+    .section-{{ section.id }}-view-all-menu-stage.is-transitioning-out .section-{{ section.id }}-view-all-menu-card {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+
+    .section-{{ section.id }}-view-all-menu-stage.is-transitioning-in .section-{{ section.id }}-view-all-menu-card {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+
+    .section-{{ section.id }}-view-all-menu-stage.is-transitioning-in.is-active .section-{{ section.id }}-view-all-menu-card.is-visible {
+      opacity: 1;
+      transform: scale(1);
     }
 
     .section-{{ section.id }}-view-all-menu-column,
@@ -184,11 +278,18 @@
       min-width: 0;
     }
 
-    .section-{{ section.id }}-view-all-menu-heading {
+    .section-{{ section.id }}-view-all-menu-heading,
+    .section-{{ section.id }}-view-all-menu-kicker {
       margin: 0 0 1.2rem;
       font-size: 1.6rem;
       line-height: 1.3;
-      color: rgb(var(--color-foreground));
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #141414;
+    }
+
+    .section-{{ section.id }}-view-all-menu-kicker {
+      margin-bottom: 3.2rem;
     }
 
     .section-{{ section.id }}-view-all-menu-frame {
@@ -207,7 +308,7 @@
       justify-content: center;
       aspect-ratio: 1.6 / 1;
       padding: 1.2rem;
-      background: rgba(var(--color-foreground), 0.04);
+      background: #ffffff;
     }
 
     .section-{{ section.id }}-view-all-menu-frame-image {
@@ -222,18 +323,59 @@
       line-height: 1.3;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: rgba(var(--color-foreground), 0.88);
+      color: #141414;
     }
 
     .section-{{ section.id }}-view-all-menu-frame.is-active .section-{{ section.id }}-view-all-menu-frame-title,
     .section-{{ section.id }}-view-all-menu-frame:hover .section-{{ section.id }}-view-all-menu-frame-title,
     .section-{{ section.id }}-view-all-menu-frame:focus-visible .section-{{ section.id }}-view-all-menu-frame-title {
-      color: rgb(var(--color-foreground));
+      color: #141414;
     }
 
     .section-{{ section.id }}-view-all-menu-panels {
       position: relative;
-      min-height: 100%;
+      min-height: 0;
+      padding-top: 5.8rem;
+    }
+
+    .section-{{ section.id }}-view-all-menu-back {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #141414;
+      cursor: pointer;
+    }
+
+    .section-{{ section.id }}-view-all-menu-back:hover,
+    .section-{{ section.id }}-view-all-menu-back:focus-visible {
+      color: #141414;
+    }
+
+    .section-{{ section.id }}-view-all-menu-version-heading {
+      margin: 0 0 2rem;
+      font-size: 1.8rem;
+      line-height: 1.3;
+      color: #141414;
+    }
+
+    .section-{{ section.id }}-view-all-menu-version-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 2.4rem 2rem;
+    }
+
+    .section-{{ section.id }}-view-all-menu-version-card {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .section-{{ section.id }}-view-all-menu-version-card:hover .section-{{ section.id }}-view-all-menu-frame-title,
+    .section-{{ section.id }}-view-all-menu-version-card:focus-visible .section-{{ section.id }}-view-all-menu-frame-title {
+      color: #141414;
     }
 
     .section-{{ section.id }}-view-all-menu-panel {
@@ -251,17 +393,21 @@
     }
 
     .section-{{ section.id }}-view-all-menu-item + .section-{{ section.id }}-view-all-menu-item {
-      margin-top: 0.8rem;
+      margin-top: 1.8rem;
     }
 
     .section-{{ section.id }}-view-all-menu-link {
-      color: rgba(var(--color-foreground), 0.82);
+      color: #141414;
       text-decoration: none;
+      font-size: 1.6rem;
+      line-height: 1.35;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
     .section-{{ section.id }}-view-all-menu-link:hover,
     .section-{{ section.id }}-view-all-menu-link:focus-visible {
-      color: rgb(var(--color-foreground));
+      color: #141414;
       text-decoration: underline;
       text-underline-offset: 0.2rem;
     }
@@ -362,70 +508,170 @@
             class="section-{{ section.id }}-view-all-trigger {% if section.settings.view_all_style == 'link' %}link underlined-link{% elsif section.settings.view_all_style == 'solid' %}button{% else %}button button--secondary{% endif %}"
             aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title }}"
           >
-            {{ 'sections.featured_collection.view_all' | t }}
+            {%- if section.settings.view_all_mega_menu != blank and section.settings.view_all_mega_menu.handle == 'gatorz-shop-by-frame' -%}
+              Full Collection Detail
+            {%- else -%}
+              {{ 'sections.featured_collection.view_all' | t }}
+            {%- endif -%}
           </a>
           {%- if section.settings.view_all_mega_menu != blank and section.settings.view_all_mega_menu.links.size > 0 -%}
-            <div class="section-{{ section.id }}-view-all-menu color-{{ section.settings.color_scheme }} gradient" role="navigation" aria-label="{{ section.settings.view_all_mega_menu.title | escape }}" data-featured-collection-mega-menu data-open-on-hover="true">
-              <div class="section-{{ section.id }}-view-all-menu-grid">
-                <div class="section-{{ section.id }}-view-all-menu-frames" role="list">
-                  {%- for childlink in section.settings.view_all_mega_menu.links -%}
-                    {%- liquid
-                      assign frame_collection = childlink.object
-                      assign frame_image = blank
-                      if frame_collection != blank and frame_collection.featured_image != blank
-                        assign frame_image = frame_collection.featured_image
-                      endif
-                    -%}
-                    <a
-                      href="{{ childlink.url }}"
-                      class="section-{{ section.id }}-view-all-menu-frame{% if forloop.first %} is-active{% endif %}"
-                      data-mega-menu-trigger="{{ section.id }}-{{ forloop.index }}"
-                    >
-                      <figure class="section-{{ section.id }}-view-all-menu-frame-figure">
-                        <div class="section-{{ section.id }}-view-all-menu-frame-image-wrap">
-                          {%- if frame_image != blank -%}
-                            <img
-                              class="section-{{ section.id }}-view-all-menu-frame-image"
-                              src="{{ frame_image | image_url: width: 480 }}"
-                              alt="{{ childlink.title | escape }}"
-                              loading="lazy"
-                              width="{{ frame_image.width }}"
-                              height="{{ frame_image.height }}"
-                            >
-                          {%- else -%}
-                            <span class="section-{{ section.id }}-view-all-menu-frame-image placeholder-svg-wrapper">
-                              {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
-                            </span>
-                          {%- endif -%}
-                        </div>
-                        <figcaption class="section-{{ section.id }}-view-all-menu-frame-title">
-                          {{ childlink.title | escape }}
-                        </figcaption>
-                      </figure>
-                    </a>
-                  {%- endfor -%}
+            <div class="section-{{ section.id }}-view-all-menu" role="dialog" aria-modal="true" aria-label="{{ section.settings.view_all_mega_menu.title | escape }}" data-featured-collection-mega-menu data-open-on-hover="true">
+              <div class="section-{{ section.id }}-view-all-menu-shell">
+                <div class="section-{{ section.id }}-view-all-menu-topbar">
+                  <button type="button" class="section-{{ section.id }}-view-all-menu-close" data-mega-menu-close aria-label="Close menu">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
-                <div class="section-{{ section.id }}-view-all-menu-panels">
+                <div class="section-{{ section.id }}-view-all-menu-grid">
+                  <div class="section-{{ section.id }}-view-all-menu-frames" role="list">
+                  <div class="section-{{ section.id }}-view-all-menu-stage section-{{ section.id }}-view-all-menu-stage--frames is-active" data-mega-menu-stage="frames">
+                    {%- for childlink in section.settings.view_all_mega_menu.links -%}
+                      {%- liquid
+                        assign frame_collection = childlink.object
+                        assign frame_image = blank
+                        if frame_collection != blank and frame_collection.featured_image != blank
+                          assign frame_image = frame_collection.featured_image
+                        endif
+                        assign sequence_index = forloop.index0
+                      -%}
+                      <a
+                        href="{{ childlink.url }}"
+                        class="section-{{ section.id }}-view-all-menu-frame section-{{ section.id }}-view-all-menu-card{% if forloop.first %} is-active{% endif %}"
+                        data-mega-menu-trigger="{{ section.id }}-{{ forloop.index }}"
+                      >
+                        <figure class="section-{{ section.id }}-view-all-menu-frame-figure">
+                          <div class="section-{{ section.id }}-view-all-menu-frame-image-wrap">
+                            {%- if frame_image != blank -%}
+                              <img
+                                class="section-{{ section.id }}-view-all-menu-frame-image"
+                                src="{{ frame_image | image_url: width: 480 }}"
+                                alt="{{ childlink.title | escape }}"
+                                loading="lazy"
+                                width="{{ frame_image.width }}"
+                                height="{{ frame_image.height }}"
+                              >
+                            {%- else -%}
+                              <span class="section-{{ section.id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+                                {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                              </span>
+                            {%- endif -%}
+                          </div>
+                          <figcaption class="section-{{ section.id }}-view-all-menu-frame-title">
+                            {{ childlink.title | escape }}
+                          </figcaption>
+                        </figure>
+                      </a>
+                    {%- endfor -%}
+                  </div>
                   {%- for childlink in section.settings.view_all_mega_menu.links -%}
-                    <div class="section-{{ section.id }}-view-all-menu-panel{% if forloop.first %} is-active{% endif %}" data-mega-menu-panel="{{ section.id }}-{{ forloop.index }}">
-                      <div class="section-{{ section.id }}-view-all-menu-column">
-                        <a href="{{ childlink.url }}" class="section-{{ section.id }}-view-all-menu-heading link">
-                          {{ childlink.title | escape }}
-                        </a>
-                        {%- if childlink.links != blank -%}
-                          <ul class="section-{{ section.id }}-view-all-menu-list" role="list">
-                            {%- for grandchildlink in childlink.links -%}
-                              <li class="section-{{ section.id }}-view-all-menu-item">
-                                <a href="{{ grandchildlink.url }}" class="section-{{ section.id }}-view-all-menu-link">
+                    <div class="section-{{ section.id }}-view-all-menu-stage section-{{ section.id }}-view-all-menu-stage--versions" data-mega-menu-stage="versions" data-mega-menu-versions="{{ section.id }}-{{ forloop.index }}">
+                      <button type="button" class="section-{{ section.id }}-view-all-menu-back" data-mega-menu-back>
+                        Back to frames
+                      </button>
+                      <h3 class="section-{{ section.id }}-view-all-menu-version-heading">{{ childlink.title | escape }}</h3>
+                      <div class="section-{{ section.id }}-view-all-menu-version-grid" role="list">
+                        {%- liquid
+                          assign version_collection = childlink.object
+                        -%}
+                        {%- if version_collection != blank and version_collection.all_products_count > 0 -%}
+                          {%- for version_product in version_collection.products limit: 12 -%}
+                            {%- liquid
+                              assign version_image = blank
+                              if version_product.featured_media != blank and version_product.featured_media.preview_image != blank
+                                assign version_image = version_product.featured_media.preview_image
+                              elsif version_product.featured_image != blank
+                                assign version_image = version_product.featured_image
+                              endif
+                            -%}
+                            <a href="{{ version_product.url }}" class="section-{{ section.id }}-view-all-menu-version-card section-{{ section.id }}-view-all-menu-card">
+                              <figure class="section-{{ section.id }}-view-all-menu-frame-figure">
+                                <div class="section-{{ section.id }}-view-all-menu-frame-image-wrap">
+                                  {%- if version_image != blank -%}
+                                    <img
+                                      class="section-{{ section.id }}-view-all-menu-frame-image"
+                                      src="{{ version_image | image_url: width: 480 }}"
+                                      alt="{{ version_product.title | escape }}"
+                                      loading="lazy"
+                                      width="{{ version_image.width }}"
+                                      height="{{ version_image.height }}"
+                                    >
+                                  {%- else -%}
+                                    <span class="section-{{ section.id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+                                      {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                    </span>
+                                  {%- endif -%}
+                                </div>
+                                <figcaption class="section-{{ section.id }}-view-all-menu-frame-title">
+                                  {{ version_product.title | escape }}
+                                </figcaption>
+                              </figure>
+                            </a>
+                          {%- endfor -%}
+                        {%- elsif childlink.links != blank -%}
+                          {%- for grandchildlink in childlink.links -%}
+                            {%- liquid
+                              assign version_object = grandchildlink.object
+                              assign version_image = blank
+                              if version_object != blank
+                                if version_object.featured_image != blank
+                                  assign version_image = version_object.featured_image
+                                elsif version_object.featured_media != blank and version_object.featured_media.preview_image != blank
+                                  assign version_image = version_object.featured_media.preview_image
+                                endif
+                              endif
+                            -%}
+                            <a href="{{ grandchildlink.url }}" class="section-{{ section.id }}-view-all-menu-version-card section-{{ section.id }}-view-all-menu-card">
+                              <figure class="section-{{ section.id }}-view-all-menu-frame-figure">
+                                <div class="section-{{ section.id }}-view-all-menu-frame-image-wrap">
+                                  {%- if version_image != blank -%}
+                                    <img
+                                      class="section-{{ section.id }}-view-all-menu-frame-image"
+                                      src="{{ version_image | image_url: width: 480 }}"
+                                      alt="{{ grandchildlink.title | escape }}"
+                                      loading="lazy"
+                                      width="{{ version_image.width }}"
+                                      height="{{ version_image.height }}"
+                                    >
+                                  {%- else -%}
+                                    <span class="section-{{ section.id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+                                      {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                    </span>
+                                  {%- endif -%}
+                                </div>
+                                <figcaption class="section-{{ section.id }}-view-all-menu-frame-title">
                                   {{ grandchildlink.title | escape }}
-                                </a>
-                              </li>
-                            {%- endfor -%}
-                          </ul>
+                                </figcaption>
+                              </figure>
+                            </a>
+                          {%- endfor -%}
                         {%- endif -%}
                       </div>
                     </div>
                   {%- endfor -%}
+                  </div>
+                  <div class="section-{{ section.id }}-view-all-menu-panels">
+                    <p class="section-{{ section.id }}-view-all-menu-kicker">Shop By Category</p>
+                    {%- for childlink in section.settings.view_all_mega_menu.links -%}
+                      <div class="section-{{ section.id }}-view-all-menu-panel{% if forloop.first %} is-active{% endif %}" data-mega-menu-panel="{{ section.id }}-{{ forloop.index }}">
+                        <div class="section-{{ section.id }}-view-all-menu-column">
+                          <a href="{{ childlink.url }}" class="section-{{ section.id }}-view-all-menu-heading link">
+                            {{ childlink.title | escape }}
+                          </a>
+                          {%- if childlink.links != blank -%}
+                            <ul class="section-{{ section.id }}-view-all-menu-list" role="list">
+                              {%- for grandchildlink in childlink.links -%}
+                                <li class="section-{{ section.id }}-view-all-menu-item">
+                                  <a href="{{ grandchildlink.url }}" class="section-{{ section.id }}-view-all-menu-link">
+                                    {{ grandchildlink.title | escape }}
+                                  </a>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          {%- endif -%}
+                        </div>
+                      </div>
+                    {%- endfor -%}
+                  </div>
                 </div>
               </div>
             </div>
