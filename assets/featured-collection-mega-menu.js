@@ -90,17 +90,14 @@ class FeaturedCollectionMegaMenu {
   }
 
   handleTriggerClick(event) {
-    if (window.innerWidth >= 990) {
-      event.preventDefault();
-      // Cancel any pending hover-open and clear the fill animation
-      if (this._hoverTimer !== null) {
-        clearTimeout(this._hoverTimer);
-        this._hoverTimer = null;
-      }
-      this.trigger.classList.remove('is-charging');
-      this.open();
-      return;
+    event.preventDefault();
+    // Cancel any pending hover-open and clear the fill animation
+    if (this._hoverTimer !== null) {
+      clearTimeout(this._hoverTimer);
+      this._hoverTimer = null;
     }
+    this.trigger.classList.remove('is-charging');
+    this.open();
   }
 
   handleDocumentKeydown(event) {
