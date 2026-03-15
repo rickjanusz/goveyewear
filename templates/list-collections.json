@@ -11,47 +11,8 @@
   "sections": {
     "main": {
       "type": "main-list-collections",
-      "blocks": {
-        "brand_gatorz": {
-          "type": "brand",
-          "settings": {
-            "collection": "gatorz"
-          }
-        },
-        "brand_revision": {
-          "type": "brand",
-          "settings": {
-            "collection": "revision"
-          }
-        },
-        "brand_ess": {
-          "type": "brand",
-          "settings": {
-            "collection": "ess"
-          }
-        },
-        "brand_fast_metal": {
-          "type": "brand",
-          "settings": {
-            "collection": "fast-metal"
-          }
-        },
-        "brand_bolle": {
-          "type": "brand",
-          "settings": {
-            "collection": "bolle"
-          }
-        }
-      },
-      "block_order": [
-        "brand_gatorz",
-        "brand_revision",
-        "brand_ess",
-        "brand_fast_metal",
-        "brand_bolle"
-      ],
       "settings": {
-        "title": "All Brands",
+        "title": "Collections",
         "sort": "alphabetical",
         "image_ratio": "square"
       }

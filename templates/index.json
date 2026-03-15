@@ -131,6 +131,8 @@
         "full_width": true,
         "show_view_all": true,
         "view_all_style": "outline",
+        "detail_button_label": "Explore Gatorz",
+        "detail_button_link": "/collections/gatorz",
         "view_all_mega_menu": "gatorz-shop-by-frame",
         "enable_desktop_slider": true,
         "color_scheme": "accent-1",
