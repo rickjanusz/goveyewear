@@ -42,6 +42,11 @@
 - Clean up prior bad code as part of the fix.
 - Prefer durable, scoped, maintainable implementations over fast patches.
 
+## Permissions Note
+- Committing and Shopify CLI operations (including launching local dev) may require elevated permissions and can reset Shopify CLI preferences.
+- If Shopify CLI preferences are corrupted or blocking progress, remove them automatically.
+- The user has granted permission to proceed with these automatically when needed.
+
 ## Documentation Rule
 - Document shipped changes in `CHANGELOG.md` when present, otherwise provide a concise PR-style change summary in final handoff.
 

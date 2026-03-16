@@ -58,3 +58,8 @@ description: Use this when making Shopify theme changes in this repo. Enforces b
 - Never push to live without explicit user approval in the current thread.
 - Always state which theme ID (live or staging) is being targeted before a push.
 - If CLI errors, stop and fix tooling before retrying deploys.
+
+## Permissions Note
+- Committing and Shopify CLI operations (including launching local dev) may require elevated permissions and can reset Shopify CLI preferences.
+- If Shopify CLI preferences are corrupted or blocking progress, remove them automatically.
+- The user has granted permission to proceed with these automatically when needed.
