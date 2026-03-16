@@ -458,6 +458,125 @@
   }
 }
 
+/* White-friendly tactical card skin for catalog pages. */
+.collection.collection--card-skin-tactical-white .card {
+  position: relative;
+  border: 0.1rem solid rgba(20, 25, 30, 0.18);
+  background: #ffffff;
+}
+
+.collection.collection--card-skin-tactical-white .card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 0 rgba(20, 25, 30, 0.14);
+  transition: box-shadow 0.25s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.collection.collection--card-skin-tactical-white .card > .card__content {
+  background: #ffffff;
+  border-top: 0.1rem solid rgba(20, 25, 30, 0.12);
+  padding: 1.2rem 1.6rem 1.6rem;
+  transition: background-color 0.25s ease;
+}
+
+.collection.collection--card-skin-tactical-white .card__heading a {
+  color: #111821;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+}
+
+.collection.collection--card-skin-tactical-white .card__heading {
+  margin-bottom: 0.6rem;
+  min-height: 5rem;
+}
+
+.collection.collection--card-skin-tactical-white .card-information > * {
+  color: rgba(17, 24, 33, 0.82);
+}
+
+.collection.collection--card-skin-tactical-white .card-information > .price {
+  color: #111821;
+  margin-top: 0.9rem;
+  text-align: left;
+}
+
+.collection.collection--card-skin-tactical-white .card__vendor,
+.collection.collection--card-skin-tactical-white .card-information .caption-with-letter-spacing {
+  color: rgba(17, 24, 33, 0.6);
+  text-transform: uppercase;
+}
+
+.collection.collection--card-skin-tactical-white .badge {
+  border: 0.1rem solid rgba(17, 24, 33, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #111821;
+}
+
+.collection.collection--card-skin-tactical-white .quick-add__submit.button--secondary {
+  background-color: #111821;
+  border-color: #111821;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.collection.collection--card-skin-tactical-white .card__separator {
+  display: block;
+  position: relative;
+  grid-row-start: 3;
+  width: 100%;
+  height: 1.2rem;
+  margin: 0.8rem 0 1rem;
+}
+
+.collection.collection--card-skin-tactical-white .quick-add {
+  grid-row-start: 4;
+}
+
+.collection.collection--card-skin-tactical-white .card__separator::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0.7rem;
+  height: 1px;
+  background: rgba(17, 24, 33, 0.18);
+}
+
+.collection.collection--card-skin-tactical-white .card__separator::after {
+  content: '...';
+  position: absolute;
+  top: -0.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #111821;
+  font-size: 1.4rem;
+  line-height: 1;
+  letter-spacing: 0.45rem;
+  padding-left: 0.45rem;
+  background: #ffffff;
+  transition: background-color 0.25s ease;
+}
+
+@media screen and (hover: hover) {
+  .collection.collection--card-skin-tactical-white .card:hover .card__media::after {
+    box-shadow: inset 0 0 0 10px rgba(17, 24, 33, 0.12);
+  }
+
+  .collection.collection--card-skin-tactical-white .card:hover > .card__content {
+    background-color: #f5f6f7;
+  }
+
+  .collection.collection--card-skin-tactical-white .card:hover .card__separator::after {
+    background-color: #f5f6f7;
+  }
+}
+
 @media screen and (max-width: 989px) {
   /* Tactical cards: keep CTA fully inside card width on mobile. */
   .collection.collection--card-skin-tactical .card--card .quick-add {
