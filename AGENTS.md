@@ -20,10 +20,12 @@
 - Announce target theme ID before running any push command.
 
 ## Settings Sync Protocol
-- Pull the target theme first before making any code edits or pushes.
-- If user says they changed admin/theme settings, pull first before making code edits.
+- Pull from **live first** before making any code edits or pushes.
+- When pulling from live, **only sync user settings diffs** (do not pull development files/code).
+- If staging settings need to be synced, **only sync user settings diffs** (do not pull development files/code).
+- If user says they changed admin/theme settings, pull live settings first before making code edits.
 - `config/settings_data.json` and `config/settings_schema.json` can carry merchant config; do not overwrite blindly.
-- Sync first, then edit.
+- Sync settings first, then edit.
 - Commit the settings sync before making additional changes.
 
 ## Scope Rules

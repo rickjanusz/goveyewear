@@ -16,23 +16,27 @@ description: Use this when making Shopify theme changes in this repo. Enforces b
 - Stage validation is required before release.
 
 ## Required Workflow
-1. Pull the target theme first before making any code edits or pushes.
-2. If admin changes are expected, treat the pull as mandatory settings sync.
-3. Commit the settings sync before additional edits.
-4. Make scoped edits only (prefer file-level pushes when possible).
-5. Commit before every push.
-6. Push to staging theme first.
-7. Validate the staging preview URL behavior against the requested change.
-8. Ask for explicit approval.
-9. Push the same commit to live only after approval.
+1. Pull from **live first** before making any code edits or pushes.
+2. When pulling from live, **only sync user settings diffs** (do not pull development files/code).
+3. If staging settings need to be synced, **only sync user settings diffs** (do not pull development files/code).
+4. If admin changes are expected, treat the live pull as mandatory settings sync.
+5. Commit the settings sync before additional edits.
+6. Make scoped edits only (prefer file-level pushes when possible).
+7. Commit before every push.
+8. Push to staging theme first.
+9. Validate the staging preview URL behavior against the requested change.
+10. Ask for explicit approval.
+11. Push the same commit to live only after approval.
 
 ## Theme Targets
 - Live theme: `160510771450` (`GovEyewear (Dawn)`)
 - Staging theme: `160581189882` (`GovEyewear Dev (Staging)`)
 
 ## Commands
-- Pull staging:
-  - `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160581189882 --nodelete`
+- Pull live settings (settings-only sync):
+  - `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json`
+- Pull staging settings (settings-only sync):
+  - `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160581189882 --nodelete --only config/settings_data.json --only config/settings_schema.json`
 - Push staging (full):
   - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete`
 - Push staging (single file):
