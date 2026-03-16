@@ -229,6 +229,7 @@
         "full_width": true,
         "show_view_all": true,
         "view_all_style": "outline",
+        "view_all_mega_menu": "revision-shop-by-frame",
         "detail_button_label": "Explore Revision",
         "detail_button_link": "/collections/revision",
         "enable_desktop_slider": true,
