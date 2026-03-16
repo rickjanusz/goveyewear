@@ -25,14 +25,6 @@
   -%}
   {%- liquid
     assign ratio = 1
-    if card_product.featured_media and media_aspect_ratio == 'portrait'
-      assign ratio = 0.8
-    elsif card_product.featured_media and media_aspect_ratio == 'adapt'
-      assign ratio = card_product.featured_media.aspect_ratio
-    endif
-    if ratio == 0 or ratio == nil
-      assign ratio = 1
-    endif
   -%}
   <div class="card-wrapper card-wrapper--image-fit-{{ resolved_card_image_fit }} underline-links-hover">
     <div class="card
