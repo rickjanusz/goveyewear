@@ -732,7 +732,8 @@
       {%- endif -%}
     </slider-component>
 
-    {%- if section.settings.show_view_all and more_in_collection -%}
+    {%- assign show_detail_button = section.settings.detail_button_label != blank and section.settings.detail_button_link != blank -%}
+    {%- if section.settings.show_view_all and (more_in_collection or show_detail_button) -%}
       <div class="center collection__view-all">
         <div class="section-{{ section.id }}-view-all-wrap{% if section.settings.view_all_mega_menu != blank and section.settings.view_all_mega_menu.links.size > 0 %} section-{{ section.id }}-view-all-wrap--has-menu{% endif %}">
           {%- if section.settings.detail_button_label != blank and section.settings.detail_button_link != blank -%}
