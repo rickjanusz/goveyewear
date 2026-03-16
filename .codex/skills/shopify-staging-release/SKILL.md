@@ -27,6 +27,9 @@ description: Use this when making Shopify theme changes in this repo. Enforces b
 9. Validate the staging preview URL behavior against the requested change.
 10. Ask for explicit approval.
 11. Push the same commit to live only after approval.
+12. Default to file-scoped pushes (`--only`) unless the user explicitly requests a full push.
+13. If more than 3 files would be pushed, stop and ask for approval.
+14. Never push `config/settings_data.json` or `config/settings_schema.json` unless the task explicitly requires settings changes.
 
 ## Theme Targets
 - Live theme: `160510771450` (`GovEyewear (Dawn)`)
@@ -43,6 +46,27 @@ description: Use this when making Shopify theme changes in this repo. Enforces b
   - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only <path>`
 - Push live (single file, only after approval):
   - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --only <path> --allow-live`
+
+## Local Dev Defaults
+- Default dev port: `9292`. If busy, try `9293`, then `9294`, then `9295`.
+
+## PR Policy
+- After pushing to GitHub, auto-open a PR unless the user explicitly says not to.
+
+## Handoff Protocol (Required)
+- Before any pull/push, read `AGENTS.md` and `/Users/p/Code/GovEyewear/Site/WORKLOG.md`.
+- Before any push, state:
+  - Current branch + HEAD commit hash
+  - Last pushed commit hash (GitHub)
+  - Target theme ID (staging/live)
+  - Exact file list to be pushed
+  - Whether local dev server is running (port)
+- After completing work, update `/Users/p/Code/GovEyewear/Site/WORKLOG.md` with:
+  - Branch + commit hash
+  - Pull/push commands run (with theme IDs)
+  - Exact files pushed
+  - Staging/live preview links
+  - Open TODOs/approvals needed
 
 ## Settings Safety
 - `config/settings_data.json` and `config/settings_schema.json` may include merchant-managed configuration.
