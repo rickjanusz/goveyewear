@@ -44,21 +44,6 @@
       {{ body_font_italic | font_face: font_display: 'swap' }}
       {{ body_font_bold_italic | font_face: font_display: 'swap' }}
       {{ settings.type_header_font | font_face: font_display: 'swap' }}
-      {%- unless settings.brand_palette_gatorz_heading_font.system? -%}
-        {{ settings.brand_palette_gatorz_heading_font | font_face: font_display: 'swap' }}
-      {%- endunless -%}
-      {%- unless settings.brand_palette_revision_heading_font.system? -%}
-        {{ settings.brand_palette_revision_heading_font | font_face: font_display: 'swap' }}
-      {%- endunless -%}
-      {%- unless settings.brand_palette_ess_heading_font.system? -%}
-        {{ settings.brand_palette_ess_heading_font | font_face: font_display: 'swap' }}
-      {%- endunless -%}
-      {%- unless settings.brand_palette_fast_metal_heading_font.system? -%}
-        {{ settings.brand_palette_fast_metal_heading_font | font_face: font_display: 'swap' }}
-      {%- endunless -%}
-      {%- unless settings.brand_palette_bolle_heading_font.system? -%}
-        {{ settings.brand_palette_bolle_heading_font | font_face: font_display: 'swap' }}
-      {%- endunless -%}
       {%- if settings.use_custom_heading_font and settings.custom_heading_font_url != blank -%}
         @font-face {
           font-family: "{{ settings.custom_heading_font_family | default: 'Black Ops One' }}";
@@ -285,8 +270,6 @@
       {%- assign palette_accent_1_key = brand_palette_prefix | append: '_accent_1' -%}
       {%- assign palette_accent_2_key = brand_palette_prefix | append: '_accent_2' -%}
       {%- assign palette_button_labels_key = brand_palette_prefix | append: '_solid_button_labels' -%}
-      {%- assign palette_heading_color_key = brand_palette_prefix | append: '_heading_color' -%}
-      {%- assign palette_heading_font_key = brand_palette_prefix | append: '_heading_font' -%}
 
       {%- assign palette_text = settings[palette_text_key] -%}
       {%- assign palette_background_1 = settings[palette_background_1_key] -%}
@@ -294,8 +277,6 @@
       {%- assign palette_accent_1 = settings[palette_accent_1_key] -%}
       {%- assign palette_accent_2 = settings[palette_accent_2_key] -%}
       {%- assign palette_button_labels = settings[palette_button_labels_key] -%}
-      {%- assign palette_heading_color = settings[palette_heading_color_key] -%}
-      {%- assign palette_heading_font = settings[palette_heading_font_key] -%}
 
       {%- capture main_content_style -%}
         --color-base-text: {{ palette_text.red }}, {{ palette_text.green }}, {{ palette_text.blue }};
@@ -309,17 +290,12 @@
         --gradient-base-background-2: {{ palette_background_2 }};
         --gradient-base-accent-1: {{ palette_accent_1 }};
         --gradient-base-accent-2: {{ palette_accent_2 }};
-        --brand-heading-color: {{ palette_heading_color.red }}, {{ palette_heading_color.green }}, {{ palette_heading_color.blue }};
-        --brand-heading-font-family: {{ palette_heading_font.family }}, {{ palette_heading_font.fallback_families }};
-        --brand-heading-font-style: {{ palette_heading_font.style }};
-        --brand-heading-font-weight: {{ palette_heading_font.weight }};
       {%- endcapture -%}
     {%- endif -%}
 
     <main
       id="MainContent"
       class="content-for-layout focus-none{% unless request.page_type == 'index' %} color-{{ settings.non_home_main_content_scheme }} gradient{% endunless %}"
-      {% if brand_palette_prefix != blank %}data-brand-heading="true"{% endif %}
       {% if main_content_style != blank %}style="{{ main_content_style | strip }}"{% endif %}
       role="main"
       tabindex="-1"
