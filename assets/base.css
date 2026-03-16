@@ -390,6 +390,23 @@ h5,
   word-break: break-word;
 }
 
+#MainContent[data-brand-heading='true'] h1,
+#MainContent[data-brand-heading='true'] h2,
+#MainContent[data-brand-heading='true'] h3,
+#MainContent[data-brand-heading='true'] h4,
+#MainContent[data-brand-heading='true'] h5,
+#MainContent[data-brand-heading='true'] .h0,
+#MainContent[data-brand-heading='true'] .h1,
+#MainContent[data-brand-heading='true'] .h2,
+#MainContent[data-brand-heading='true'] .h3,
+#MainContent[data-brand-heading='true'] .h4,
+#MainContent[data-brand-heading='true'] .h5 {
+  color: rgb(var(--brand-heading-color));
+  font-family: var(--brand-heading-font-family, var(--font-heading-family));
+  font-style: var(--brand-heading-font-style, var(--font-heading-style));
+  font-weight: var(--brand-heading-font-weight, var(--font-heading-weight));
+}
+
 .hxl {
   font-size: calc(var(--font-heading-scale) * 5rem);
 }

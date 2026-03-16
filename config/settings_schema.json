@@ -144,6 +144,18 @@
       },
       {
         "type": "color",
+        "id": "brand_palette_gatorz_heading_color",
+        "default": "#E8D7B8",
+        "label": "Heading color"
+      },
+      {
+        "type": "font_picker",
+        "id": "brand_palette_gatorz_heading_font",
+        "default": "assistant_n4",
+        "label": "Heading font"
+      },
+      {
+        "type": "color",
         "id": "brand_palette_gatorz_background_1",
         "default": "#10141B",
         "label": "Background 1"
@@ -187,6 +199,18 @@
         "id": "brand_palette_revision_text",
         "default": "#121212",
         "label": "Text color"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_revision_heading_color",
+        "default": "#121212",
+        "label": "Heading color"
+      },
+      {
+        "type": "font_picker",
+        "id": "brand_palette_revision_heading_font",
+        "default": "assistant_n4",
+        "label": "Heading font"
       },
       {
         "type": "color",
@@ -236,6 +260,18 @@
       },
       {
         "type": "color",
+        "id": "brand_palette_ess_heading_color",
+        "default": "#121212",
+        "label": "Heading color"
+      },
+      {
+        "type": "font_picker",
+        "id": "brand_palette_ess_heading_font",
+        "default": "assistant_n4",
+        "label": "Heading font"
+      },
+      {
+        "type": "color",
         "id": "brand_palette_ess_background_1",
         "default": "#FFFFFF",
         "label": "Background 1"
@@ -282,6 +318,18 @@
       },
       {
         "type": "color",
+        "id": "brand_palette_fast_metal_heading_color",
+        "default": "#121212",
+        "label": "Heading color"
+      },
+      {
+        "type": "font_picker",
+        "id": "brand_palette_fast_metal_heading_font",
+        "default": "assistant_n4",
+        "label": "Heading font"
+      },
+      {
+        "type": "color",
         "id": "brand_palette_fast_metal_background_1",
         "default": "#FFFFFF",
         "label": "Background 1"
@@ -325,6 +373,18 @@
         "id": "brand_palette_bolle_text",
         "default": "#121212",
         "label": "Text color"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_bolle_heading_color",
+        "default": "#121212",
+        "label": "Heading color"
+      },
+      {
+        "type": "font_picker",
+        "id": "brand_palette_bolle_heading_font",
+        "default": "assistant_n4",
+        "label": "Heading font"
       },
       {
         "type": "color",
