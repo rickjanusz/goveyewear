@@ -229,6 +229,7 @@
         "full_width": true,
         "show_view_all": true,
         "view_all_style": "outline",
+        "view_all_mega_menu": "revision-shop-by-frame",
         "enable_desktop_slider": true,
         "color_scheme": "accent-1",
         "card_skin": "tactical",
