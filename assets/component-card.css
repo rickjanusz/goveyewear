@@ -475,6 +475,10 @@
   z-index: 2;
 }
 
+.collection.collection--card-skin-tactical-white .card__inner {
+  --ratio-percent: 100%;
+}
+
 .collection.collection--card-skin-tactical-white .card > .card__content {
   background: #ffffff;
   border-top: 0.1rem solid rgba(20, 25, 30, 0.12);
