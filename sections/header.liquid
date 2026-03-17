@@ -576,7 +576,8 @@
                 {%- if link.links != blank -%}
                   <header-menu>
                     {%- assign is_fullscreen_mega_menu = false -%}
-                    {%- if link.title | downcase == 'catalog' -%}
+                    {%- assign link_title_downcase = link.title | downcase -%}
+                    {%- if link_title_downcase == 'catalog' -%}
                       {%- assign is_fullscreen_mega_menu = true -%}
                     {%- endif -%}
                     {%- assign menu_label = link.title | escape -%}
