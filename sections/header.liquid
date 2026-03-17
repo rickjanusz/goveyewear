@@ -626,13 +626,16 @@
                                   if brand_object != blank and brand_object.featured_image != blank
                                     assign brand_image = brand_object.featured_image
                                   endif
+                                  assign brand_handle = childlink.title | handleize
+                                  if brand_object != blank and brand_object.handle != blank
+                                    assign brand_handle = brand_object.handle
+                                  endif
                                   assign brand_key = section.id | append: '-brand-' | append: forloop.index
-                                  assign brand_title_downcase = childlink.title | downcase | strip
+                                  assign brand_title_downcase = brand_handle | downcase | strip
                                   assign is_direct_brand = false
                                   if direct_brand_titles contains brand_title_downcase
                                     assign is_direct_brand = true
                                   endif
-                                  assign brand_handle = childlink.title | handleize
                                   assign brand_menu_handle = brand_handle | append: '-shop-by-frame'
                                   assign brand_menu = linklists[brand_menu_handle]
                                   assign frame_links = brand_menu.links
@@ -899,8 +902,12 @@
                             </div>
                             {%- for childlink in fullscreen_menu_links -%}
                               {%- liquid
+                                assign brand_object = childlink.object
                                 assign brand_key = section.id | append: '-brand-' | append: forloop.index
                                 assign brand_handle = childlink.title | handleize
+                                if brand_object != blank and brand_object.handle != blank
+                                  assign brand_handle = brand_object.handle
+                                endif
                                 assign brand_menu_handle = brand_handle | append: '-shop-by-frame'
                                 assign brand_menu = linklists[brand_menu_handle]
                                 assign frame_links = brand_menu.links
