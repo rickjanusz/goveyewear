@@ -38,9 +38,6 @@
   width: 100%;
   background-color: rgb(var(--color-background));
   --color-foreground: 16, 20, 27;
-  --color-link: 16, 20, 27;
-  --color-button: 16, 20, 27;
-  --color-button-text: 16, 20, 27;
   --color-base-outline-button-labels: 16, 20, 27;
   --color-badge-background: 16, 20, 27;
   --color-badge-border: 16, 20, 27;
@@ -57,15 +54,17 @@
 .quick-add-modal__content .product__title,
 .quick-add-modal__content .price,
 .quick-add-modal__content .product__tax,
-.quick-add-modal__content .product-form__input .form__label,
-.quick-add-modal__content .shopify-payment-terms,
-.quick-add-modal__content .shopify-payment-terms * {
+.quick-add-modal__content .product-form__input .form__label {
   color: #10141b;
 }
 
 .quick-add-modal__content .product-form__input input[type='radio'] + label {
   color: #10141b;
   border-color: #10141b;
+}
+
+.quick-add-modal__content .product-form__input input[type='radio']:checked + label {
+  color: #ffffff !important;
 }
 
 .quick-add-modal__content .product-form__submit,
@@ -88,6 +87,10 @@
 .quick-add-modal__content .shopify-payment-terms__more-options span,
 .quick-add-modal__content .shopify-payment-terms__text *,
 .quick-add-modal__content .shopify-payment-terms__more-options * {
+  color: #10141b !important;
+}
+
+.quick-add-modal__content .shopify-payment-terms [style*="color"] {
   color: #10141b !important;
 }
 
