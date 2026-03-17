@@ -3,6 +3,51 @@
 <noscript>{{ 'component-slider.css' | asset_url | stylesheet_tag }}</noscript>
 
 {%- style -%}
+  .multicolumn-{{ section.id }} .multicolumn-card.content-container {
+    {% if section.settings.card_background_color != blank %}
+      background-color: {{ section.settings.card_background_color }};
+    {% endif %}
+    {% if section.settings.card_border_top_thickness > 0 %}
+      border-top: {{ section.settings.card_border_top_thickness }}px solid {{ section.settings.card_border_top_color }};
+    {% endif %}
+    {% if section.settings.card_border_bottom_thickness > 0 %}
+      border-bottom: {{ section.settings.card_border_bottom_thickness }}px solid {{ section.settings.card_border_bottom_color }};
+    {% endif %}
+    overflow: hidden;
+  }
+
+  .multicolumn-{{ section.id }} .multicolumn-card__rivet {
+    position: absolute;
+    width: {{ section.settings.card_rivet_size }}px;
+    height: {{ section.settings.card_rivet_size }}px;
+    background-image: url('{{ section.settings.card_rivet_image | image_url: width: 96 }}');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .multicolumn-{{ section.id }} .multicolumn-card__rivet--top-left {
+    top: {{ section.settings.card_rivet_offset_y }}px;
+    left: {{ section.settings.card_rivet_offset_x }}px;
+  }
+
+  .multicolumn-{{ section.id }} .multicolumn-card__rivet--top-right {
+    top: {{ section.settings.card_rivet_offset_y }}px;
+    right: {{ section.settings.card_rivet_offset_x }}px;
+  }
+
+  .multicolumn-{{ section.id }} .multicolumn-card__rivet--bottom-left {
+    bottom: {{ section.settings.card_rivet_offset_y }}px;
+    left: {{ section.settings.card_rivet_offset_x }}px;
+  }
+
+  .multicolumn-{{ section.id }} .multicolumn-card__rivet--bottom-right {
+    bottom: {{ section.settings.card_rivet_offset_y }}px;
+    right: {{ section.settings.card_rivet_offset_x }}px;
+  }
+
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -57,6 +102,12 @@
 
           <li id="Slide-{{ section.id }}-{{ forloop.index }}" class="multicolumn-list__item grid__item{% if section.settings.swipe_on_mobile %} slider__slide{% endif %}{% if section.settings.column_alignment == 'center' %} center{% endif %}{{ empty_column }}" {{ block.shopify_attributes }}>            
             <div class="multicolumn-card content-container">
+              {%- if section.settings.enable_card_rivets and section.settings.card_rivet_image != blank -%}
+                <span class="multicolumn-card__rivet multicolumn-card__rivet--top-left"></span>
+                <span class="multicolumn-card__rivet multicolumn-card__rivet--top-right"></span>
+                <span class="multicolumn-card__rivet multicolumn-card__rivet--bottom-left"></span>
+                <span class="multicolumn-card__rivet multicolumn-card__rivet--bottom-right"></span>
+              {%- endif -%}
               {%- if block.settings.image != blank -%}
                 {% if section.settings.image_ratio == 'adapt' or section.settings.image_ratio == 'circle' %}
                   {% assign spaced_image = true %}
@@ -240,6 +291,88 @@
       ],
       "default": "primary",
       "label": "t:sections.multicolumn.settings.background_style.label"
+    },
+    {
+      "type": "header",
+      "content": "Card appearance"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background color"
+    },
+    {
+      "type": "color",
+      "id": "card_border_top_color",
+      "default": "#000000",
+      "label": "Card border top color"
+    },
+    {
+      "type": "range",
+      "id": "card_border_top_thickness",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Card border top thickness"
+    },
+    {
+      "type": "color",
+      "id": "card_border_bottom_color",
+      "default": "#000000",
+      "label": "Card border bottom color"
+    },
+    {
+      "type": "range",
+      "id": "card_border_bottom_thickness",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Card border bottom thickness"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_card_rivets",
+      "default": false,
+      "label": "Enable card rivets"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_rivet_image",
+      "label": "Card rivet image"
+    },
+    {
+      "type": "range",
+      "id": "card_rivet_size",
+      "min": 4,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 12,
+      "label": "Card rivet size"
+    },
+    {
+      "type": "range",
+      "id": "card_rivet_offset_x",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 10,
+      "label": "Card rivet offset X"
+    },
+    {
+      "type": "range",
+      "id": "card_rivet_offset_y",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 10,
+      "label": "Card rivet offset Y"
     },
     {
       "type": "text",
