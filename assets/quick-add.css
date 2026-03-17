@@ -41,10 +41,30 @@
   --color-link: 16, 20, 27;
   --color-button: 16, 20, 27;
   --color-button-text: 16, 20, 27;
+  --color-badge-background: 16, 20, 27;
   --color-badge-border: 16, 20, 27;
   overflow: hidden;
   max-width: var(--page-width);
   width: calc(100% - 3rem);
+}
+
+.quick-add-modal__content .badge {
+  color: #ffffff;
+}
+
+.quick-add-modal__content .product__text,
+.quick-add-modal__content .product__title,
+.quick-add-modal__content .price,
+.quick-add-modal__content .product__tax,
+.quick-add-modal__content .product-form__input .form__label,
+.quick-add-modal__content .shopify-payment-terms,
+.quick-add-modal__content .shopify-payment-terms * {
+  color: #10141b;
+}
+
+.quick-add-modal__content .product-form__input input[type='radio'] + label {
+  color: #10141b;
+  border-color: #10141b;
 }
 
 @media screen and (min-width: 750px) {
