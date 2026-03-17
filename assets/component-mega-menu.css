@@ -100,12 +100,16 @@
   z-index: 2147483647;
   background-color: #ffffff;
   transform: translateY(-1.5rem);
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .mega-menu__content--fullscreen.is-open {
   display: block;
   opacity: 1;
   transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .mega-menu--fullscreen .mega-menu__content--fullscreen {
