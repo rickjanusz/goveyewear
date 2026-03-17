@@ -67,6 +67,20 @@
   border-color: #10141b;
 }
 
+.quick-add-modal__content .product-form__submit,
+.quick-add-modal__content .button,
+.quick-add-modal__content .button--secondary {
+  color: #10141b;
+  border-color: #10141b;
+}
+
+.quick-add-modal__content .shopify-payment-terms,
+.quick-add-modal__content .shopify-payment-terms__text,
+.quick-add-modal__content .shopify-payment-terms__more-options,
+.quick-add-modal__content .shopify-payment-terms a {
+  color: #10141b;
+}
+
 @media screen and (min-width: 750px) {
   .quick-add-modal__content {
     margin-top: 10rem;
