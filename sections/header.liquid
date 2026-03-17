@@ -618,7 +618,7 @@
                             </div>
                             <div class="mega-menu__fullscreen-body">
                             <div class="mega-menu__fullscreen-stage mega-menu__fullscreen-stage--brands is-active" data-mega-menu-stage="brands">
-                              {%- assign direct_brand_titles = 'bolle,fast metal' | split: ',' -%}
+                              {%- assign direct_brand_titles = 'bolle,fast metal,ess' | split: ',' -%}
                               {%- for childlink in fullscreen_menu_links -%}
                                 {%- liquid
                                   assign brand_object = childlink.object
@@ -632,8 +632,15 @@
                                   if direct_brand_titles contains brand_title_downcase
                                     assign is_direct_brand = true
                                   endif
+                                  assign brand_handle = childlink.title | handleize
+                                  assign brand_menu_handle = brand_handle | append: '-shop-by-frame'
+                                  assign brand_menu = linklists[brand_menu_handle]
+                                  assign frame_links = brand_menu.links
+                                  if frame_links == blank
+                                    assign frame_links = childlink.links
+                                  endif
                                 -%}
-                                <a href="{{ childlink.url }}" class="mega-menu__fullscreen-card{% if forloop.first %} is-active{% endif %}"{% unless is_direct_brand %} data-mega-menu-trigger="{{ brand_key }}" data-mega-menu-next="frames"{% endunless %}>
+                                <a href="{{ childlink.url }}" class="mega-menu__fullscreen-card{% if forloop.first %} is-active{% endif %}"{% if is_direct_brand == false and frame_links != blank %} data-mega-menu-trigger="{{ brand_key }}" data-mega-menu-next="frames"{% endif %}>
                                   <figure class="mega-menu__fullscreen-figure">
                                       <div class="mega-menu__fullscreen-image-wrap">
                                         {%- if brand_image != blank -%}
@@ -659,12 +666,21 @@
                                 {%- endfor -%}
                               </div>
                               {%- for childlink in fullscreen_menu_links -%}
-                                {%- assign brand_key = section.id | append: '-brand-' | append: forloop.index -%}
+                                {%- liquid
+                                  assign brand_key = section.id | append: '-brand-' | append: forloop.index
+                                  assign brand_handle = childlink.title | handleize
+                                  assign brand_menu_handle = brand_handle | append: '-shop-by-frame'
+                                  assign brand_menu = linklists[brand_menu_handle]
+                                  assign frame_links = brand_menu.links
+                                  if frame_links == blank
+                                    assign frame_links = childlink.links
+                                  endif
+                                -%}
                                 <div class="mega-menu__fullscreen-stage mega-menu__fullscreen-stage--frames" data-mega-menu-stage="frames" data-mega-menu-frames="{{ brand_key }}">
                                   <h3 class="mega-menu__fullscreen-heading">{{ childlink.title | escape }}</h3>
                                   <div class="mega-menu__fullscreen-grid" role="list">
-                                    {%- if childlink.links != blank -%}
-                                      {%- for grandchildlink in childlink.links -%}
+                                    {%- if frame_links != blank -%}
+                                      {%- for grandchildlink in frame_links -%}
                                         {%- liquid
                                           assign frame_object = grandchildlink.object
                                           assign frame_image = blank
@@ -700,8 +716,8 @@
                                     {%- endif -%}
                                   </div>
                                 </div>
-                                {%- if childlink.links != blank -%}
-                                  {%- for grandchildlink in childlink.links -%}
+                                {%- if frame_links != blank -%}
+                                  {%- for grandchildlink in frame_links -%}
                                     {%- assign frame_key = section.id | append: '-frame-' | append: forloop.parentloop.index | append: '-' | append: forloop.index -%}
                                     <div class="mega-menu__fullscreen-stage mega-menu__fullscreen-stage--content" data-mega-menu-stage="content" data-mega-menu-content="{{ frame_key }}">
                                       <h3 class="mega-menu__fullscreen-heading">{{ grandchildlink.title | escape }}</h3>
@@ -841,7 +857,7 @@
                           </div>
                           <div class="mega-menu__fullscreen-body">
                             <div class="mega-menu__fullscreen-stage mega-menu__fullscreen-stage--brands is-active" data-mega-menu-stage="brands">
-                              {%- assign direct_brand_titles = 'bolle,fast metal' | split: ',' -%}
+                              {%- assign direct_brand_titles = 'bolle,fast metal,ess' | split: ',' -%}
                               {%- for childlink in fullscreen_menu_links -%}
                                 {%- liquid
                                   assign brand_object = childlink.object
@@ -882,12 +898,21 @@
                               {%- endfor -%}
                             </div>
                             {%- for childlink in fullscreen_menu_links -%}
-                              {%- assign brand_key = section.id | append: '-brand-' | append: forloop.index -%}
+                              {%- liquid
+                                assign brand_key = section.id | append: '-brand-' | append: forloop.index
+                                assign brand_handle = childlink.title | handleize
+                                assign brand_menu_handle = brand_handle | append: '-shop-by-frame'
+                                assign brand_menu = linklists[brand_menu_handle]
+                                assign frame_links = brand_menu.links
+                                if frame_links == blank
+                                  assign frame_links = childlink.links
+                                endif
+                              -%}
                               <div class="mega-menu__fullscreen-stage mega-menu__fullscreen-stage--frames" data-mega-menu-stage="frames" data-mega-menu-frames="{{ brand_key }}">
                                 <h3 class="mega-menu__fullscreen-heading">{{ childlink.title | escape }}</h3>
                                 <div class="mega-menu__fullscreen-grid" role="list">
-                                  {%- if childlink.links != blank -%}
-                                    {%- for grandchildlink in childlink.links -%}
+                                  {%- if frame_links != blank -%}
+                                    {%- for grandchildlink in frame_links -%}
                                       {%- liquid
                                         assign frame_object = grandchildlink.object
                                         assign frame_image = blank
@@ -923,9 +948,9 @@
                                   {%- endif -%}
                                 </div>
                               </div>
-                              {%- if childlink.links != blank -%}
-                                {%- for grandchildlink in childlink.links -%}
-                                  {%- assign frame_key = section.id | append: '-frame-' | append: forloop.parentloop.index | append: '-' | append: forloop.index -%}
+                                {%- if frame_links != blank -%}
+                                  {%- for grandchildlink in frame_links -%}
+                                    {%- assign frame_key = section.id | append: '-frame-' | append: forloop.parentloop.index | append: '-' | append: forloop.index -%}
                                   <div class="mega-menu__fullscreen-stage mega-menu__fullscreen-stage--content" data-mega-menu-stage="content" data-mega-menu-content="{{ frame_key }}">
                                     <h3 class="mega-menu__fullscreen-heading">{{ grandchildlink.title | escape }}</h3>
                                     <div class="mega-menu__fullscreen-grid" role="list">
