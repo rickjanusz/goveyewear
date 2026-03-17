@@ -15,6 +15,7 @@ class HeaderMegaMenuFullscreenOverlay {
 
     if (!this.stages.length) return;
 
+    this.mountToBody();
     this.bindEvents();
     this.showBrands({ immediate: true });
   }
@@ -63,15 +64,21 @@ class HeaderMegaMenuFullscreenOverlay {
 
   open() {
     this.container.classList.add('is-open');
-    document.body.classList.add('overflow-hidden', 'header-mega-menu-open');
+    document.body.classList.add('overflow-hidden');
     document.addEventListener('keydown', this.handleKeydown);
     this.showBrands({ immediate: true });
   }
 
   close() {
     this.container.classList.remove('is-open');
-    document.body.classList.remove('overflow-hidden', 'header-mega-menu-open');
+    document.body.classList.remove('overflow-hidden');
     document.removeEventListener('keydown', this.handleKeydown);
+  }
+
+  mountToBody() {
+    if (this.container.parentElement !== document.body) {
+      document.body.appendChild(this.container);
+    }
   }
 
   handleKeydown(event) {
