@@ -100,6 +100,15 @@
   color: #10141b !important;
 }
 
+.quick-add-modal__content,
+.quick-add-modal__content .color-background-1,
+.quick-add-modal__content .color-background-2,
+.quick-add-modal__content .color-inverse,
+.quick-add-modal__content .color-accent-1,
+.quick-add-modal__content .color-accent-2 {
+  color: #10141b !important;
+}
+
 
 @media screen and (min-width: 750px) {
   .quick-add-modal__content {
