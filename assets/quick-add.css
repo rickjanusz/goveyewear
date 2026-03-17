@@ -37,8 +37,10 @@
   margin: 3.2rem auto 0;
   width: 100%;
   background-color: rgb(var(--color-background));
+  --color-base-text: 16, 20, 27;
   --color-foreground: 16, 20, 27;
   --color-base-outline-button-labels: 16, 20, 27;
+  --color-link: 16, 20, 27;
   --color-badge-background: 16, 20, 27;
   --color-badge-border: 16, 20, 27;
   overflow: hidden;
