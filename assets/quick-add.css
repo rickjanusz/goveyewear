@@ -41,6 +41,8 @@
   --color-foreground: 16, 20, 27;
   --color-base-outline-button-labels: 16, 20, 27;
   --color-link: 16, 20, 27;
+  --alpha-foreground: 1;
+  --alpha-link: 1;
   --color-badge-background: 16, 20, 27;
   --color-badge-border: 16, 20, 27;
   overflow: hidden;
@@ -83,6 +85,7 @@
 .quick-add-modal__content .shopify-payment-terms__more-options,
 .quick-add-modal__content .shopify-payment-terms a {
   color: #10141b !important;
+  opacity: 1 !important;
 }
 
 .quick-add-modal__content .shopify-payment-terms__text span,
@@ -90,6 +93,7 @@
 .quick-add-modal__content .shopify-payment-terms__text *,
 .quick-add-modal__content .shopify-payment-terms__more-options * {
   color: #10141b !important;
+  opacity: 1 !important;
 }
 
 .quick-add-modal__content .shopify-payment-terms [style*="color"] {
