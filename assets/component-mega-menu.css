@@ -104,6 +104,13 @@
   pointer-events: none;
 }
 
+[data-fullscreen-overlay][hidden] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 .mega-menu__content--fullscreen.is-open {
   display: block;
   opacity: 1;

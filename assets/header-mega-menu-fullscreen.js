@@ -64,7 +64,9 @@ class HeaderMegaMenuFullscreenOverlay {
   }
 
   open() {
+    this.container.removeAttribute('hidden');
     this.container.classList.add('is-open');
+    this.container.style.display = 'block';
     this.container.style.removeProperty('visibility');
     this.container.style.removeProperty('pointer-events');
     document.body.classList.add('overflow-hidden');
@@ -74,8 +76,10 @@ class HeaderMegaMenuFullscreenOverlay {
 
   close() {
     this.container.classList.remove('is-open');
+    this.container.style.display = 'none';
     this.container.style.visibility = 'hidden';
     this.container.style.pointerEvents = 'none';
+    this.container.setAttribute('hidden', '');
     document.body.classList.remove('overflow-hidden');
     document.removeEventListener('keydown', this.handleKeydown);
   }
