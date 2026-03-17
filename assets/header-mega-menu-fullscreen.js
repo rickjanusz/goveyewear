@@ -1,7 +1,6 @@
-class HeaderMegaMenuFullscreen {
+class HeaderMegaMenuFullscreenOverlay {
   constructor(container) {
     this.container = container;
-    this.details = container.closest('details');
     this.triggers = Array.from(container.querySelectorAll('[data-mega-menu-trigger]'));
     this.stages = Array.from(container.querySelectorAll('[data-mega-menu-stage]'));
     this.backButtons = Array.from(container.querySelectorAll('[data-mega-menu-back]'));
@@ -12,19 +11,15 @@ class HeaderMegaMenuFullscreen {
     this.activeBrandTitle = '';
     this.activeFrameKey = null;
     this.activeFrameTitle = '';
-
-    if (!this.details || !this.triggers.length || !this.stages.length) return;
-
-    this.handleToggle = this.handleToggle.bind(this);
     this.handleKeydown = this.handleKeydown.bind(this);
+
+    if (!this.stages.length) return;
 
     this.bindEvents();
     this.showBrands({ immediate: true });
   }
 
   bindEvents() {
-    this.details.addEventListener('toggle', this.handleToggle);
-
     this.triggers.forEach((trigger) => {
       trigger.addEventListener('mouseenter', () => {
         this.activate(trigger.dataset.megaMenuTrigger);
@@ -61,25 +56,27 @@ class HeaderMegaMenuFullscreen {
     if (this.closeButton) {
       this.closeButton.addEventListener('click', (event) => {
         event.preventDefault();
-        this.details.removeAttribute('open');
+        this.close();
       });
     }
   }
 
-  handleToggle() {
-    if (this.details.open) {
-      document.body.classList.add('overflow-hidden');
-      document.addEventListener('keydown', this.handleKeydown);
-      this.showBrands({ immediate: true });
-      return;
-    }
+  open() {
+    this.container.classList.add('is-open');
+    document.body.classList.add('overflow-hidden');
+    document.addEventListener('keydown', this.handleKeydown);
+    this.showBrands({ immediate: true });
+  }
+
+  close() {
+    this.container.classList.remove('is-open');
     document.body.classList.remove('overflow-hidden');
     document.removeEventListener('keydown', this.handleKeydown);
   }
 
   handleKeydown(event) {
     if (event.key === 'Escape') {
-      this.details.removeAttribute('open');
+      this.close();
     }
   }
 
@@ -158,10 +155,24 @@ class HeaderMegaMenuFullscreen {
 }
 
 const initHeaderMegaMenuFullscreen = () => {
-  document.querySelectorAll('[data-header-mega-menu]').forEach((container) => {
+  const overlays = Array.from(document.querySelectorAll('[data-header-mega-menu]'));
+  const overlayMap = new Map();
+
+  overlays.forEach((container) => {
     if (container.dataset.megaMenuInitialized === 'true') return;
     container.dataset.megaMenuInitialized = 'true';
-    new HeaderMegaMenuFullscreen(container);
+    const instance = new HeaderMegaMenuFullscreenOverlay(container);
+    const key = container.dataset.fullscreenId || container.id;
+    if (key) overlayMap.set(key, instance);
+  });
+
+  document.querySelectorAll('[data-fullscreen-trigger]').forEach((trigger) => {
+    trigger.addEventListener('click', (event) => {
+      event.preventDefault();
+      const targetId = trigger.dataset.fullscreenTarget;
+      const overlay = overlayMap.get(targetId);
+      if (overlay) overlay.open();
+    });
   });
 };
 

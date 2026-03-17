@@ -92,6 +92,18 @@
   font-weight: normal;
 }
 
+.mega-menu__content--fullscreen {
+  display: none;
+  opacity: 0;
+  transform: translateY(-1.5rem);
+}
+
+.mega-menu__content--fullscreen.is-open {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .mega-menu--fullscreen .mega-menu__content--fullscreen {
   background-color: #ffffff;
   border: 0;
