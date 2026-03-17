@@ -11,8 +11,11 @@ class FeaturedCollectionMegaMenu {
     this.titleElement = container.querySelector('[data-mega-menu-title]');
     this.defaultTitle = this.titleElement ? this.titleElement.textContent.trim() : '';
     this.closeButton = container.querySelector('[data-mega-menu-close]');
+    this.activeBrandKey = null;
+    this.activeBrandTitle = '';
     this.transitionToken = 0;
     this._hoverTimer = null;
+    this.hasBrands = this.stages.some((stage) => stage.dataset.megaMenuStage === 'brands');
     this.handleDocumentKeydown = this.handleDocumentKeydown.bind(this);
     this.handleTriggerEnter = this.handleTriggerEnter.bind(this);
     this.handleTriggerLeave = this.handleTriggerLeave.bind(this);
@@ -23,7 +26,11 @@ class FeaturedCollectionMegaMenu {
     this.mountToBody();
     this.bindEvents();
     this.activate(this.triggers[0].dataset.megaMenuTrigger);
-    this.showFrames({ immediate: true });
+    if (this.hasBrands) {
+      this.showBrands({ immediate: true });
+    } else {
+      this.showFrames({ immediate: true });
+    }
   }
 
   mountToBody() {
@@ -47,6 +54,18 @@ class FeaturedCollectionMegaMenu {
         this.activate(trigger.dataset.megaMenuTrigger);
       });
       trigger.addEventListener('click', (event) => {
+        const nextStage = trigger.dataset.megaMenuNext;
+        if (nextStage === 'frames') {
+          event.preventDefault();
+          this.showFrames(trigger.dataset.megaMenuTrigger, trigger.textContent.trim());
+          return;
+        }
+        if (nextStage === 'versions' || nextStage === 'content') {
+          event.preventDefault();
+          this.showVersions(trigger.dataset.megaMenuTrigger, trigger.textContent.trim());
+          return;
+        }
+        if (this.hasBrands) return;
         event.preventDefault();
         this.showVersions(trigger.dataset.megaMenuTrigger);
       });
@@ -54,6 +73,15 @@ class FeaturedCollectionMegaMenu {
 
     this.backButtons.forEach((button) => {
       button.addEventListener('click', () => {
+        const target = button.dataset.megaMenuBack;
+        if (target === 'brands') {
+          this.showBrands();
+          return;
+        }
+        if (target === 'frames') {
+          this.showFrames(this.activeBrandKey, this.activeBrandTitle, { immediate: true });
+          return;
+        }
         this.showFrames();
       });
     });
@@ -118,7 +146,11 @@ class FeaturedCollectionMegaMenu {
     this.container.classList.remove('is-open');
     document.body.classList.remove('overflow-hidden');
     document.removeEventListener('keydown', this.handleDocumentKeydown);
-    this.showFrames({ immediate: true });
+    if (this.hasBrands) {
+      this.showBrands({ immediate: true });
+    } else {
+      this.showFrames({ immediate: true });
+    }
   }
 
   activate(targetId) {
@@ -131,16 +163,28 @@ class FeaturedCollectionMegaMenu {
     });
   }
 
-  showFrames(options = {}) {
+  showBrands(options = {}) {
+    this.updateChrome({ showBack: 'none', title: this.defaultTitle });
+    this.transitionToStage('brands', options);
+  }
+
+  showFrames(targetId, title, options = {}) {
+    if (this.hasBrands && targetId) {
+      this.activeBrandKey = targetId;
+      this.activeBrandTitle = title || this.defaultTitle;
+      this.updateChrome({ showBack: 'brands', title: this.activeBrandTitle });
+      this.transitionToStage(targetId, options);
+      return;
+    }
     this.updateChrome({ showBack: false, title: this.defaultTitle });
     this.transitionToStage('frames', options);
   }
 
-  showVersions(targetId) {
+  showVersions(targetId, titleOverride) {
     const trigger = this.triggers.find((item) => item.dataset.megaMenuTrigger === targetId);
-    const title = trigger ? trigger.textContent.trim() : this.defaultTitle;
+    const title = titleOverride || (trigger ? trigger.textContent.trim() : this.defaultTitle);
     this.activate(targetId);
-    this.updateChrome({ showBack: true, title });
+    this.updateChrome({ showBack: this.hasBrands ? 'frames' : true, title });
     this.transitionToStage(targetId);
   }
 
@@ -193,9 +237,16 @@ class FeaturedCollectionMegaMenu {
   }
 
   resolveStage(targetKey) {
+    if (targetKey === 'brands') {
+      return this.stages.find((stage) => stage.dataset.megaMenuStage === 'brands');
+    }
+
     if (targetKey === 'frames') {
       return this.stages.find((stage) => stage.dataset.megaMenuStage === 'frames');
     }
+
+    const framesStage = this.stages.find((stage) => stage.dataset.megaMenuFrames === targetKey);
+    if (framesStage) return framesStage;
 
     return this.stages.find((stage) => stage.dataset.megaMenuVersions === targetKey);
   }
@@ -212,7 +263,18 @@ class FeaturedCollectionMegaMenu {
 
   updateChrome({ showBack, title }) {
     this.backButtons.forEach((button) => {
-      button.classList.toggle('is-hidden', !showBack);
+      const target = button.dataset.megaMenuBack || 'frames';
+      let shouldShow = false;
+
+      if (showBack === true) {
+        shouldShow = true;
+      } else if (showBack === 'brands') {
+        shouldShow = target === 'brands';
+      } else if (showBack === 'frames') {
+        shouldShow = target === 'frames';
+      }
+
+      button.classList.toggle('is-hidden', !shouldShow);
     });
 
     if (this.titleElement) {
