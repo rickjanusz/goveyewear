@@ -72,13 +72,20 @@
 .quick-add-modal__content .button--secondary {
   color: #10141b;
   border-color: #10141b;
+  --color-button: 16, 20, 27;
+  --color-button-text: 16, 20, 27;
 }
 
 .quick-add-modal__content .shopify-payment-terms,
 .quick-add-modal__content .shopify-payment-terms__text,
 .quick-add-modal__content .shopify-payment-terms__more-options,
 .quick-add-modal__content .shopify-payment-terms a {
-  color: #10141b;
+  color: #10141b !important;
+}
+
+.quick-add-modal__content .shopify-payment-terms__text span,
+.quick-add-modal__content .shopify-payment-terms__more-options span {
+  color: #10141b !important;
 }
 
 @media screen and (min-width: 750px) {
