@@ -41,6 +41,7 @@
   --color-link: 16, 20, 27;
   --color-button: 16, 20, 27;
   --color-button-text: 16, 20, 27;
+  --color-base-outline-button-labels: 16, 20, 27;
   --color-badge-background: 16, 20, 27;
   --color-badge-border: 16, 20, 27;
   overflow: hidden;
