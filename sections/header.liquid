@@ -591,6 +591,9 @@
                     {%- endif -%}
                     {%- if is_fullscreen_mega_menu -%}
                       {%- assign fullscreen_menu_links = section.settings.fullscreen_mega_menu_links.links -%}
+                      {%- if fullscreen_menu_links == blank and section.settings.fullscreen_mega_menu_links != blank -%}
+                        {%- assign fullscreen_menu_links = linklists[section.settings.fullscreen_mega_menu_links].links -%}
+                      {%- endif -%}
                       {%- if fullscreen_menu_links == blank -%}
                         {%- assign fullscreen_menu_links = link.links -%}
                       {%- endif -%}
@@ -645,6 +648,9 @@
                   {%- endif -%}
                   {%- if is_fullscreen_mega_menu -%}
                     {%- assign fullscreen_menu_links = section.settings.fullscreen_mega_menu_links.links -%}
+                    {%- if fullscreen_menu_links == blank and section.settings.fullscreen_mega_menu_links != blank -%}
+                      {%- assign fullscreen_menu_links = linklists[section.settings.fullscreen_mega_menu_links].links -%}
+                    {%- endif -%}
                     {%- if fullscreen_menu_links == blank -%}
                       {%- assign fullscreen_menu_links = link.links -%}
                     {%- endif -%}
