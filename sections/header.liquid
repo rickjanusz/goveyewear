@@ -12,6 +12,7 @@
 {%- if section.settings.menu_type_desktop == 'mega' -%}
   <link rel="stylesheet" href="{{ 'component-mega-menu.css' | asset_url }}" media="print" onload="this.media='all'">
   <noscript>{{ 'component-mega-menu.css' | asset_url | stylesheet_tag }}</noscript>
+  <script src="{{ 'header-mega-menu-fullscreen.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 {%- if settings.cart_type == "drawer" -%}
   {{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
@@ -574,6 +575,185 @@
               <li>
                 {%- if link.links != blank -%}
                   <header-menu>
+                    {%- assign is_fullscreen_mega_menu = false -%}
+                    {%- if link.title | downcase == 'catalog' -%}
+                      {%- assign is_fullscreen_mega_menu = true -%}
+                    {%- endif -%}
+                    {%- assign menu_label = link.title | escape -%}
+                    {%- if is_fullscreen_mega_menu -%}
+                      {%- assign menu_label = 'Shop' -%}
+                    {%- endif -%}
+                    {%- if is_fullscreen_mega_menu -%}
+                    <details id="Details-HeaderMenu-{{ forloop.index }}" class="mega-menu mega-menu--fullscreen" data-header-mega-menu-root>
+                      <summary class="header__menu-item list-menu__item link focus-inset">
+                        <span {%- if link.child_active %} class="header__active-menu-item"{% endif %}>{{ menu_label }}</span>
+                        {% render 'icon-caret' %}
+                      </summary>
+                      <div id="MegaMenu-Content-{{ forloop.index }}" class="mega-menu__content mega-menu__content--fullscreen gradient motion-reduce global-settings-popup" tabindex="-1" data-header-mega-menu>
+                        <div class="mega-menu__fullscreen-shell">
+                          <div class="mega-menu__fullscreen-topbar">
+                            <div class="mega-menu__fullscreen-topbar-start">
+                              <button type="button" class="mega-menu__fullscreen-back is-hidden" data-mega-menu-back="brands">
+                                Back to shop by brand
+                              </button>
+                              <button type="button" class="mega-menu__fullscreen-back is-hidden" data-mega-menu-back="frames">
+                                Back to shop by frame
+                              </button>
+                            </div>
+                            <div class="mega-menu__fullscreen-topbar-center">
+                              <p class="mega-menu__fullscreen-title" data-mega-menu-title>Shop</p>
+                            </div>
+                            <div class="mega-menu__fullscreen-topbar-end">
+                              <button type="button" class="mega-menu__fullscreen-close" data-mega-menu-close aria-label="Close menu">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                          </div>
+                          <div class="mega-menu__fullscreen-body">
+                            <div class="mega-menu__fullscreen-stage mega-menu__fullscreen-stage--brands is-active" data-mega-menu-stage="brands">
+                              {%- for childlink in link.links -%}
+                                {%- liquid
+                                  assign brand_object = childlink.object
+                                  assign brand_image = blank
+                                  if brand_object != blank and brand_object.featured_image != blank
+                                    assign brand_image = brand_object.featured_image
+                                  endif
+                                  assign brand_key = section.id | append: '-brand-' | append: forloop.index
+                                -%}
+                                <a href="{{ childlink.url }}" class="mega-menu__fullscreen-card{% if forloop.first %} is-active{% endif %}" data-mega-menu-trigger="{{ brand_key }}" data-mega-menu-next="frames">
+                                  <figure class="mega-menu__fullscreen-figure">
+                                    <div class="mega-menu__fullscreen-image-wrap">
+                                      {%- if brand_image != blank -%}
+                                        <img
+                                          class="mega-menu__fullscreen-image"
+                                          src="{{ brand_image | image_url: width: 480 }}"
+                                          alt="{{ childlink.title | escape }}"
+                                          loading="lazy"
+                                          width="{{ brand_image.width }}"
+                                          height="{{ brand_image.height }}"
+                                        >
+                                      {%- else -%}
+                                        <span class="mega-menu__fullscreen-image placeholder-svg-wrapper">
+                                          {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                        </span>
+                                      {%- endif -%}
+                                    </div>
+                                    <figcaption class="mega-menu__fullscreen-title-text">
+                                      {{ childlink.title | escape }}
+                                    </figcaption>
+                                  </figure>
+                                </a>
+                              {%- endfor -%}
+                            </div>
+                            {%- for childlink in link.links -%}
+                              {%- assign brand_key = section.id | append: '-brand-' | append: forloop.index -%}
+                              <div class="mega-menu__fullscreen-stage mega-menu__fullscreen-stage--frames" data-mega-menu-stage="frames" data-mega-menu-frames="{{ brand_key }}">
+                                <h3 class="mega-menu__fullscreen-heading">{{ childlink.title | escape }}</h3>
+                                <div class="mega-menu__fullscreen-grid" role="list">
+                                  {%- if childlink.links != blank -%}
+                                    {%- for grandchildlink in childlink.links -%}
+                                      {%- liquid
+                                        assign frame_object = grandchildlink.object
+                                        assign frame_image = blank
+                                        if frame_object != blank and frame_object.featured_image != blank
+                                          assign frame_image = frame_object.featured_image
+                                        endif
+                                        assign frame_key = section.id | append: '-frame-' | append: forloop.parentloop.index | append: '-' | append: forloop.index
+                                      -%}
+                                      <a href="{{ grandchildlink.url }}" class="mega-menu__fullscreen-card" data-mega-menu-trigger="{{ frame_key }}" data-mega-menu-next="content">
+                                        <figure class="mega-menu__fullscreen-figure">
+                                          <div class="mega-menu__fullscreen-image-wrap">
+                                            {%- if frame_image != blank -%}
+                                              <img
+                                                class="mega-menu__fullscreen-image"
+                                                src="{{ frame_image | image_url: width: 480 }}"
+                                                alt="{{ grandchildlink.title | escape }}"
+                                                loading="lazy"
+                                                width="{{ frame_image.width }}"
+                                                height="{{ frame_image.height }}"
+                                              >
+                                            {%- else -%}
+                                              <span class="mega-menu__fullscreen-image placeholder-svg-wrapper">
+                                                {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                              </span>
+                                            {%- endif -%}
+                                          </div>
+                                          <figcaption class="mega-menu__fullscreen-title-text">
+                                            {{ grandchildlink.title | escape }}
+                                          </figcaption>
+                                        </figure>
+                                      </a>
+                                    {%- endfor -%}
+                                  {%- endif -%}
+                                </div>
+                              </div>
+                              {%- if childlink.links != blank -%}
+                                {%- for grandchildlink in childlink.links -%}
+                                  {%- assign frame_key = section.id | append: '-frame-' | append: forloop.parentloop.index | append: '-' | append: forloop.index -%}
+                                  <div class="mega-menu__fullscreen-stage mega-menu__fullscreen-stage--content" data-mega-menu-stage="content" data-mega-menu-content="{{ frame_key }}">
+                                    <h3 class="mega-menu__fullscreen-heading">{{ grandchildlink.title | escape }}</h3>
+                                    <div class="mega-menu__fullscreen-grid" role="list">
+                                      {%- liquid
+                                        assign content_collection = grandchildlink.object
+                                      -%}
+                                      {%- if content_collection != blank and content_collection.all_products_count > 0 -%}
+                                        {%- for content_product in content_collection.products limit: 12 -%}
+                                          {%- liquid
+                                            assign content_image = blank
+                                            if content_product.featured_media != blank and content_product.featured_media.preview_image != blank
+                                              assign content_image = content_product.featured_media.preview_image
+                                            elsif content_product.featured_image != blank
+                                              assign content_image = content_product.featured_image
+                                            endif
+                                          -%}
+                                          <a href="{{ content_product.url }}" class="mega-menu__fullscreen-card">
+                                            <figure class="mega-menu__fullscreen-figure">
+                                              <div class="mega-menu__fullscreen-image-wrap">
+                                                {%- if content_image != blank -%}
+                                                  <img
+                                                    class="mega-menu__fullscreen-image"
+                                                    src="{{ content_image | image_url: width: 480 }}"
+                                                    alt="{{ content_product.title | escape }}"
+                                                    loading="lazy"
+                                                    width="{{ content_image.width }}"
+                                                    height="{{ content_image.height }}"
+                                                  >
+                                                {%- else -%}
+                                                  <span class="mega-menu__fullscreen-image placeholder-svg-wrapper">
+                                                    {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                  </span>
+                                                {%- endif -%}
+                                              </div>
+                                              <figcaption class="mega-menu__fullscreen-title-text">
+                                                {{ content_product.title | escape }}
+                                              </figcaption>
+                                            </figure>
+                                          </a>
+                                        {%- endfor -%}
+                                      {%- else -%}
+                                        <a href="{{ grandchildlink.url }}" class="mega-menu__fullscreen-card">
+                                          <figure class="mega-menu__fullscreen-figure">
+                                            <div class="mega-menu__fullscreen-image-wrap">
+                                              <span class="mega-menu__fullscreen-image placeholder-svg-wrapper">
+                                                {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                              </span>
+                                            </div>
+                                            <figcaption class="mega-menu__fullscreen-title-text">
+                                              {{ grandchildlink.title | escape }}
+                                            </figcaption>
+                                          </figure>
+                                        </a>
+                                      {%- endif -%}
+                                    </div>
+                                  </div>
+                                {%- endfor -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+                          </div>
+                        </div>
+                      </div>
+                    </details>
+                    {%- else -%}
                     <details id="Details-HeaderMenu-{{ forloop.index }}" class="mega-menu">
                       <summary class="header__menu-item list-menu__item link focus-inset">
                         <span {%- if link.child_active %} class="header__active-menu-item"{% endif %}>{{ link.title | escape }}</span>
@@ -602,6 +782,7 @@
                         </ul>
                       </div>
                     </details>
+                    {%- endif -%}
                   </header-menu>
                 {%- else -%}
                   <a href="{{ link.url }}" class="header__menu-item header__menu-item list-menu__item link link--text focus-inset"{% if link.current %} aria-current="page"{% endif %}>
