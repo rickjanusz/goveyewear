@@ -573,7 +573,6 @@
         </nav>
       {%- else -%}
         <nav class="header__inline-menu">
-          {%- assign fullscreen_overlays = '' -%}
           <ul class="list-menu list-menu--inline" role="list">
             {%- for link in section.settings.menu.links -%}
               <li>
@@ -599,10 +598,7 @@
                         <a href="{{ link.url }}" class="header__menu-item header__menu-item list-menu__item link link--text focus-inset section-{{ section.id }}-view-all-detail-trigger" data-mega-menu-open{% if link.current %} aria-current="page"{% endif %}>
                           <span {%- if link.current %} class="header__active-menu-item"{% endif %}>{{ menu_label }}</span>
                         </a>
-                        {%- capture fullscreen_overlay_markup -%}
-                          {% render 'header-view-all-mega-menu', menu_links: fullscreen_menu_links, menu_id: section.id, menu_title: menu_label %}
-                        {%- endcapture -%}
-                        {%- assign fullscreen_overlays = fullscreen_overlays | append: fullscreen_overlay_markup -%}
+                        {% render 'header-view-all-mega-menu', menu_links: fullscreen_menu_links, menu_id: section.id, menu_title: menu_label %}
                       </div>
                     {%- else -%}
                     <details id="Details-HeaderMenu-{{ forloop.index }}" class="mega-menu">
@@ -656,10 +652,7 @@
                       <a href="{{ link.url }}" class="header__menu-item header__menu-item list-menu__item link link--text focus-inset section-{{ section.id }}-view-all-detail-trigger" data-mega-menu-open{% if link.current %} aria-current="page"{% endif %}>
                         <span {%- if link.current %} class="header__active-menu-item"{% endif %}>{{ menu_label }}</span>
                       </a>
-                      {%- capture fullscreen_overlay_markup -%}
-                        {% render 'header-view-all-mega-menu', menu_links: fullscreen_menu_links, menu_id: section.id, menu_title: menu_label %}
-                      {%- endcapture -%}
-                      {%- assign fullscreen_overlays = fullscreen_overlays | append: fullscreen_overlay_markup -%}
+                      {% render 'header-view-all-mega-menu', menu_links: fullscreen_menu_links, menu_id: section.id, menu_title: menu_label %}
                     </div>
                   {%- else -%}
                     <a href="{{ link.url }}" class="header__menu-item header__menu-item list-menu__item link link--text focus-inset"{% if link.current %} aria-current="page"{% endif %}>
@@ -670,7 +663,6 @@
               </li>
             {%- endfor -%}
           </ul>
-          {{ fullscreen_overlays }}
         </nav>
       {%- endif -%}
     {%- endif -%}
