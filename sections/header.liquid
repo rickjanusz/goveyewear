@@ -576,8 +576,10 @@
                 {%- if link.links != blank -%}
                   <header-menu>
                     {%- assign is_fullscreen_mega_menu = false -%}
-                    {%- assign link_title_downcase = link.title | downcase -%}
-                    {%- if link_title_downcase == 'catalog' -%}
+                    {%- assign link_title_downcase = link.title | downcase | strip -%}
+                    {%- assign fullscreen_menu_label = section.settings.fullscreen_mega_menu_label | default: 'Catalog' -%}
+                    {%- assign fullscreen_menu_label_downcase = fullscreen_menu_label | downcase | strip -%}
+                    {%- if link_title_downcase == fullscreen_menu_label_downcase -%}
                       {%- assign is_fullscreen_mega_menu = true -%}
                     {%- endif -%}
                     {%- assign menu_label = link.title | escape -%}
@@ -1112,6 +1114,13 @@
       "default": 180,
       "unit": "px",
       "label": "Logo width (mobile)"
+    },
+    {
+      "type": "text",
+      "id": "fullscreen_mega_menu_label",
+      "label": "Fullscreen mega menu trigger label",
+      "default": "Catalog",
+      "info": "Menu item label that should open the fullscreen 3-stage mega menu."
     },
     {
       "type": "range",
