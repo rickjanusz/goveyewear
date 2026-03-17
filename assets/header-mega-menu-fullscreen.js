@@ -63,14 +63,14 @@ class HeaderMegaMenuFullscreenOverlay {
 
   open() {
     this.container.classList.add('is-open');
-    document.body.classList.add('overflow-hidden');
+    document.body.classList.add('overflow-hidden', 'header-mega-menu-open');
     document.addEventListener('keydown', this.handleKeydown);
     this.showBrands({ immediate: true });
   }
 
   close() {
     this.container.classList.remove('is-open');
-    document.body.classList.remove('overflow-hidden');
+    document.body.classList.remove('overflow-hidden', 'header-mega-menu-open');
     document.removeEventListener('keydown', this.handleKeydown);
   }
 
