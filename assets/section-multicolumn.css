@@ -114,6 +114,16 @@
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
+
+  .multicolumn-list:not(.slider) {
+    display: grid;
+    grid-template-columns: repeat(var(--multicolumn-mobile-columns, 1), minmax(0, 1fr));
+  }
+
+  .multicolumn-list:not(.slider) .multicolumn-list__item {
+    width: auto;
+    max-width: none;
+  }
 }
 
 
@@ -121,6 +131,16 @@
   .multicolumn-list.slider,
   .multicolumn-list.grid--4-col-desktop {
     padding: 0;
+  }
+
+  .multicolumn-list:not(.slider) {
+    display: grid;
+    grid-template-columns: repeat(var(--multicolumn-desktop-columns, 3), minmax(0, 1fr));
+  }
+
+  .multicolumn-list:not(.slider) .multicolumn-list__item {
+    width: auto;
+    max-width: none;
   }
 
   .multicolumn-list__item,

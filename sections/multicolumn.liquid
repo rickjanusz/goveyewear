@@ -9,6 +9,11 @@
   {{ section.settings.card_heading_font | font_face: font_display: 'swap' }}
   {{ section.settings.card_text_font | font_face: font_display: 'swap' }}
 
+  .multicolumn-{{ section.id }} {
+    --multicolumn-desktop-columns: {{ section.settings.columns_desktop }};
+    --multicolumn-mobile-columns: {{ section.settings.columns_mobile }};
+  }
+
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
