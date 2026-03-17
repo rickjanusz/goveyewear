@@ -29,8 +29,9 @@ class HeaderMegaMenuFullscreenOverlay {
         this.activate(trigger.dataset.megaMenuTrigger);
       });
       trigger.addEventListener('click', (event) => {
-        event.preventDefault();
         const nextStage = trigger.dataset.megaMenuNext;
+        if (!nextStage) return;
+        event.preventDefault();
         if (nextStage === 'frames') {
           this.showFramesStage(trigger.dataset.megaMenuTrigger, trigger.textContent.trim());
           return;
@@ -64,6 +65,8 @@ class HeaderMegaMenuFullscreenOverlay {
 
   open() {
     this.container.classList.add('is-open');
+    this.container.style.removeProperty('visibility');
+    this.container.style.removeProperty('pointer-events');
     document.body.classList.add('overflow-hidden');
     document.addEventListener('keydown', this.handleKeydown);
     this.showBrands({ immediate: true });
@@ -71,6 +74,8 @@ class HeaderMegaMenuFullscreenOverlay {
 
   close() {
     this.container.classList.remove('is-open');
+    this.container.style.visibility = 'hidden';
+    this.container.style.pointerEvents = 'none';
     document.body.classList.remove('overflow-hidden');
     document.removeEventListener('keydown', this.handleKeydown);
   }
