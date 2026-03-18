@@ -23,13 +23,9 @@
 - Never push `config/settings_data.json` or `config/settings_schema.json` unless the task explicitly requires settings changes.
 
 ## Settings Sync Protocol
-- Pull from **live first** before making any code edits or pushes.
-- When pulling from live, **only sync user settings diffs** (do not pull development files/code).
-- If staging settings need to be synced, **only sync user settings diffs** (do not pull development files/code).
-- If user says they changed admin/theme settings, pull live settings first before making code edits.
+- Only pull settings from **live** or **staging** when the user explicitly says they’ve made admin/theme changes and requests a pull.
+- When pulling, **only sync user settings diffs** (do not pull development files/code).
 - `config/settings_data.json` and `config/settings_schema.json` can carry merchant config; do not overwrite blindly.
-- Sync settings first, then edit.
-- Commit the settings sync before making additional changes.
 - Use the settings-only pull commands:
   - Live: `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json`
   - Staging: `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160581189882 --nodelete --only config/settings_data.json --only config/settings_schema.json`
