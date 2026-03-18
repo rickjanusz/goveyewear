@@ -305,7 +305,7 @@ class FeaturedCollectionMegaMenu {
     }
     if (this.breadcrumb.brandLabel) {
       if (showFrameCrumb) {
-        this.breadcrumb.brandLabel.textContent = this.activeBrandTitle ? `${this.activeBrandTitle} - Shop by Frame` : '';
+        this.breadcrumb.brandLabel.textContent = this.activeBrandTitle ? `${this.activeBrandTitle} Frames` : '';
       } else {
         this.breadcrumb.brandLabel.textContent = this.activeBrandTitle || '';
       }
