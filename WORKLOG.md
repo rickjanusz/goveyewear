@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: b517e2bf998e1b1d5a27e7ed3650b5bac458e9ec
-- Last pushed commit (GitHub): b517e2bf998e1b1d5a27e7ed3650b5bac458e9ec
+- HEAD commit: c62def437a709302e865813f776dbf45eec5c2f0
+- Last pushed commit (GitHub): c62def437a709302e865813f776dbf45eec5c2f0
 - Local dev server:
   - Running? no
   - Port:
@@ -23,6 +23,10 @@ Keep this file updated so any agent can resume without overwriting files.
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete`
   - Files pushed: full theme (overwrite staging to match live/local baseline)
   - Note: Shopify CLI preferences were reset (`rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`) before successful push due local storage error
+- 2026-03-18: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/featured-collection-mega-menu.js`
+  - Files pushed: `assets/featured-collection-mega-menu.js`
+  - Change: main menu final breadcrumb now uses selected frame title (`{{frame}}`) as non-link text
 
 ## Previews
 - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
