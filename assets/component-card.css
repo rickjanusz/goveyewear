@@ -386,6 +386,10 @@
   text-align: left;
 }
 
+.collection.collection--card-skin-tactical .price--on-sale .price-item--regular {
+  color: rgba(var(--color-base-accent-2), 0.72);
+}
+
 .collection.collection--card-skin-tactical .card__vendor,
 .collection.collection--card-skin-tactical .card-information .caption-with-letter-spacing {
   color: rgba(var(--color-base-accent-2), 0.75);
