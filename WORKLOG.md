@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: c62def437a709302e865813f776dbf45eec5c2f0
-- Last pushed commit (GitHub): c62def437a709302e865813f776dbf45eec5c2f0
+- HEAD commit: 350ccef643630f9f5b8f8a4aa16e6032ea5bcc9b
+- Last pushed commit (GitHub): 350ccef643630f9f5b8f8a4aa16e6032ea5bcc9b
 - Local dev server:
   - Running? no
   - Port:
@@ -31,6 +31,10 @@ Keep this file updated so any agent can resume without overwriting files.
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --only assets/featured-collection-mega-menu.js --allow-live`
   - Files pushed: `assets/featured-collection-mega-menu.js`
   - Change: promoted same breadcrumb fix from staging to live
+- 2026-03-18: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/base.css`
+  - Files pushed: `assets/base.css`
+  - Change: removed global `.page-width` max-width restraint while preserving section padding
 
 ## Previews
 - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
