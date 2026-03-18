@@ -28,6 +28,24 @@
     margin-top: 0.8rem;
   }
 
+  .product-recommendations__meta-accordion-list {
+    margin: 1.2rem 0 0;
+    padding-left: 2rem;
+  }
+
+  .product-recommendations__meta-accordion-list li + li {
+    margin-top: 0.4rem;
+  }
+
+  .product-recommendations__meta-video {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 1.2rem;
+    border-radius: 0.4rem;
+    background: #000;
+  }
+
   @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top }}px;
@@ -37,13 +55,31 @@
 {%- endstyle -%}
 
 {%- liquid
+  assign mo_specs = product.metafields.custom.specs_tech_data_structured.value
+  assign mo_comparison = product.metafields.custom.comparison_table_structured.value
+  assign mo_use_cases = product.metafields.custom.mission_use_cases_structured.value
+  assign mo_media_callouts = product.metafields.custom.media_callouts_structured.value
+
+  if mo_specs.first != blank
+    assign mo_specs = mo_specs.first
+  endif
+  if mo_comparison.first != blank
+    assign mo_comparison = mo_comparison.first
+  endif
+  if mo_use_cases.first != blank
+    assign mo_use_cases = mo_use_cases.first
+  endif
+  if mo_media_callouts.first != blank
+    assign mo_media_callouts = mo_media_callouts.first
+  endif
+
   assign mf_specs = product.metafields.custom.specs_tech_data
   assign mf_comparison = product.metafields.custom.comparison_table
   assign mf_use_cases = product.metafields.custom.mission_use_cases
   assign mf_media_callouts = product.metafields.custom.media_callouts
 
   assign has_meta_accordion = false
-  if mf_specs != blank or mf_comparison != blank or mf_use_cases != blank or mf_media_callouts != blank
+  if mo_specs != blank or mo_comparison != blank or mo_use_cases != blank or mo_media_callouts != blank or mf_specs != blank or mf_comparison != blank or mf_use_cases != blank or mf_media_callouts != blank
     assign has_meta_accordion = true
   endif
 -%}
@@ -70,69 +106,142 @@
 
     {%- if has_meta_accordion -%}
       <div class="product-recommendations__meta-accordion" data-product-meta-accordion>
-        {%- if mf_specs != blank -%}
+        {%- if mo_specs != blank or mf_specs != blank -%}
           <div class="accordion">
             <details id="Details-specs-{{ section.id }}">
               <summary>
                 <div class="summary__title">
                   {% render 'icon-accordion', icon: 'clipboard' %}
-                  <h3 class="h4 accordion__title">Specs / Tech Data</h3>
+                  <h3 class="h4 accordion__title">
+                    {{ mo_specs.title.value | default: 'Specs / Tech Data' }}
+                  </h3>
                 </div>
                 {% render 'icon-caret' %}
               </summary>
               <div class="accordion__content rte">
-                {{ mf_specs | metafield_tag }}
+                {%- if mo_specs != blank -%}
+                  {%- if mo_specs.content != blank -%}
+                    {{ mo_specs.content | metafield_tag }}
+                  {%- endif -%}
+                  {%- if mo_specs.bullets.value != blank -%}
+                    <ul class="product-recommendations__meta-accordion-list">
+                      {%- for bullet in mo_specs.bullets.value -%}
+                        <li>{{ bullet }}</li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                {%- else -%}
+                  {{ mf_specs | metafield_tag }}
+                {%- endif -%}
               </div>
             </details>
           </div>
         {%- endif -%}
 
-        {%- if mf_comparison != blank -%}
+        {%- if mo_comparison != blank or mf_comparison != blank -%}
           <div class="accordion">
             <details id="Details-comparison-{{ section.id }}">
               <summary>
                 <div class="summary__title">
                   {% render 'icon-accordion', icon: 'eye' %}
-                  <h3 class="h4 accordion__title">Comparison Table</h3>
+                  <h3 class="h4 accordion__title">
+                    {{ mo_comparison.title.value | default: 'Comparison Table' }}
+                  </h3>
                 </div>
                 {% render 'icon-caret' %}
               </summary>
               <div class="accordion__content rte">
-                {{ mf_comparison | metafield_tag }}
+                {%- if mo_comparison != blank -%}
+                  {%- if mo_comparison.content != blank -%}
+                    {{ mo_comparison.content | metafield_tag }}
+                  {%- endif -%}
+                  {%- if mo_comparison.bullets.value != blank -%}
+                    <ul class="product-recommendations__meta-accordion-list">
+                      {%- for bullet in mo_comparison.bullets.value -%}
+                        <li>{{ bullet }}</li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                {%- else -%}
+                  {{ mf_comparison | metafield_tag }}
+                {%- endif -%}
               </div>
             </details>
           </div>
         {%- endif -%}
 
-        {%- if mf_use_cases != blank -%}
+        {%- if mo_use_cases != blank or mf_use_cases != blank -%}
           <div class="accordion">
             <details id="Details-use-cases-{{ section.id }}">
               <summary>
                 <div class="summary__title">
                   {% render 'icon-accordion', icon: 'chat_bubble' %}
-                  <h3 class="h4 accordion__title">Mission Use Cases</h3>
+                  <h3 class="h4 accordion__title">
+                    {{ mo_use_cases.title.value | default: 'Mission Use Cases' }}
+                  </h3>
                 </div>
                 {% render 'icon-caret' %}
               </summary>
               <div class="accordion__content rte">
-                {{ mf_use_cases | metafield_tag }}
+                {%- if mo_use_cases != blank -%}
+                  {%- if mo_use_cases.content != blank -%}
+                    {{ mo_use_cases.content | metafield_tag }}
+                  {%- endif -%}
+                  {%- if mo_use_cases.bullets.value != blank -%}
+                    <ul class="product-recommendations__meta-accordion-list">
+                      {%- for bullet in mo_use_cases.bullets.value -%}
+                        <li>{{ bullet }}</li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                {%- else -%}
+                  {{ mf_use_cases | metafield_tag }}
+                {%- endif -%}
               </div>
             </details>
           </div>
         {%- endif -%}
 
-        {%- if mf_media_callouts != blank -%}
+        {%- if mo_media_callouts != blank or mf_media_callouts != blank -%}
           <div class="accordion">
             <details id="Details-media-callouts-{{ section.id }}">
               <summary>
                 <div class="summary__title">
                   {% render 'icon-accordion', icon: 'star' %}
-                  <h3 class="h4 accordion__title">Media + Callouts</h3>
+                  <h3 class="h4 accordion__title">
+                    {{ mo_media_callouts.title.value | default: 'Media + Callouts' }}
+                  </h3>
                 </div>
                 {% render 'icon-caret' %}
               </summary>
               <div class="accordion__content rte">
-                {{ mf_media_callouts | metafield_tag }}
+                {%- if mo_media_callouts != blank -%}
+                  {%- if mo_media_callouts.content != blank -%}
+                    {{ mo_media_callouts.content | metafield_tag }}
+                  {%- endif -%}
+                  {%- if mo_media_callouts.bullets.value != blank -%}
+                    <ul class="product-recommendations__meta-accordion-list">
+                      {%- for bullet in mo_media_callouts.bullets.value -%}
+                        <li>{{ bullet }}</li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                  {%- assign media_callouts_video = mo_media_callouts.video.value -%}
+                  {%- if media_callouts_video != blank and media_callouts_video.media_type == 'video' -%}
+                    {{
+                      media_callouts_video
+                      | video_tag:
+                        controls: true,
+                        autoplay: false,
+                        loop: false,
+                        muted: false,
+                        playsinline: true,
+                        class: 'product-recommendations__meta-video'
+                    }}
+                  {%- endif -%}
+                {%- else -%}
+                  {{ mf_media_callouts | metafield_tag }}
+                {%- endif -%}
               </div>
             </details>
           </div>
