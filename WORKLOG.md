@@ -4,7 +4,7 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: 350ccef643630f9f5b8f8a4aa16e6032ea5bcc9b
+- HEAD commit: ef9838da57731de95d7a4fcdb92f630274329060
 - Last pushed commit (GitHub): 350ccef643630f9f5b8f8a4aa16e6032ea5bcc9b
 - Local dev server:
   - Running? no
@@ -35,6 +35,30 @@ Keep this file updated so any agent can resume without overwriting files.
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/base.css`
   - Files pushed: `assets/base.css`
   - Change: removed global `.page-width` max-width restraint while preserving section padding
+- 2026-03-18: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/product-recommendations.liquid`
+  - Files pushed: `sections/product-recommendations.liquid`
+  - Change: product accordion now supports structured metaobject refs (with fallback), optional bullets list, and optional video rendering in Media + Callouts
+- 2026-03-18: target theme ID `160510771450` (live)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --only sections/product-recommendations.liquid --allow-live`
+  - Files pushed: `sections/product-recommendations.liquid`
+  - Change: promoted structured accordion + optional Media/Callouts video support to live
+- 2026-03-18: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/product-recommendations.liquid`
+  - Files pushed: `sections/product-recommendations.liquid`
+  - Change: Media + Callouts accordion now defaults open when populated
+- 2026-03-18: target theme ID `160510771450` (live)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --only sections/product-recommendations.liquid --allow-live`
+  - Files pushed: `sections/product-recommendations.liquid`
+  - Change: promoted Media + Callouts default-open behavior to live
+- 2026-03-18: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only locales/en.default.json`
+  - Files pushed: `locales/en.default.json`
+  - Change: product CTA label changed from “Choose options” to “Equip Now”
+- 2026-03-18: target theme ID `160510771450` (live)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --only locales/en.default.json --allow-live`
+  - Files pushed: `locales/en.default.json`
+  - Change: promoted “Equip Now” CTA label to live
 
 ## Previews
 - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
