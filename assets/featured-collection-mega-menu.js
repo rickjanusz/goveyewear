@@ -1,3 +1,7 @@
+(() => {
+  if (window.__govFeaturedCollectionMegaMenuLoaded) return;
+  window.__govFeaturedCollectionMegaMenuLoaded = true;
+
 class FeaturedCollectionMegaMenu {
   constructor(container) {
     this.container = container;
@@ -376,3 +380,5 @@ if (document.readyState === 'loading') {
 }
 
 document.addEventListener('shopify:section:load', initFeaturedCollectionMegaMenus);
+
+})();
