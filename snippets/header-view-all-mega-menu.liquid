@@ -113,7 +113,6 @@
             endif
           -%}
           <div class="section-{{ menu_id }}-view-all-menu-stage section-{{ menu_id }}-view-all-menu-stage--frames" data-mega-menu-stage="frames" data-mega-menu-frames="{{ brand_key }}">
-            <h3 class="section-{{ menu_id }}-view-all-menu-version-heading">{{ childlink.title | escape }}</h3>
             {%- if frame_links != blank -%}
               {%- for grandchildlink in frame_links -%}
                 {%- liquid
