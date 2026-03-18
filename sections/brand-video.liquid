@@ -11,6 +11,7 @@
 
   .brand-video-{{ section.id }} .brand-video__media {
     width: 100%;
+    position: relative;
   }
 
   .brand-video-{{ section.id }} .brand-video__embed,
@@ -31,6 +32,44 @@
     background: transparent;
   }
 
+  .brand-video-{{ section.id }} .brand-video__sound-toggle {
+    position: absolute;
+    left: 1.2rem;
+    bottom: 1.2rem;
+    z-index: 2;
+    width: 4.2rem;
+    height: 4.2rem;
+    border: 0;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(16, 20, 27, 0.84);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .brand-video-{{ section.id }} .brand-video__sound-toggle:hover {
+    background: rgba(16, 20, 27, 0.96);
+  }
+
+  .brand-video-{{ section.id }} .brand-video__sound-toggle:focus-visible {
+    outline: 0.2rem solid rgba(255, 255, 255, 0.9);
+    outline-offset: 0.2rem;
+  }
+
+  .brand-video-{{ section.id }} .brand-video__sound-toggle-icon {
+    width: 2rem;
+    height: 2rem;
+    display: none;
+  }
+
+  .brand-video-{{ section.id }} .brand-video__sound-toggle.is-muted .brand-video__sound-toggle-icon--muted,
+  .brand-video-{{ section.id }} .brand-video__sound-toggle:not(.is-muted) .brand-video__sound-toggle-icon--unmuted {
+    display: block;
+  }
+
   @media screen and (min-width: 750px) {
     .brand-video-{{ section.id }} {
       padding-top: {{ section.settings.padding_top }}px;
@@ -39,10 +78,28 @@
   }
 {%- endstyle -%}
 
-<section class="brand-video-{{ section.id }} color-{{ section.settings.color_scheme }} gradient">
+<section id="BrandVideo-{{ section.id }}" class="brand-video-{{ section.id }} color-{{ section.settings.color_scheme }} gradient">
   <div class="brand-video__media">
     {%- if section.settings.video != blank -%}
-      {{ section.settings.video | video_tag: class: 'brand-video__file', autoplay: true, loop: true, muted: true, controls: false }}
+      {%- assign hosted_video_id = 'BrandVideoFile-' | append: section.id -%}
+      {{ section.settings.video | video_tag: id: hosted_video_id, class: 'brand-video__file', autoplay: true, loop: true, muted: true, controls: false }}
+      <button
+        type="button"
+        class="brand-video__sound-toggle is-muted"
+        data-brand-video-toggle
+        aria-label="Unmute video"
+        aria-pressed="false"
+      >
+        <svg class="brand-video__sound-toggle-icon brand-video__sound-toggle-icon--muted" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 10v4h4l5 4V6L7 10H3z" fill="currentColor"/>
+          <path d="M15.5 9.5l5 5m0-5l-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg class="brand-video__sound-toggle-icon brand-video__sound-toggle-icon--unmuted" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 10v4h4l5 4V6L7 10H3z" fill="currentColor"/>
+          <path d="M16 8c1.8 1.3 3 3.3 3 6s-1.2 4.7-3 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M14 10.5c1 .8 1.5 1.9 1.5 3.5s-.5 2.7-1.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
     {%- elsif section.settings.video_url != blank -%}
       {%- if section.settings.video_url.type == 'youtube' -%}
         <iframe
@@ -70,6 +127,36 @@
     {%- endif -%}
   </div>
 </section>
+
+<script>
+  (() => {
+    const section = document.getElementById('BrandVideo-{{ section.id }}');
+    if (!section || section.dataset.soundToggleBound === 'true') return;
+    const video = section.querySelector('.brand-video__file');
+    const toggle = section.querySelector('[data-brand-video-toggle]');
+    if (!video || !toggle) return;
+
+    section.dataset.soundToggleBound = 'true';
+
+    const syncState = () => {
+      const muted = !!video.muted;
+      toggle.classList.toggle('is-muted', muted);
+      toggle.setAttribute('aria-pressed', String(!muted));
+      toggle.setAttribute('aria-label', muted ? 'Unmute video' : 'Mute video');
+    };
+
+    toggle.addEventListener('click', () => {
+      video.muted = !video.muted;
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
+      syncState();
+    });
+
+    video.addEventListener('volumechange', syncState);
+    syncState();
+  })();
+</script>
 
 {% schema %}
 {
