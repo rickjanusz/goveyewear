@@ -9,7 +9,7 @@ class FeaturedCollectionMegaMenu {
     this.stages = Array.from(container.querySelectorAll('[data-mega-menu-stage]'));
     this.backButtons = Array.from(container.querySelectorAll('[data-mega-menu-back]'));
     this.titleElement = container.querySelector('[data-mega-menu-title]');
-    this.defaultTitle = this.titleElement ? this.titleElement.textContent.trim() : '';
+    this.defaultTitle = this.titleElement ? this.titleElement.textContent.trim() : 'Shop';
     this.closeButton = container.querySelector('[data-mega-menu-close]');
     this.breadcrumb = {
       backBrands: container.querySelector('[data-mega-menu-back="brands"]'),
@@ -304,7 +304,11 @@ class FeaturedCollectionMegaMenu {
       this.breadcrumb.sepBrands.classList.toggle('is-hidden', !showBrandCrumb);
     }
     if (this.breadcrumb.brandLabel) {
-      this.breadcrumb.brandLabel.textContent = this.activeBrandTitle || '';
+      if (showFrameCrumb) {
+        this.breadcrumb.brandLabel.textContent = this.activeBrandTitle ? `${this.activeBrandTitle} - Shop by Frame` : '';
+      } else {
+        this.breadcrumb.brandLabel.textContent = this.activeBrandTitle || '';
+      }
       this.breadcrumb.brandLabel.classList.toggle('is-hidden', !showBrandCrumb);
     }
     if (this.breadcrumb.sepFrames) {
