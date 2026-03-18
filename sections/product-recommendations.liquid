@@ -3,10 +3,12 @@
 <link rel="stylesheet" href="{{ 'component-card.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'section-product-recommendations.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-accordion.css' | asset_url }}" media="print" onload="this.media='all'">
 
 <noscript>{{ 'component-card.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'component-price.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'section-product-recommendations.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-accordion.css' | asset_url | stylesheet_tag }}</noscript>
 
 {%- style -%}
   .section-{{ section.id }}-padding {
@@ -18,6 +20,14 @@
     text-align: {{ section.settings.heading_alignment | default: 'left' }};
   }
 
+  .product-recommendations__meta-accordion {
+    margin-top: 2.4rem;
+  }
+
+  .product-recommendations__meta-accordion .accordion + .accordion {
+    margin-top: 0.8rem;
+  }
+
   @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top }}px;
@@ -25,6 +35,18 @@
     }
   }
 {%- endstyle -%}
+
+{%- liquid
+  assign mf_specs = product.metafields.custom.specs_tech_data
+  assign mf_comparison = product.metafields.custom.comparison_table
+  assign mf_use_cases = product.metafields.custom.mission_use_cases
+  assign mf_media_callouts = product.metafields.custom.media_callouts
+
+  assign has_meta_accordion = false
+  if mf_specs != blank or mf_comparison != blank or mf_use_cases != blank or mf_media_callouts != blank
+    assign has_meta_accordion = true
+  endif
+-%}
 
 <div class="color-{{ section.settings.color_scheme }} gradient">
   <product-recommendations class="product-recommendations collection collection--card-skin-tactical-white page-width section-{{ section.id }}-padding section-{{ section.id }}-heading isolate" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}">
@@ -45,6 +67,78 @@
         {% endfor %}
       </ul>
     {% endif %}
+
+    {%- if has_meta_accordion -%}
+      <div class="product-recommendations__meta-accordion" data-product-meta-accordion>
+        {%- if mf_specs != blank -%}
+          <div class="accordion">
+            <details id="Details-specs-{{ section.id }}">
+              <summary>
+                <div class="summary__title">
+                  {% render 'icon-accordion', icon: 'clipboard' %}
+                  <h3 class="h4 accordion__title">Specs / Tech Data</h3>
+                </div>
+                {% render 'icon-caret' %}
+              </summary>
+              <div class="accordion__content rte">
+                {{ mf_specs | metafield_tag }}
+              </div>
+            </details>
+          </div>
+        {%- endif -%}
+
+        {%- if mf_comparison != blank -%}
+          <div class="accordion">
+            <details id="Details-comparison-{{ section.id }}">
+              <summary>
+                <div class="summary__title">
+                  {% render 'icon-accordion', icon: 'eye' %}
+                  <h3 class="h4 accordion__title">Comparison Table</h3>
+                </div>
+                {% render 'icon-caret' %}
+              </summary>
+              <div class="accordion__content rte">
+                {{ mf_comparison | metafield_tag }}
+              </div>
+            </details>
+          </div>
+        {%- endif -%}
+
+        {%- if mf_use_cases != blank -%}
+          <div class="accordion">
+            <details id="Details-use-cases-{{ section.id }}">
+              <summary>
+                <div class="summary__title">
+                  {% render 'icon-accordion', icon: 'chat_bubble' %}
+                  <h3 class="h4 accordion__title">Mission Use Cases</h3>
+                </div>
+                {% render 'icon-caret' %}
+              </summary>
+              <div class="accordion__content rte">
+                {{ mf_use_cases | metafield_tag }}
+              </div>
+            </details>
+          </div>
+        {%- endif -%}
+
+        {%- if mf_media_callouts != blank -%}
+          <div class="accordion">
+            <details id="Details-media-callouts-{{ section.id }}">
+              <summary>
+                <div class="summary__title">
+                  {% render 'icon-accordion', icon: 'star' %}
+                  <h3 class="h4 accordion__title">Media + Callouts</h3>
+                </div>
+                {% render 'icon-caret' %}
+              </summary>
+              <div class="accordion__content rte">
+                {{ mf_media_callouts | metafield_tag }}
+              </div>
+            </details>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
   </product-recommendations>
 </div>
 
