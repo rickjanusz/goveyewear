@@ -27,6 +27,10 @@ Keep this file updated so any agent can resume without overwriting files.
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/featured-collection-mega-menu.js`
   - Files pushed: `assets/featured-collection-mega-menu.js`
   - Change: main menu final breadcrumb now uses selected frame title (`{{frame}}`) as non-link text
+- 2026-03-18: target theme ID `160510771450` (live)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --only assets/featured-collection-mega-menu.js --allow-live`
+  - Files pushed: `assets/featured-collection-mega-menu.js`
+  - Change: promoted same breadcrumb fix from staging to live
 
 ## Previews
 - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
