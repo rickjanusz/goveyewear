@@ -93,6 +93,13 @@ class FeaturedCollectionMegaMenu {
       });
     });
 
+    if (this.breadcrumb.brandLabel) {
+      this.breadcrumb.brandLabel.addEventListener('click', () => {
+        if (!this.activeBrandKey) return;
+        this.showFrames(this.activeBrandKey, this.activeBrandTitle, { immediate: true });
+      });
+    }
+
     if (this.closeButton) {
       this.closeButton.addEventListener('click', (event) => {
         event.preventDefault();
