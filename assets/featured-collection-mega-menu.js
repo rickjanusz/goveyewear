@@ -13,8 +13,8 @@ class FeaturedCollectionMegaMenu {
     this.closeButton = container.querySelector('[data-mega-menu-close]');
     this.breadcrumb = {
       backBrands: container.querySelector('[data-mega-menu-back="brands"]'),
-      backFrames: container.querySelector('[data-mega-menu-back="frames"]'),
       brandLabel: container.querySelector('[data-mega-menu-crumb-current="brand"]'),
+      framesLabel: container.querySelector('[data-mega-menu-crumb-current="frames"]'),
       sepBrands: container.querySelector('[data-mega-menu-crumb-sep="brands"]'),
       sepFrames: container.querySelector('[data-mega-menu-crumb-sep="frames"]'),
     };
@@ -299,7 +299,7 @@ class FeaturedCollectionMegaMenu {
   }
 
   updateBreadcrumb(showBack) {
-    if (!this.breadcrumb.backBrands && !this.breadcrumb.backFrames) return;
+    if (!this.breadcrumb.backBrands && !this.breadcrumb.framesLabel) return;
 
     const showBrandCrumb = showBack === 'brands' || showBack === 'frames';
     const showFrameCrumb = showBack === 'frames';
@@ -319,11 +319,11 @@ class FeaturedCollectionMegaMenu {
     if (this.breadcrumb.sepFrames) {
       this.breadcrumb.sepFrames.classList.toggle('is-hidden', !showFrameCrumb);
     }
-    if (this.breadcrumb.backFrames) {
+    if (this.breadcrumb.framesLabel) {
       if (showFrameCrumb && this.activeBrandTitle) {
-        this.breadcrumb.backFrames.textContent = `${this.activeBrandTitle} Frames`;
+        this.breadcrumb.framesLabel.textContent = `${this.activeBrandTitle} Frames`;
       }
-      this.breadcrumb.backFrames.classList.toggle('is-hidden', !showFrameCrumb);
+      this.breadcrumb.framesLabel.classList.toggle('is-hidden', !showFrameCrumb);
     }
   }
 
