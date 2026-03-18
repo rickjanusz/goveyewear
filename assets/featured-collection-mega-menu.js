@@ -348,8 +348,8 @@ class FeaturedCollectionMegaMenu {
       this.breadcrumb.sepFrames.classList.toggle('is-hidden', !showFrameCrumb);
     }
     if (this.breadcrumb.framesLabel) {
-      if (showFrameCrumb && this.activeBrandTitle) {
-        this.breadcrumb.framesLabel.textContent = `${this.activeBrandTitle} Frames`;
+      if (showFrameCrumb) {
+        this.breadcrumb.framesLabel.textContent = this.currentChromeTitle || '';
       }
       this.breadcrumb.framesLabel.classList.toggle('is-hidden', !showFrameCrumb);
     }
