@@ -11,6 +11,13 @@ class FeaturedCollectionMegaMenu {
     this.titleElement = container.querySelector('[data-mega-menu-title]');
     this.defaultTitle = this.titleElement ? this.titleElement.textContent.trim() : '';
     this.closeButton = container.querySelector('[data-mega-menu-close]');
+    this.breadcrumb = {
+      backBrands: container.querySelector('[data-mega-menu-back="brands"]'),
+      backFrames: container.querySelector('[data-mega-menu-back="frames"]'),
+      brandLabel: container.querySelector('[data-mega-menu-crumb-current="brand"]'),
+      sepBrands: container.querySelector('[data-mega-menu-crumb-sep="brands"]'),
+      sepFrames: container.querySelector('[data-mega-menu-crumb-sep="frames"]'),
+    };
     this.activeBrandKey = null;
     this.activeBrandTitle = '';
     this.transitionToken = 0;
@@ -172,7 +179,7 @@ class FeaturedCollectionMegaMenu {
     if (this.hasBrands && targetId) {
       this.activeBrandKey = targetId;
       this.activeBrandTitle = title || this.defaultTitle;
-      this.updateChrome({ showBack: 'brands', title: this.activeBrandTitle });
+      this.updateChrome({ showBack: 'brands', title: `${this.activeBrandTitle} - Shop by Frame` });
       this.transitionToStage(targetId, options);
       return;
     }
@@ -277,8 +284,34 @@ class FeaturedCollectionMegaMenu {
       button.classList.toggle('is-hidden', !shouldShow);
     });
 
+    this.updateBreadcrumb(showBack);
+
     if (this.titleElement) {
       this.titleElement.textContent = title || this.defaultTitle;
+    }
+  }
+
+  updateBreadcrumb(showBack) {
+    if (!this.breadcrumb.backBrands && !this.breadcrumb.backFrames) return;
+
+    const showBrandCrumb = showBack === 'brands' || showBack === 'frames';
+    const showFrameCrumb = showBack === 'frames';
+
+    if (this.breadcrumb.backBrands) {
+      this.breadcrumb.backBrands.classList.toggle('is-hidden', !showBrandCrumb);
+    }
+    if (this.breadcrumb.sepBrands) {
+      this.breadcrumb.sepBrands.classList.toggle('is-hidden', !showBrandCrumb);
+    }
+    if (this.breadcrumb.brandLabel) {
+      this.breadcrumb.brandLabel.textContent = this.activeBrandTitle || '';
+      this.breadcrumb.brandLabel.classList.toggle('is-hidden', !showBrandCrumb);
+    }
+    if (this.breadcrumb.sepFrames) {
+      this.breadcrumb.sepFrames.classList.toggle('is-hidden', !showFrameCrumb);
+    }
+    if (this.breadcrumb.backFrames) {
+      this.breadcrumb.backFrames.classList.toggle('is-hidden', !showFrameCrumb);
     }
   }
 

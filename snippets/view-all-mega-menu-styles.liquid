@@ -124,6 +124,44 @@
     text-overflow: ellipsis;
   }
 
+  .section-{{ menu_id }}-view-all-menu-logo {
+    max-width: 16rem;
+    height: auto;
+  }
+
+  .section-{{ menu_id }}-view-all-menu-logo-text {
+    font-size: 1.4rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #141414;
+  }
+
+  .section-{{ menu_id }}-view-all-menu-breadcrumbs {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.3rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #141414;
+  }
+
+  .section-{{ menu_id }}-view-all-menu-crumb {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    text-transform: inherit;
+    letter-spacing: inherit;
+  }
+
+  .section-{{ menu_id }}-view-all-menu-crumb.is-hidden,
+  .section-{{ menu_id }}-view-all-menu-crumb-sep.is-hidden {
+    display: none;
+  }
+
   .section-{{ menu_id }}-view-all-menu-close {
     display: inline-flex;
     align-items: center;
