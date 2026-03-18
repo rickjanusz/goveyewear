@@ -13,6 +13,7 @@ class FeaturedCollectionMegaMenu {
     this.closeButton = container.querySelector('[data-mega-menu-close]');
     this.breadcrumb = {
       backBrands: container.querySelector('[data-mega-menu-back="brands"]'),
+      backFrames: container.querySelector('[data-mega-menu-back="frames"]'),
       brandLabel: container.querySelector('[data-mega-menu-crumb-current="brand"]'),
       framesLabel: container.querySelector('[data-mega-menu-crumb-current="frames"]'),
       sepBrands: container.querySelector('[data-mega-menu-crumb-sep="brands"]'),
@@ -20,6 +21,7 @@ class FeaturedCollectionMegaMenu {
     };
     this.activeBrandKey = null;
     this.activeBrandTitle = '';
+    this.currentChromeTitle = this.defaultTitle;
     this.transitionToken = 0;
     this._hoverTimer = null;
     this.hasBrands = this.stages.some((stage) => stage.dataset.megaMenuStage === 'brands');
@@ -93,7 +95,7 @@ class FeaturedCollectionMegaMenu {
       });
     });
 
-    if (this.breadcrumb.brandLabel) {
+    if (this.hasBrands && this.breadcrumb.brandLabel) {
       this.breadcrumb.brandLabel.addEventListener('click', () => {
         if (!this.activeBrandKey) return;
         this.showFrames(this.activeBrandKey, this.activeBrandTitle, { immediate: true });
@@ -276,6 +278,8 @@ class FeaturedCollectionMegaMenu {
   }
 
   updateChrome({ showBack, title }) {
+    this.currentChromeTitle = title || this.defaultTitle;
+
     this.backButtons.forEach((button) => {
       const target = button.dataset.megaMenuBack || 'frames';
       let shouldShow = false;
@@ -294,18 +298,42 @@ class FeaturedCollectionMegaMenu {
     this.updateBreadcrumb(showBack);
 
     if (this.titleElement) {
-      this.titleElement.textContent = title || this.defaultTitle;
+      this.titleElement.textContent = this.currentChromeTitle;
     }
   }
 
   updateBreadcrumb(showBack) {
-    if (!this.breadcrumb.backBrands && !this.breadcrumb.framesLabel) return;
+    if (!this.breadcrumb.backBrands && !this.breadcrumb.backFrames && !this.breadcrumb.framesLabel) return;
+
+    if (!this.hasBrands) {
+      const showSimpleCrumb = showBack === true;
+
+      if (this.breadcrumb.backFrames) {
+        this.breadcrumb.backFrames.textContent = 'Shop by Frame';
+        this.breadcrumb.backFrames.classList.remove('is-hidden');
+      }
+      if (this.breadcrumb.sepBrands) {
+        this.breadcrumb.sepBrands.classList.toggle('is-hidden', !showSimpleCrumb);
+      }
+      if (this.breadcrumb.brandLabel) {
+        this.breadcrumb.brandLabel.textContent = showSimpleCrumb ? this.currentChromeTitle : '';
+        this.breadcrumb.brandLabel.classList.toggle('is-hidden', !showSimpleCrumb);
+      }
+      if (this.breadcrumb.sepFrames) {
+        this.breadcrumb.sepFrames.classList.add('is-hidden');
+      }
+      if (this.breadcrumb.framesLabel) {
+        this.breadcrumb.framesLabel.classList.add('is-hidden');
+      }
+      return;
+    }
 
     const showBrandCrumb = showBack === 'brands' || showBack === 'frames';
     const showFrameCrumb = showBack === 'frames';
 
     if (this.breadcrumb.backBrands) {
-      this.breadcrumb.backBrands.classList.toggle('is-hidden', !showBrandCrumb);
+      this.breadcrumb.backBrands.textContent = 'Shop by Brand';
+      this.breadcrumb.backBrands.classList.toggle('is-hidden', false);
     }
     if (this.breadcrumb.sepBrands) {
       this.breadcrumb.sepBrands.classList.toggle('is-hidden', !showBrandCrumb);

@@ -245,17 +245,51 @@
       justify-content: flex-end;
     }
 
-    .section-{{ section.id }}-view-all-menu-topbar-title {
-      margin: 0;
-      font-size: 1.8rem;
-      line-height: 1.2;
+    .section-{{ section.id }}-view-all-menu-logo {
+      max-width: 16rem;
+      height: auto;
+    }
+
+    .section-{{ section.id }}-view-all-menu-logo-text {
+      font-size: 1.4rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: #141414;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    }
+
+    .section-{{ section.id }}-view-all-menu-breadcrumbs {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.3rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #141414;
+    }
+
+    .section-{{ section.id }}-view-all-menu-breadcrumbs--center {
+      justify-content: center;
+      width: 100%;
+    }
+
+    .section-{{ section.id }}-view-all-menu-crumb {
+      background: transparent;
+      border: 0;
+      padding: 0;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      text-transform: inherit;
+      letter-spacing: inherit;
+    }
+
+    .section-{{ section.id }}-view-all-menu-crumb-sep {
+      color: inherit;
+    }
+
+    .section-{{ section.id }}-view-all-menu-crumb.is-hidden,
+    .section-{{ section.id }}-view-all-menu-crumb-sep.is-hidden {
+      display: none;
     }
 
     .section-{{ section.id }}-view-all-menu-close {
@@ -508,11 +542,40 @@
       align-items: center;
     }
 
-    .section-{{ section.id }}-view-all-menu-topbar-title {
-      margin: 0;
-      font-size: 1.6rem;
-      font-weight: 600;
+    .section-{{ section.id }}-view-all-menu-logo {
+      max-width: 12rem;
+      height: auto;
+    }
+
+    .section-{{ section.id }}-view-all-menu-logo-text {
+      font-size: 1.2rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       color: #141414;
+    }
+
+    .section-{{ section.id }}-view-all-menu-breadcrumbs {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #141414;
+    }
+
+    .section-{{ section.id }}-view-all-menu-crumb {
+      background: transparent;
+      border: 0;
+      padding: 0;
+      color: inherit;
+      font: inherit;
+      text-transform: inherit;
+      letter-spacing: inherit;
+    }
+
+    .section-{{ section.id }}-view-all-menu-crumb-sep {
+      color: inherit;
     }
 
     .section-{{ section.id }}-view-all-menu-close {
@@ -528,20 +591,9 @@
       color: #6d6d6d;
     }
 
-    .section-{{ section.id }}-view-all-menu-back {
-      display: inline-flex;
-      align-items: center;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 1.4rem;
-      color: #6d6d6d;
-      padding: 0.4rem;
-    }
-
-    .section-{{ section.id }}-view-all-menu-back.is-hidden {
-      visibility: hidden;
-      pointer-events: none;
+    .section-{{ section.id }}-view-all-menu-crumb.is-hidden,
+    .section-{{ section.id }}-view-all-menu-crumb-sep.is-hidden {
+      display: none;
     }
 
     .section-{{ section.id }}-view-all-menu-grid {
@@ -765,12 +817,23 @@
               <div class="section-{{ section.id }}-view-all-menu-shell">
                 <div class="section-{{ section.id }}-view-all-menu-topbar">
                   <div class="section-{{ section.id }}-view-all-menu-topbar-start">
-                    <button type="button" class="section-{{ section.id }}-view-all-menu-back is-hidden" data-mega-menu-back>
-                      Back to frames
-                    </button>
+                    <img
+                      class="section-{{ section.id }}-view-all-menu-logo"
+                      src="https://www.goveyewear.com/cdn/shop/files/goveyewear_logo_final.svg?v=1772904915&width=160"
+                      srcset="https://www.goveyewear.com/cdn/shop/files/goveyewear_logo_final.svg?v=1772904915&width=80 80w, https://www.goveyewear.com/cdn/shop/files/goveyewear_logo_final.svg?v=1772904915&width=120 120w, https://www.goveyewear.com/cdn/shop/files/goveyewear_logo_final.svg?v=1772904915&width=160 160w, https://www.goveyewear.com/cdn/shop/files/goveyewear_logo_final.svg?v=1772904915&width=200 200w, https://www.goveyewear.com/cdn/shop/files/goveyewear_logo_final.svg?v=1772904915&width=240 240w"
+                      sizes="(max-width: 989px) 120px, 160px"
+                      alt="{{ shop.name | escape }}"
+                      loading="eager"
+                      width="160"
+                      height="36"
+                    >
                   </div>
                   <div class="section-{{ section.id }}-view-all-menu-topbar-center">
-                    <p class="section-{{ section.id }}-view-all-menu-topbar-title" data-mega-menu-title>{{ section.settings.view_all_mega_menu.title | escape }}</p>
+                    <nav class="section-{{ section.id }}-view-all-menu-breadcrumbs section-{{ section.id }}-view-all-menu-breadcrumbs--center" aria-label="Menu breadcrumb">
+                      <button type="button" class="section-{{ section.id }}-view-all-menu-crumb is-hidden" data-mega-menu-back="frames">Shop by Frame</button>
+                      <span class="section-{{ section.id }}-view-all-menu-crumb-sep is-hidden" data-mega-menu-crumb-sep="brands">/</span>
+                      <span class="section-{{ section.id }}-view-all-menu-crumb is-hidden" data-mega-menu-crumb-current="brand"></span>
+                    </nav>
                   </div>
                   <div class="section-{{ section.id }}-view-all-menu-topbar-end">
                     <button type="button" class="section-{{ section.id }}-view-all-menu-close" data-mega-menu-close aria-label="Close menu">
