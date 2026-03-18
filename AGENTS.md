@@ -57,12 +57,6 @@
 
 ## Handoff Protocol (Required)
 - Before any pull/push, read `AGENTS.md` and `/Users/p/Code/GovEyewear/Site/WORKLOG.md`.
-- Before any push, state:
-  - Current branch + HEAD commit hash
-  - Last pushed commit hash (GitHub)
-  - Target theme ID (staging/live)
-  - Exact file list to be pushed
-  - Whether local dev server is running (port)
 - After completing work, update `/Users/p/Code/GovEyewear/Site/WORKLOG.md` with:
   - Branch + commit hash
   - Pull/push commands run (with theme IDs)
