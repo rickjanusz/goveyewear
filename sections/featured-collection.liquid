@@ -704,7 +704,8 @@
 
 {%- liquid
   assign carousel_limit = 15
-  assign products_to_display = section.settings.collection.all_products_count
+  assign total_products = section.settings.collection.all_products_count
+  assign products_to_display = total_products
   if products_to_display > carousel_limit
     assign products_to_display = carousel_limit
   endif
@@ -713,6 +714,9 @@
     assign resolved_card_media_ratio = 'square'
   endif
   assign more_in_collection = false
+  if total_products > products_to_display
+    assign more_in_collection = true
+  endif
 
   assign columns_mobile_int = section.settings.columns_mobile | plus: 0
   assign show_mobile_slider = false
@@ -795,10 +799,14 @@
     {%- if show_view_all_block -%}
       <div class="center collection__view-all">
         <div class="section-{{ section.id }}-view-all-wrap{% if section.settings.view_all_mega_menu != blank and section.settings.view_all_mega_menu.links.size > 0 %} section-{{ section.id }}-view-all-wrap--has-menu{% endif %}">
-          {%- if section.settings.collection != blank -%}
-            <a href="{{ section.settings.collection.url }}"
+          {%- assign main_view_all_href = section.settings.collection.url -%}
+          {%- if main_view_all_href == blank and section.settings.detail_button_link != blank -%}
+            {%- assign main_view_all_href = section.settings.detail_button_link -%}
+          {%- endif -%}
+          {%- if main_view_all_href != blank -%}
+            <a href="{{ main_view_all_href }}"
               class="section-{{ section.id }}-view-all-trigger {% if section.settings.view_all_style == 'link' %}link underlined-link{% elsif section.settings.view_all_style == 'solid' %}button{% else %}button button--secondary{% endif %}"
-              aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title }}"
+              aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title | default: 'Collection' }}"
             >
               {{ 'sections.featured_collection.view_all' | t }}
             </a>
