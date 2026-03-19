@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: ff410baa3f0bb0a59cc078f18e2e11c7d658e992
-- Last pushed commit (GitHub): 350ccef643630f9f5b8f8a4aa16e6032ea5bcc9b
+- HEAD commit: 878aa0604a3d663f7f9eec15d0e72adb2f62c77d
+- Last pushed commit (GitHub): 878aa0604a3d663f7f9eec15d0e72adb2f62c77d
 - Local dev server:
   - Running? no
   - Port:
@@ -23,6 +23,18 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-19: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/captions-placeholder.vtt --only sections/brand-video.liquid --only sections/image-banner.liquid`
+  - Files pushed: `assets/captions-placeholder.vtt`, `sections/brand-video.liquid`, `sections/image-banner.liquid`
+  - Change: Lighthouse fixes (guaranteed banner alt text, MP4-first hosted brand video rendering with captions track placeholder)
+- 2026-03-19: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/product-recommendations.liquid`
+  - Files pushed: `sections/product-recommendations.liquid`
+  - Change: Media + Callouts hosted video now uses MP4-first rendering with captions track placeholder
+- 2026-03-19: GitHub sync
+  - Command: `git push origin codex/mega-menu-3stage`
+  - Commit range: `fbefdd2..878aa06`
+  - PR: `https://github.com/rickjanusz/goveyewear/pull/1`
 - 2026-03-18: target theme ID `160581189882` (staging)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete`
   - Files pushed: full theme (overwrite staging to match live/local baseline)
