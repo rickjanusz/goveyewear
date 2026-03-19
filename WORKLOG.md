@@ -23,6 +23,10 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-19: target theme ID `160510771450` (live)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only sections/featured-collection.liquid --only snippets/featured-collection-computed-state.liquid`
+  - Files pushed: `sections/featured-collection.liquid`, `snippets/featured-collection-computed-state.liquid`
+  - Change: promoted computed-state snippet cleanup (featured section logic extraction) to live
 - 2026-03-19: target theme ID `160581189882` (staging)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid --only snippets/featured-collection-computed-state.liquid`
   - Files pushed: `sections/featured-collection.liquid`, `snippets/featured-collection-computed-state.liquid`
