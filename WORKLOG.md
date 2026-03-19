@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: 045f97dbaf4638272ce6743c6a724845f4f1814a
-- Last pushed commit (GitHub): 045f97dbaf4638272ce6743c6a724845f4f1814a
+- HEAD commit: 5e738995b0dd5d0205fd2941a59a3c1f14508907
+- Last pushed commit (GitHub): 5e738995b0dd5d0205fd2941a59a3c1f14508907
 - Local dev server:
   - Running? no
   - Port:
@@ -23,6 +23,10 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-19: target theme ID `160510771450` (live)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only sections/featured-collection.liquid --only snippets/featured-collection-view-all.liquid --only snippets/featured-collection-view-all-mega-menu.liquid`
+  - Files pushed: `sections/featured-collection.liquid`, `snippets/featured-collection-view-all.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Change: promoted phase-1 featured section modularization cleanup from staging to live
 - 2026-03-19: target theme ID `160581189882` (staging)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/featured-collection-view-all.liquid --only snippets/featured-collection-view-all-mega-menu.liquid`
   - Files pushed: `snippets/featured-collection-view-all.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`
