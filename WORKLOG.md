@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: 5dc33ed8f1f3a85a06f94dde6b524e1fa6860d2f
-- Last pushed commit (GitHub): 5dc33ed8f1f3a85a06f94dde6b524e1fa6860d2f
+- HEAD commit: 2d59d99a3370dd432b1bc44ea2e06b97b1d9bb0e
+- Last pushed commit (GitHub): 2d59d99a3370dd432b1bc44ea2e06b97b1d9bb0e
 - Local dev server:
   - Running? no
   - Port:
@@ -14,6 +14,10 @@ Keep this file updated so any agent can resume without overwriting files.
   - Live: 160510771450
 
 ## Recent Pulls
+- 2026-03-19: `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json`
+  - Intent: settings-only sync from live after user-admin updates
+  - Result: success
+  - Files updated: `config/settings_data.json` (added gatorz brand palette keys), `config/settings_schema.json` unchanged
 - 2026-03-18: `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json`
   - Intent: settings-only sync from live after admin updates
   - Result: success
@@ -23,6 +27,9 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-19: GitHub sync
+  - Command: `git push origin codex/mega-menu-3stage`
+  - Commit range: `4b2edfc..2d59d99`
 - 2026-03-19: target theme ID `160510771450` (live)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only assets/base.css`
   - Files pushed: `assets/base.css`
