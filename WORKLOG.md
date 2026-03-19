@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: 0581745ff8df3c808c97c1ea37a2d2cd7d3e0259
-- Last pushed commit (GitHub): 0581745ff8df3c808c97c1ea37a2d2cd7d3e0259
+- HEAD commit: a4a02d213ef2149cc44f4996a8e6bb3ecf4ecf26
+- Last pushed commit (GitHub): a4a02d213ef2149cc44f4996a8e6bb3ecf4ecf26
 - Local dev server:
   - Running? no
   - Port:
@@ -23,6 +23,13 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-19: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid`
+  - Files pushed: `sections/featured-collection.liquid`
+  - Change: restored non-brand fallback to `detail_button_link` for primary View All button when collection URL is blank, while keeping brand-template hijack prevention in place
+- 2026-03-19: GitHub sync
+  - Command: `git push origin codex/mega-menu-3stage`
+  - Commit range: `3c2513e..a4a02d2`
 - 2026-03-19: target theme ID `160581189882` (staging)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid`
   - Files pushed: `sections/featured-collection.liquid`
