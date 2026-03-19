@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: 62f7162f71ff268508645a6b40f4692f50cbe0c6
-- Last pushed commit (GitHub): 62f7162f71ff268508645a6b40f4692f50cbe0c6
+- HEAD commit: 0581745ff8df3c808c97c1ea37a2d2cd7d3e0259
+- Last pushed commit (GitHub): 0581745ff8df3c808c97c1ea37a2d2cd7d3e0259
 - Local dev server:
   - Running? no
   - Port:
@@ -23,6 +23,13 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-19: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid`
+  - Files pushed: `sections/featured-collection.liquid`
+  - Change: main View All/Full Arsenal now always renders from collection URL when enabled, even when collection count is <= carousel limit (prevents brand-page fallback/hijack to detail link)
+- 2026-03-19: GitHub sync
+  - Command: `git push origin codex/mega-menu-3stage`
+  - Commit range: `7f7fba7..0581745`
 - 2026-03-19: target theme ID `160581189882` (staging)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid`
   - Files pushed: `sections/featured-collection.liquid`
