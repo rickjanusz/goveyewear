@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: a4a02d213ef2149cc44f4996a8e6bb3ecf4ecf26
-- Last pushed commit (GitHub): a4a02d213ef2149cc44f4996a8e6bb3ecf4ecf26
+- HEAD commit: b10c3870383f34e944ae8f95af74fca0624f3412
+- Last pushed commit (GitHub): b10c3870383f34e944ae8f95af74fca0624f3412
 - Local dev server:
   - Running? no
   - Port:
@@ -23,6 +23,13 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-19: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid`
+  - Files pushed: `sections/featured-collection.liquid`
+  - Change: rolled back `featured-collection.liquid` CTA logic to known-good baseline and applied brand-template-only uncap (no 15-card limit on brand collection templates)
+- 2026-03-19: GitHub sync
+  - Command: `git push origin codex/mega-menu-3stage`
+  - Commit range: `e5bf847..b10c387`
 - 2026-03-19: target theme ID `160581189882` (staging)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid`
   - Files pushed: `sections/featured-collection.liquid`
