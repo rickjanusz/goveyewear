@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: 878aa0604a3d663f7f9eec15d0e72adb2f62c77d
-- Last pushed commit (GitHub): 878aa0604a3d663f7f9eec15d0e72adb2f62c77d
+- HEAD commit: 62f7162f71ff268508645a6b40f4692f50cbe0c6
+- Last pushed commit (GitHub): 62f7162f71ff268508645a6b40f4692f50cbe0c6
 - Local dev server:
   - Running? no
   - Port:
@@ -23,6 +23,13 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-19: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid`
+  - Files pushed: `sections/featured-collection.liquid`
+  - Change: removed `detail_button_link` fallback from main View All/Full Arsenal link to prevent brand-page button hijack
+- 2026-03-19: GitHub sync
+  - Command: `git push origin codex/mega-menu-3stage`
+  - Commit range: `9731c57..62f7162`
 - 2026-03-19: target theme ID `160510771450` (live)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only sections/featured-collection.liquid`
   - Files pushed: `sections/featured-collection.liquid`
