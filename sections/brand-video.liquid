@@ -80,7 +80,34 @@
   <div class="brand-video__media">
     {%- if section.settings.video != blank -%}
       {%- assign hosted_video_id = 'BrandVideoFile-' | append: section.id -%}
-      {{ section.settings.video | video_tag: id: hosted_video_id, class: 'brand-video__file', autoplay: true, loop: true, muted: true, controls: false }}
+      {%- assign hosted_video_source = blank -%}
+      {%- for source in section.settings.video.sources -%}
+        {%- if source.mime_type contains 'mp4' -%}
+          {%- assign hosted_video_source = source -%}
+          {%- if source.width != blank and source.width <= 1280 -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if hosted_video_source == blank -%}
+        {%- assign hosted_video_source = section.settings.video.sources | first -%}
+      {%- endif -%}
+      {%- assign hosted_video_poster = section.settings.video.preview_image -%}
+      <video
+        id="{{ hosted_video_id }}"
+        class="brand-video__file"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        {% if hosted_video_poster != blank %}poster="{{ hosted_video_poster | image_url: width: 1600 }}"{% endif %}
+      >
+        {%- if hosted_video_source != blank -%}
+          <source src="{{ hosted_video_source.url }}" type="{{ hosted_video_source.mime_type }}">
+        {%- endif -%}
+        <track kind="captions" srclang="en" label="English captions" src="{{ 'captions-placeholder.vtt' | asset_url }}" default>
+      </video>
       <button
         type="button"
         class="brand-video__sound-toggle is-muted"

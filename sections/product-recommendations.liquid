@@ -228,16 +228,34 @@
                   {%- endif -%}
                   {%- assign media_callouts_video = mo_media_callouts.video.value -%}
                   {%- if media_callouts_video != blank and media_callouts_video.media_type == 'video' -%}
-                    {{
-                      media_callouts_video
-                      | video_tag:
-                        controls: true,
-                        autoplay: true,
-                        loop: true,
-                        muted: true,
-                        playsinline: true,
-                        class: 'product-recommendations__meta-video'
-                    }}
+                    {%- assign media_callouts_video_source = blank -%}
+                    {%- for source in media_callouts_video.sources -%}
+                      {%- if source.mime_type contains 'mp4' -%}
+                        {%- assign media_callouts_video_source = source -%}
+                        {%- if source.width != blank and source.width <= 1280 -%}
+                          {%- break -%}
+                        {%- endif -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                    {%- if media_callouts_video_source == blank -%}
+                      {%- assign media_callouts_video_source = media_callouts_video.sources | first -%}
+                    {%- endif -%}
+                    {%- assign media_callouts_video_poster = media_callouts_video.preview_image -%}
+                    <video
+                      class="product-recommendations__meta-video"
+                      controls
+                      autoplay
+                      muted
+                      loop
+                      playsinline
+                      preload="metadata"
+                      {% if media_callouts_video_poster != blank %}poster="{{ media_callouts_video_poster | image_url: width: 1200 }}"{% endif %}
+                    >
+                      {%- if media_callouts_video_source != blank -%}
+                        <source src="{{ media_callouts_video_source.url }}" type="{{ media_callouts_video_source.mime_type }}">
+                      {%- endif -%}
+                      <track kind="captions" srclang="en" label="English captions" src="{{ 'captions-placeholder.vtt' | asset_url }}" default>
+                    </video>
                   {%- endif -%}
                 {%- else -%}
                   {{ mf_media_callouts | metafield_tag }}
