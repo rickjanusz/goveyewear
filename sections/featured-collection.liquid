@@ -703,8 +703,11 @@
 {%- endstyle -%}
 
 {%- liquid
+  assign total_products = section.settings.collection.all_products_count | default: 0
   assign carousel_limit = 15
-  assign total_products = section.settings.collection.all_products_count
+  if is_brand_collection_template
+    assign carousel_limit = total_products
+  endif
   assign products_to_display = total_products
   if products_to_display > carousel_limit
     assign products_to_display = carousel_limit
