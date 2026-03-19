@@ -92,6 +92,10 @@
   --color-button-text: var(--color-foreground);
 }
 
+.color-inverse .button--secondary:after {
+  --border-opacity: 0;
+}
+
 .button--tertiary {
   --color-button: var(--color-base-outline-button-labels);
   --color-button-text: var(--color-base-outline-button-labels);
