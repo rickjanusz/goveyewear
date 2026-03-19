@@ -78,21 +78,63 @@
 
 <section id="BrandVideo-{{ section.id }}" class="brand-video-{{ section.id }} color-{{ section.settings.color_scheme }} gradient">
   <div class="brand-video__media">
-    {%- if section.settings.video != blank -%}
+    {%- if section.settings.video != blank or section.settings.video_mobile != blank -%}
       {%- assign hosted_video_id = 'BrandVideoFile-' | append: section.id -%}
-      {%- assign hosted_video_source = blank -%}
-      {%- for source in section.settings.video.sources -%}
-        {%- if source.mime_type contains 'mp4' -%}
-          {%- assign hosted_video_source = source -%}
-          {%- if source.width != blank and source.width <= 1280 -%}
-            {%- break -%}
-          {%- endif -%}
-        {%- endif -%}
-      {%- endfor -%}
-      {%- if hosted_video_source == blank -%}
-        {%- assign hosted_video_source = section.settings.video.sources | first -%}
+      {%- assign desktop_video = section.settings.video -%}
+      {%- assign mobile_video = section.settings.video_mobile -%}
+      {%- if desktop_video == blank and mobile_video != blank -%}
+        {%- assign desktop_video = mobile_video -%}
       {%- endif -%}
-      {%- assign hosted_video_poster = section.settings.video.preview_image -%}
+
+      {%- assign desktop_video_source = blank -%}
+      {%- if desktop_video != blank -%}
+        {%- for source in desktop_video.sources -%}
+          {%- if source.mime_type contains 'mp4' -%}
+            {%- assign desktop_video_source = source -%}
+            {%- if source.width != blank and source.width <= 1920 -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if desktop_video_source == blank -%}
+          {%- assign desktop_video_source = desktop_video.sources | first -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- assign mobile_video_source = blank -%}
+      {%- if mobile_video != blank -%}
+        {%- for source in mobile_video.sources -%}
+          {%- if source.mime_type contains 'mp4' -%}
+            {%- assign mobile_video_source = source -%}
+            {%- if source.width != blank and source.width <= 854 -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if mobile_video_source == blank -%}
+          {%- assign mobile_video_source = mobile_video.sources | first -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if mobile_video_source == blank and desktop_video != blank -%}
+        {%- for source in desktop_video.sources -%}
+          {%- if source.mime_type contains 'mp4' -%}
+            {%- assign mobile_video_source = source -%}
+            {%- if source.width != blank and source.width <= 854 -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- assign hosted_video_source = blank -%}
+      {%- if desktop_video_source != blank -%}
+        {%- assign hosted_video_source = desktop_video_source -%}
+      {%- endif -%}
+      {%- assign hosted_video_poster = desktop_video.preview_image -%}
+      {%- if hosted_video_poster == blank and mobile_video != blank -%}
+        {%- assign hosted_video_poster = mobile_video.preview_image -%}
+      {%- endif -%}
       <video
         id="{{ hosted_video_id }}"
         class="brand-video__file"
@@ -103,6 +145,9 @@
         preload="metadata"
         {% if hosted_video_poster != blank %}poster="{{ hosted_video_poster | image_url: width: 1600 }}"{% endif %}
       >
+        {%- if mobile_video_source != blank -%}
+          <source src="{{ mobile_video_source.url }}" type="{{ mobile_video_source.mime_type }}" media="(max-width: 749px)">
+        {%- endif -%}
         {%- if hosted_video_source != blank -%}
           <source src="{{ hosted_video_source.url }}" type="{{ hosted_video_source.mime_type }}">
         {%- endif -%}
@@ -206,6 +251,12 @@
       "type": "video",
       "id": "video",
       "label": "Hosted video"
+    },
+    {
+      "type": "video",
+      "id": "video_mobile",
+      "label": "Hosted mobile video",
+      "info": "Optional. Shown on screens up to 749px; if blank, the smallest desktop source is used."
     },
     {
       "type": "video_url",
