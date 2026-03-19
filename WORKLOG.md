@@ -23,6 +23,10 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-19: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/brand-video.liquid`
+  - Files pushed: `sections/brand-video.liquid`
+  - Change: added optional `Hosted mobile video` setting and responsive mobile-first `<source media>` handling for brand video section
 - 2026-03-19: target theme ID `160510771450` (live)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only assets/captions-placeholder.vtt --only sections/brand-video.liquid --only sections/image-banner.liquid`
   - Files pushed: `assets/captions-placeholder.vtt`, `sections/brand-video.liquid`, `sections/image-banner.liquid`
