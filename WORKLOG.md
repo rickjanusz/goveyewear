@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: 92bd2d2d72ae486815999d90b7d75fc489d53109
-- Last pushed commit (GitHub): 92bd2d2d72ae486815999d90b7d75fc489d53109
+- HEAD commit: 5dc33ed8f1f3a85a06f94dde6b524e1fa6860d2f
+- Last pushed commit (GitHub): 5dc33ed8f1f3a85a06f94dde6b524e1fa6860d2f
 - Local dev server:
   - Running? no
   - Port:
@@ -23,6 +23,17 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-19: target theme ID `160510771450` (live)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only assets/base.css`
+  - Files pushed: `assets/base.css`
+  - Change: removed inverse secondary button white outline by setting inverse secondary border opacity to `0`
+- 2026-03-19: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/base.css`
+  - Files pushed: `assets/base.css`
+  - Change: staging validation for inverse secondary button border cleanup
+- 2026-03-19: GitHub sync
+  - Command: `git push origin codex/mega-menu-3stage`
+  - Commit range: `5d7f56c..5dc33ed`
 - 2026-03-19: target theme ID `160510771450` (live)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only sections/featured-collection.liquid --only snippets/featured-collection-computed-state.liquid`
   - Files pushed: `sections/featured-collection.liquid`, `snippets/featured-collection-computed-state.liquid`
