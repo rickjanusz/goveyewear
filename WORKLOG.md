@@ -23,6 +23,14 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-19: target theme ID `160510771450` (live)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only assets/captions-placeholder.vtt --only sections/brand-video.liquid --only sections/image-banner.liquid`
+  - Files pushed: `assets/captions-placeholder.vtt`, `sections/brand-video.liquid`, `sections/image-banner.liquid`
+  - Change: promoted Lighthouse accessibility + video delivery fixes to live
+- 2026-03-19: target theme ID `160510771450` (live)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only sections/product-recommendations.liquid`
+  - Files pushed: `sections/product-recommendations.liquid`
+  - Change: promoted Media + Callouts MP4-first video render + captions track placeholder to live
 - 2026-03-19: target theme ID `160581189882` (staging)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/captions-placeholder.vtt --only sections/brand-video.liquid --only sections/image-banner.liquid`
   - Files pushed: `assets/captions-placeholder.vtt`, `sections/brand-video.liquid`, `sections/image-banner.liquid`
