@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: 5e738995b0dd5d0205fd2941a59a3c1f14508907
-- Last pushed commit (GitHub): 5e738995b0dd5d0205fd2941a59a3c1f14508907
+- HEAD commit: 92bd2d2d72ae486815999d90b7d75fc489d53109
+- Last pushed commit (GitHub): 92bd2d2d72ae486815999d90b7d75fc489d53109
 - Local dev server:
   - Running? no
   - Port:
@@ -23,6 +23,13 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-19: target theme ID `160581189882` (staging)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid --only snippets/featured-collection-computed-state.liquid`
+  - Files pushed: `sections/featured-collection.liquid`, `snippets/featured-collection-computed-state.liquid`
+  - Change: extracted featured collection computed state (limit/display/slider booleans) into dedicated snippet and kept section behavior parity
+- 2026-03-19: GitHub sync
+  - Command: `git push origin codex/mega-menu-3stage`
+  - Commit range: `32b2bb4..92bd2d2`
 - 2026-03-19: target theme ID `160510771450` (live)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only sections/featured-collection.liquid --only snippets/featured-collection-view-all.liquid --only snippets/featured-collection-view-all-mega-menu.liquid`
   - Files pushed: `sections/featured-collection.liquid`, `snippets/featured-collection-view-all.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`
