@@ -24,6 +24,13 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Recent Pushes
 - 2026-03-19: target theme ID `160510771450` (live)
+  - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only sections/featured-collection.liquid`
+  - Files pushed: `sections/featured-collection.liquid`
+  - Change: capped featured product carousel output at 15 cards to reduce DOM/media payload
+- 2026-03-19: GitHub sync
+  - Command: `git push origin codex/mega-menu-3stage`
+  - Commit range: `27f74b1..f40057d`
+- 2026-03-19: target theme ID `160510771450` (live)
   - Command: `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only sections/brand-video.liquid`
   - Files pushed: `sections/brand-video.liquid`
   - Change: promoted mobile-specific hosted video source support (`video_mobile`) to live
