@@ -794,6 +794,9 @@
       {%- assign show_detail_button = true -%}
     {%- endif -%}
     {%- assign main_view_all_href = section.settings.collection.url -%}
+    {%- if main_view_all_href == blank and is_brand_collection_template != true and section.settings.detail_button_link != blank -%}
+      {%- assign main_view_all_href = section.settings.detail_button_link -%}
+    {%- endif -%}
     {%- assign show_main_view_all = false -%}
     {%- if section.settings.show_view_all and main_view_all_href != blank -%}
       {%- assign show_main_view_all = true -%}
