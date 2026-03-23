@@ -250,6 +250,8 @@ class FeaturedCollectionMegaMenu {
 
     if (!nextStage) return;
 
+    this.syncSecondaryMenuVisibility(nextStage);
+
     if (immediate || currentStage === nextStage || !currentStage) {
       this.setActiveStage(nextStage);
       return;
