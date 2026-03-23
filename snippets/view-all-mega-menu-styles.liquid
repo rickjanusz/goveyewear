@@ -217,8 +217,9 @@
   .section-{{ menu_id }}-view-all-menu--featured-two-column .section-{{ menu_id }}-view-all-menu-secondary {
     display: block;
     padding-top: 0.6rem;
-    width: max-content;
+    width: 100%;
     max-width: 30rem;
+    justify-self: end;
   }
 
   .section-{{ menu_id }}-view-all-menu--featured-two-column .section-{{ menu_id }}-view-all-menu-grid.is-secondary-hidden .section-{{ menu_id }}-view-all-menu-secondary {
@@ -243,18 +244,15 @@
   }
 
   .section-{{ menu_id }}-view-all-menu-secondary-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1.2rem;
-    width: 100%;
+    display: inline-block;
+    position: relative;
     color: #333333;
     text-decoration: none;
     font-size: 1.5rem;
     line-height: 1.35;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    padding: 0.6rem 0;
+    padding: 0.6rem 0 0.6rem 2rem;
   }
 
   .section-{{ menu_id }}-view-all-menu-secondary-link:hover,
@@ -263,12 +261,21 @@
     text-decoration: none;
   }
 
-  .section-{{ menu_id }}-view-all-menu-secondary-link[data-mega-menu-next="frames"]::before,
-  .section-{{ menu_id }}-view-all-menu-secondary-link[data-mega-menu-back="frames"]::before {
-    content: '>';
-    flex: 0 0 auto;
+  .section-{{ menu_id }}-view-all-menu-secondary-link.is-current {
+    color: #6d6d6d;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .section-{{ menu_id }}-view-all-menu-secondary-link.is-current::before {
+    content: '\2192';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
     font-size: 1.3rem;
     line-height: 1;
+    color: currentColor;
   }
 
   .section-{{ menu_id }}-view-all-menu-stage {
