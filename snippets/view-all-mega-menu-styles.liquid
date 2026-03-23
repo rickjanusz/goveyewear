@@ -243,7 +243,11 @@
   }
 
   .section-{{ menu_id }}-view-all-menu-secondary-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    width: 100%;
     color: #333333;
     text-decoration: none;
     font-size: 1.5rem;
@@ -257,6 +261,14 @@
   .section-{{ menu_id }}-view-all-menu-secondary-link:focus-visible {
     color: #6d6d6d;
     text-decoration: none;
+  }
+
+  .section-{{ menu_id }}-view-all-menu-secondary-link[data-mega-menu-next="frames"]::after,
+  .section-{{ menu_id }}-view-all-menu-secondary-link[data-mega-menu-back="frames"]::after {
+    content: '>';
+    flex: 0 0 auto;
+    font-size: 1.3rem;
+    line-height: 1;
   }
 
   .section-{{ menu_id }}-view-all-menu-stage {
