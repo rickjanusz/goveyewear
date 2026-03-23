@@ -245,7 +245,7 @@
   .section-{{ menu_id }}-view-all-menu-secondary-link {
     display: inline-flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 1.2rem;
     width: 100%;
     color: #333333;
@@ -263,8 +263,8 @@
     text-decoration: none;
   }
 
-  .section-{{ menu_id }}-view-all-menu-secondary-link[data-mega-menu-next="frames"]::after,
-  .section-{{ menu_id }}-view-all-menu-secondary-link[data-mega-menu-back="frames"]::after {
+  .section-{{ menu_id }}-view-all-menu-secondary-link[data-mega-menu-next="frames"]::before,
+  .section-{{ menu_id }}-view-all-menu-secondary-link[data-mega-menu-back="frames"]::before {
     content: '>';
     flex: 0 0 auto;
     font-size: 1.3rem;
