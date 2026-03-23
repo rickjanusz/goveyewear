@@ -6,6 +6,8 @@ class FeaturedCollectionMegaMenu {
   constructor(container) {
     this.container = container;
     this.wrapper = container.closest('[class*="view-all-wrap"]');
+    this.grid = container.querySelector('[class*="view-all-menu-grid"]');
+    this.secondaryMenu = container.querySelector('[data-mega-menu-secondary]');
     this.trigger = this.wrapper ? this.wrapper.querySelector('[data-mega-menu-open]') : null;
     this.shell = container.querySelector('[class*="view-all-menu-shell"]');
     this.triggers = Array.from(container.querySelectorAll('[data-mega-menu-trigger]'));
@@ -25,6 +27,7 @@ class FeaturedCollectionMegaMenu {
     };
     this.activeBrandKey = null;
     this.activeBrandTitle = '';
+    this.rootBackLabel = 'Shop by Brand';
     this.currentChromeTitle = this.defaultTitle;
     this.transitionToken = 0;
     this._hoverTimer = null;
@@ -98,13 +101,6 @@ class FeaturedCollectionMegaMenu {
         this.showFrames();
       });
     });
-
-    if (this.hasBrands && this.breadcrumb.brandLabel) {
-      this.breadcrumb.brandLabel.addEventListener('click', () => {
-        if (!this.activeBrandKey) return;
-        this.showFrames(this.activeBrandKey, this.activeBrandTitle, { immediate: true });
-      });
-    }
 
     if (this.closeButton) {
       this.closeButton.addEventListener('click', (event) => {
@@ -184,6 +180,7 @@ class FeaturedCollectionMegaMenu {
   }
 
   showBrands(options = {}) {
+    this.rootBackLabel = 'Shop by Brand';
     this.updateChrome({ showBack: 'none', title: this.defaultTitle });
     this.transitionToStage('brands', options);
   }
@@ -192,6 +189,7 @@ class FeaturedCollectionMegaMenu {
     if (this.hasBrands && targetId) {
       this.activeBrandKey = targetId;
       this.activeBrandTitle = title || this.defaultTitle;
+      this.rootBackLabel = targetId.includes('-secondary-') ? 'Shop' : 'Shop by Brand';
       this.updateChrome({ showBack: 'brands', title: `${this.activeBrandTitle} - Shop by Frame` });
       this.transitionToStage(targetId, options);
       return;
@@ -272,6 +270,7 @@ class FeaturedCollectionMegaMenu {
   }
 
   setActiveStage(nextStage) {
+    this.syncSecondaryMenuVisibility(nextStage);
     this.stages.forEach((stage) => {
       stage.classList.toggle('is-active', stage === nextStage);
       stage.classList.remove('is-transitioning-in', 'is-transitioning-out');
@@ -279,6 +278,12 @@ class FeaturedCollectionMegaMenu {
         card.classList.toggle('is-visible', stage === nextStage);
       });
     });
+  }
+
+  syncSecondaryMenuVisibility(nextStage) {
+    if (!this.grid || !this.secondaryMenu) return;
+    const showSecondaryMenu = nextStage && nextStage.dataset.megaMenuStage === 'brands';
+    this.grid.classList.toggle('is-secondary-hidden', !showSecondaryMenu);
   }
 
   updateChrome({ showBack, title }) {
@@ -336,7 +341,7 @@ class FeaturedCollectionMegaMenu {
     const showFrameCrumb = showBack === 'frames';
 
     if (this.breadcrumb.backBrands) {
-      this.breadcrumb.backBrands.textContent = 'Shop by Brand';
+      this.breadcrumb.backBrands.textContent = this.rootBackLabel || 'Shop';
       this.breadcrumb.backBrands.classList.toggle('is-hidden', false);
     }
     if (this.breadcrumb.sepBrands) {
