@@ -531,7 +531,12 @@
   border: 0.1rem solid rgba(17, 24, 33, 0.2);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #111821;
+}
+
+.collection.collection--card-skin-tactical-white .badge.badge--sold-out {
+  background-color: #8f949b;
+  border-color: #8f949b;
+  color: #ffffff;
 }
 
 .collection.collection--card-skin-tactical-white .quick-add__submit.button--secondary {
