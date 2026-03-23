@@ -353,6 +353,15 @@
             <h3 class="section-{{ section.id }}-view-all-menu-secondary-heading">Explore</h3>
             <nav aria-label="Featured section secondary menu">
               <ul class="section-{{ section.id }}-view-all-menu-secondary-list" role="list">
+                <li>
+                  <button
+                    type="button"
+                    class="section-{{ section.id }}-view-all-menu-secondary-link section-{{ section.id }}-view-all-menu-secondary-link--button"
+                    data-mega-menu-back="frames"
+                  >
+                    Shop by Frame
+                  </button>
+                </li>
                 {%- for secondary_link in secondary_menu_links -%}
                 {%- liquid
                   assign secondary_key = section.id | append: '-secondary-' | append: forloop.index
