@@ -318,9 +318,69 @@
       padding: 0 4rem 4rem;
     }
 
+    .section-{{ section.id }}-view-all-menu--featured-two-column .section-{{ section.id }}-view-all-menu-grid.section-{{ section.id }}-view-all-menu-grid--has-secondary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) fit-content(30rem);
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .section-{{ section.id }}-view-all-menu--featured-two-column .section-{{ section.id }}-view-all-menu-grid.is-secondary-hidden {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
     .section-{{ section.id }}-view-all-menu-frames {
       min-height: 0;
       width: 100%;
+    }
+
+    .section-{{ section.id }}-view-all-menu-secondary {
+      display: none;
+    }
+
+    .section-{{ section.id }}-view-all-menu--featured-two-column .section-{{ section.id }}-view-all-menu-secondary {
+      display: block;
+      padding-top: 0.6rem;
+      width: max-content;
+      max-width: 30rem;
+    }
+
+    .section-{{ section.id }}-view-all-menu--featured-two-column .section-{{ section.id }}-view-all-menu-grid.is-secondary-hidden .section-{{ section.id }}-view-all-menu-secondary {
+      display: none;
+    }
+
+    .section-{{ section.id }}-view-all-menu-secondary-heading {
+      margin: 0 0 1.2rem;
+      font-size: 1.3rem;
+      line-height: 1.2;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #333333;
+    }
+
+    .section-{{ section.id }}-view-all-menu-secondary-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .section-{{ section.id }}-view-all-menu-secondary-link {
+      display: inline-block;
+      color: #333333;
+      text-decoration: none;
+      font-size: 1.5rem;
+      line-height: 1.35;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.6rem 0;
+    }
+
+    .section-{{ section.id }}-view-all-menu-secondary-link:hover,
+    .section-{{ section.id }}-view-all-menu-secondary-link:focus-visible {
+      color: #6d6d6d;
+      text-decoration: none;
     }
 
     .section-{{ section.id }}-view-all-menu-stage {
@@ -598,6 +658,10 @@
     .section-{{ section.id }}-view-all-menu-grid {
       flex: 1 1 auto;
       padding: 1.6rem;
+    }
+
+    .section-{{ section.id }}-view-all-menu-secondary {
+      display: none;
     }
 
     .section-{{ section.id }}-view-all-menu-stage {
