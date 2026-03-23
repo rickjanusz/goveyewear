@@ -15,6 +15,10 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Recent Pulls
 - 2026-03-23: local edit in progress
+  - Intent: move the Gatorz secondary-menu persistence fix into `assets/featured-collection-mega-menu.js`, which is the actual controller used by the header shop mega menu
+  - Files changed: `assets/featured-collection-mega-menu.js`
+  - Result: updated locally, not yet committed or pushed
+- 2026-03-23: local edit in progress
   - Intent: connect `gatorz-secondary-menu` into the main nav shop mega menu so the secondary text links stay visible after selecting Gatorz across that brand's deeper screens
   - Files changed: `assets/header-mega-menu-fullscreen.js`, `snippets/header-view-all-mega-menu.liquid`
   - Result: updated locally, not yet committed or pushed

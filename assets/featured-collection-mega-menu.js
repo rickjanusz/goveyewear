@@ -8,6 +8,9 @@ class FeaturedCollectionMegaMenu {
     this.wrapper = container.closest('[class*="view-all-wrap"]');
     this.grid = container.querySelector('[class*="view-all-menu-grid"]');
     this.secondaryMenu = container.querySelector('[data-mega-menu-secondary]');
+    this.secondaryMenuFor = this.secondaryMenu
+      ? this.secondaryMenu.dataset.megaMenuSecondaryFor || ''
+      : '';
     this.secondaryLinkTriggers = this.secondaryMenu
       ? Array.from(this.secondaryMenu.querySelectorAll('[data-mega-menu-trigger][data-mega-menu-next="frames"]'))
       : [];
@@ -203,6 +206,8 @@ class FeaturedCollectionMegaMenu {
   }
 
   showBrands(options = {}) {
+    this.activeBrandKey = null;
+    this.activeBrandTitle = '';
     this.setCurrentSecondaryKey(null);
     this.updateChrome({ showBack: 'none', title: this.defaultTitle });
     this.transitionToStage('brands', options);
@@ -315,7 +320,14 @@ class FeaturedCollectionMegaMenu {
 
   syncSecondaryMenuVisibility(nextStage) {
     if (!this.grid || !this.secondaryMenu) return;
-    const showSecondaryMenu = nextStage && nextStage.dataset.megaMenuRootStage === 'true';
+    let showSecondaryMenu = false;
+
+    if (this.hasBrands && this.secondaryMenuFor) {
+      showSecondaryMenu = this.activeBrandKey === this.secondaryMenuFor;
+    } else {
+      showSecondaryMenu = !!(nextStage && nextStage.dataset.megaMenuRootStage === 'true');
+    }
+
     this.grid.classList.toggle('is-secondary-hidden', !showSecondaryMenu);
   }
 
