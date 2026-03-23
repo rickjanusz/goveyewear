@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: 2d59d99a3370dd432b1bc44ea2e06b97b1d9bb0e
-- Last pushed commit (GitHub): 2d59d99a3370dd432b1bc44ea2e06b97b1d9bb0e
+- HEAD commit: 967823d8f070bb51c788af63296c82914a006816
+- Last pushed commit (GitHub): ae69caa
 - Local dev server:
   - Running? no
   - Port:
@@ -14,6 +14,22 @@ Keep this file updated so any agent can resume without overwriting files.
   - Live: 160510771450
 
 ## Recent Pulls
+- 2026-03-23: local edit in progress
+  - Intent: make the `blogs/news` index render on a white surface instead of the dark card/background treatment
+  - Files changed: `assets/section-main-blog.css`
+  - Result: updated locally, not yet committed or pushed
+- 2026-03-23: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json`
+  - Intent: pre-live-release safety check for merchant settings/content drift
+  - Result: success
+  - Files updated: no functional settings changes required for this release
+- 2026-03-23: local commit `967823d8f070bb51c788af63296c82914a006816`
+  - Intent: enable quick-add CTA rendering on search results so Acquire / All Units Deployed buttons match collection cards
+  - Files changed: `sections/main-search.liquid`, `templates/search.json`
+  - Result: committed locally, not yet pushed or staged for preview validation
+- 2026-03-23: `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json`
+  - Intent: required settings-only sync from live before staging release
+  - Result: success
+  - Files updated: `config/settings_data.json` (local header key re-applied afterward for this release), `config/settings_schema.json` unchanged
 - 2026-03-19: `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json`
   - Intent: settings-only sync from live after user-admin updates
   - Result: success
@@ -27,6 +43,112 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-23: target theme ID `160510771450` (live)
+  - Branch + commit: `codex/mega-menu-3stage` @ `967823d8f070bb51c788af63296c82914a006816`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only assets/component-card.css --only snippets/card-product.liquid`
+  - Files pushed: `assets/component-card.css`, `snippets/card-product.liquid`
+  - Change: promoted the tactical-white sold-out badge contrast fix to live so the chip reads as grey/white instead of black-on-white
+  - Live preview: https://goveyewear.myshopify.com
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+- 2026-03-23: target theme ID `160510771450` (live)
+  - Branch + commit: `codex/mega-menu-3stage` @ `967823d8f070bb51c788af63296c82914a006816`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only sections/main-search.liquid --only templates/search.json`
+  - Files pushed: `sections/main-search.liquid`, `templates/search.json`
+  - Change: promoted the search quick-add CTA fix to live so Acquire / All Units Deployed buttons render on search results
+  - Live preview: https://goveyewear.myshopify.com
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-3stage` @ `967823d8f070bb51c788af63296c82914a006816`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/main-search.liquid --only templates/search.json`
+  - Files pushed: `sections/main-search.liquid`, `templates/search.json`
+  - Change: enabled quick-add CTA rendering on search results so Acquire / All Units Deployed buttons now match collection cards
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://www.goveyewear.com
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-3stage` @ `d8d2c1d`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/component-card.css --only snippets/card-product.liquid`
+  - Files pushed: `assets/component-card.css`, `snippets/card-product.liquid`
+  - Change: fixed tactical-white collection card sold-out chip contrast by scoping sold-out badge styling (`badge--sold-out`) and removing conflicting global badge text override in white-skin card CSS
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+- 2026-03-23: target theme ID `160510771450` (live)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only snippets/featured-collection-view-all.liquid`
+  - Files pushed: `snippets/featured-collection-view-all.liquid`
+  - Change: promoted Full Arsenal URL-target correction (uses section collection URL setting) while retaining brand-featured-section visibility gate fix
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/featured-collection-view-all.liquid`
+  - Files pushed: `snippets/featured-collection-view-all.liquid`
+  - Change: restored Full Arsenal main CTA target to the section’s collection URL setting while retaining the render-gate fix so enabled buttons display on brand featured sections
+- 2026-03-23: target theme ID `160510771450` (live)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only assets/featured-collection-mega-menu.js --only sections/featured-collection.liquid --only snippets/featured-collection-view-all-mega-menu.liquid --only snippets/featured-collection-view-all.liquid`
+  - Files pushed: `assets/featured-collection-mega-menu.js`, `sections/featured-collection.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`, `snippets/featured-collection-view-all.liquid`
+  - Change: promoted the full approved featured mega-menu/right-rail rollout and CTA target-resolution adjustment from staging to live
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/featured-collection-view-all.liquid`
+  - Files pushed: `snippets/featured-collection-view-all.liquid`
+  - Change: commented out collection-first main View All URL resolution and switched main CTA href to resolve from `detail_button_link` first, then collection URL
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/featured-collection-mega-menu.js --only sections/featured-collection.liquid --only snippets/featured-collection-view-all-mega-menu.liquid`
+  - Files pushed: `assets/featured-collection-mega-menu.js`, `sections/featured-collection.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Change: converted `Shop by Frame` control from button to anchor and updated back-nav click handling to prevent default anchor navigation while preserving in-menu stage transitions
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid`
+  - Files pushed: `sections/featured-collection.liquid`
+  - Change: normalized `Shop by Frame` button styles to match anchor nav items (spacing/typography/appearance), fixing misaligned text and arrow overlap
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/featured-collection-mega-menu.js --only sections/featured-collection.liquid`
+  - Files pushed: `assets/featured-collection-mega-menu.js`, `sections/featured-collection.liquid`
+  - Change: added current-item disabled state for right-rail navigation and left-side arrow indicator; prevents re-triggering when clicking the active item
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid --only snippets/featured-collection-view-all-mega-menu.liquid`
+  - Files pushed: `sections/featured-collection.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Change: removed the right-rail `Explore` heading and deleted its corresponding CSS block
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid`
+  - Files pushed: `sections/featured-collection.liquid`
+  - Change: anchored the featured mega-menu right column by using a fixed right grid track and right-justified rail, preventing right-menu position shifts as left-stage content changes
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/featured-collection-view-all-mega-menu.liquid`
+  - Files pushed: `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Change: removed first-link-only direct-navigation rule and now treats links titled `Explore Brand Page` as the dedicated direct interior-page link while keeping other collection links triggerable for staged navigation
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid --only snippets/featured-collection-view-all-mega-menu.liquid`
+  - Files pushed: `sections/featured-collection.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Change: added an automatic "Shop by Frame" return control at the top of the featured mega-menu right column, wired to the same in-menu stage navigation used by breadcrumbs
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/featured-collection.liquid --only snippets/featured-collection-view-all-mega-menu.liquid`
+  - Files pushed: `sections/featured-collection.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Change: made first right-column link always direct-navigate (Explore Brand behavior) and added top spacing for the secondary column heading while preserving staged breadcrumb/thumbnail flows for other collection links
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/view-all-mega-menu-styles.liquid`
+  - Files pushed: `snippets/view-all-mega-menu-styles.liquid`
+  - Change: adjusted featured mega-menu 2-column rail sizing and right-column text styling (dark gray default, lighter gray hover, no underline)
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/featured-collection-mega-menu.js --only sections/featured-collection.liquid --only snippets/featured-collection-view-all-mega-menu.liquid --only snippets/view-all-mega-menu-styles.liquid`
+  - Files pushed: `assets/featured-collection-mega-menu.js`, `sections/featured-collection.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`, `snippets/view-all-mega-menu-styles.liquid`
+  - Change: added featured-section two-column mega menu with admin-driven right-column text menu and staged collection thumbnail navigation while preserving existing menu chrome
+- 2026-03-23: target theme ID `160581189882` (staging rollback, file-by-file)
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/featured-collection-mega-menu.js`
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only config/settings_data.json`
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/header.liquid`
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/header-view-all-mega-menu.liquid`
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/view-all-mega-menu-styles.liquid`
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only templates/index.json`
+  - Files pushed: `assets/featured-collection-mega-menu.js`, `config/settings_data.json`, `sections/header.liquid`, `snippets/header-view-all-mega-menu.liquid`, `snippets/view-all-mega-menu-styles.liquid`, `templates/index.json`
+  - Change: reverted the previous multi-file mega-menu rollout from staging to return to the prior behavior before re-applying incrementally
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Command: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/featured-collection-mega-menu.js --only config/settings_data.json --only sections/header.liquid --only snippets/header-view-all-mega-menu.liquid --only snippets/view-all-mega-menu-styles.liquid --only templates/index.json`
+  - Files pushed: `assets/featured-collection-mega-menu.js`, `config/settings_data.json`, `sections/header.liquid`, `snippets/header-view-all-mega-menu.liquid`, `snippets/view-all-mega-menu-styles.liquid`, `templates/index.json`
+  - Change: added global two-column Shop mega menu with secondary staged flow; hooked `gatorz-secondary-menu` to header secondary links and Gatorz featured section mega menu
 - 2026-03-19: GitHub sync
   - Command: `git push origin codex/mega-menu-3stage`
   - Commit range: `4b2edfc..2d59d99`
@@ -191,4 +313,4 @@ Keep this file updated so any agent can resume without overwriting files.
 - Live preview: https://goveyewear.myshopify.com
 
 ## Open TODOs / Approvals Needed
-- None currently. Live push not requested in this sync step.
+- Validate sold-out chips on staging collection pages and approve if live push is desired.

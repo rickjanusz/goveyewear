@@ -1,3 +1,16 @@
+.main-blog {
+  background-color: rgb(var(--color-base-background-1));
+  color: rgb(var(--color-base-text));
+}
+
+.main-blog .card__inner.color-accent-1,
+.main-blog .card__inner.color-accent-2,
+.main-blog .card__inner.color-inverse {
+  --color-foreground: var(--color-base-text);
+  --color-background: var(--color-base-background-1);
+  --gradient-background: var(--gradient-base-background-1);
+}
+
 .blog-articles {
   display: grid;
   grid-gap: 1rem;
