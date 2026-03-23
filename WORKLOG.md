@@ -4,7 +4,7 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: d49180c5c1397a4eb7c10e6f0e3e5e4f62ac3f77
+- HEAD commit: 72a88f166d49c8897c816c7e72cdd1fb768ac757
 - Last pushed commit (GitHub): ae69caa
 - Local dev server:
   - Running? no
@@ -47,6 +47,15 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-3stage` @ `72a88f166d49c8897c816c7e72cdd1fb768ac757`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/header-mega-menu-fullscreen.js --only snippets/header-view-all-mega-menu.liquid`
+  - Files pushed: `assets/header-mega-menu-fullscreen.js`, `snippets/header-view-all-mega-menu.liquid`
+  - Change: connected `gatorz-secondary-menu` to the main nav shop mega menu so the secondary text links remain available after selecting Gatorz on later brand-specific screens
+  - Staging preview: https://goveyewear.myshopify.com/?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: none
 - 2026-03-23: target theme ID `160581189882` (staging)
   - Branch + commit: `codex/mega-menu-3stage` @ `d49180c5c1397a4eb7c10e6f0e3e5e4f62ac3f77`
   - Commands:

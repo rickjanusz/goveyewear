@@ -14,6 +14,7 @@ class HeaderMegaMenuFullscreenOverlay {
     this.activeBrandTitle = '';
     this.activeFrameKey = null;
     this.activeFrameTitle = '';
+    this.secondaryMenuVisible = false;
     this.handleKeydown = this.handleKeydown.bind(this);
 
     if (!this.stages.length) return;
@@ -110,6 +111,7 @@ class HeaderMegaMenuFullscreenOverlay {
     this.activeBrandTitle = '';
     this.activeFrameKey = null;
     this.activeFrameTitle = '';
+    this.secondaryMenuVisible = false;
     this.updateChrome({ showBack: 'none', title: this.defaultTitle });
     this.syncSecondaryMenuVisibility();
     this.transitionToStageByType('brands', null, options);
@@ -119,6 +121,7 @@ class HeaderMegaMenuFullscreenOverlay {
     if (!targetId) return;
     this.activeBrandKey = targetId;
     this.activeBrandTitle = title || this.defaultTitle;
+    this.secondaryMenuVisible = targetId === this.secondaryMenuFor;
     this.updateChrome({ showBack: 'brands', title: this.activeBrandTitle });
     this.syncSecondaryMenuVisibility();
     this.transitionToStageByType('frames', targetId, options);
@@ -169,7 +172,7 @@ class HeaderMegaMenuFullscreenOverlay {
 
   syncSecondaryMenuVisibility() {
     if (!this.grid || !this.secondaryMenu) return;
-    const shouldShowSecondary = !!this.activeBrandKey && this.activeBrandKey === this.secondaryMenuFor;
+    const shouldShowSecondary = this.secondaryMenuVisible;
     this.grid.classList.toggle('is-secondary-hidden', !shouldShowSecondary);
     this.secondaryMenu.classList.toggle('is-hidden', !shouldShowSecondary);
   }
