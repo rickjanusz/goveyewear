@@ -17,6 +17,7 @@
         "show_secondary_image": false,
         "show_vendor": false,
         "show_rating": false,
+        "enable_quick_add": true,
         "enable_filtering": true,
         "enable_sorting": true,
         "article_show_date": true,

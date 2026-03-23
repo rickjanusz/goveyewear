@@ -5,6 +5,11 @@
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
 <link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
+{%- if section.settings.enable_quick_add -%}
+  <link rel="stylesheet" href="{{ 'quick-add.css' | asset_url }}" media="print" onload="this.media='all'">
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
 
 <noscript>{{ 'component-search.css' | asset_url | stylesheet_tag }}</noscript>
 
@@ -215,11 +220,12 @@
                         {% render 'card-product',
                           card_product: item,
                           media_aspect_ratio: section.settings.image_ratio,
-                          show_secondary_image: section.settings.show_secondary_image,
-                          show_vendor: section.settings.show_vendor,
-                          show_rating: section.settings.show_rating,
-                          lazy_load: lazy_load
-                        %}
+                        show_secondary_image: section.settings.show_secondary_image,
+                        show_vendor: section.settings.show_vendor,
+                        show_rating: section.settings.show_rating,
+                        show_quick_add: section.settings.enable_quick_add,
+                        lazy_load: lazy_load
+                      %}
                       {%- when 'article' -%}
                         {% render 'article-card',
                           article: item,
@@ -319,6 +325,12 @@
       "default": false,
       "label": "t:sections.main-search.settings.show_rating.label",
       "info": "t:sections.main-search.settings.show_rating.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quick_add",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.enable_quick_buy.label"
     },
     {
       "type": "header",
