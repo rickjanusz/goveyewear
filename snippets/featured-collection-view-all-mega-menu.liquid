@@ -168,6 +168,11 @@
                 if secondary_object != blank and secondary_object.handle != blank
                   assign secondary_handle = secondary_object.handle
                 endif
+                assign secondary_link_title_normalized = secondary_link.title | strip | downcase
+                assign secondary_is_explore_brand_page = false
+                if secondary_link_title_normalized == 'explore brand page'
+                  assign secondary_is_explore_brand_page = true
+                endif
                 assign secondary_menu_handle = secondary_handle | append: '-shop-by-frame'
                 assign secondary_menu = linklists[secondary_menu_handle]
                 assign secondary_frame_links = secondary_menu.links
@@ -179,7 +184,7 @@
                   assign secondary_has_collection_products = true
                 endif
               -%}
-              {%- unless forloop.first -%}
+              {%- unless secondary_is_explore_brand_page -%}
 
               <div class="section-{{ section.id }}-view-all-menu-stage section-{{ section.id }}-view-all-menu-stage--frames" data-mega-menu-stage="frames" data-mega-menu-frames="{{ secondary_key }}">
                 {%- if secondary_frame_links != blank -%}
@@ -367,6 +372,11 @@
                   assign secondary_key = section.id | append: '-secondary-' | append: forloop.index
                   assign secondary_object = secondary_link.object
                   assign secondary_handle = secondary_link.title | handleize
+                  assign secondary_link_title_normalized = secondary_link.title | strip | downcase
+                  assign secondary_is_explore_brand_page = false
+                  if secondary_link_title_normalized == 'explore brand page'
+                    assign secondary_is_explore_brand_page = true
+                  endif
                     if secondary_object != blank and secondary_object.handle != blank
                       assign secondary_handle = secondary_object.handle
                     endif
@@ -381,7 +391,7 @@
                     assign secondary_has_collection_products = true
                   endif
                   assign secondary_is_triggerable = true
-                  if forloop.first
+                  if secondary_is_explore_brand_page
                     assign secondary_is_triggerable = false
                   elsif secondary_frame_links == blank and secondary_has_collection_products == false
                     assign secondary_is_triggerable = false
