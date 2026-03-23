@@ -82,6 +82,11 @@ class FeaturedCollectionMegaMenu {
         const nextStage = trigger.dataset.megaMenuNext;
         if (nextStage === 'frames') {
           const isSecondaryTrigger = !!trigger.closest('[data-mega-menu-secondary]');
+          if (this.hasBrands && isSecondaryTrigger) {
+            event.preventDefault();
+            this.showSecondaryFrames(trigger.dataset.megaMenuTrigger, trigger.textContent.trim());
+            return;
+          }
           if (!this.hasBrands && isSecondaryTrigger && trigger.dataset.megaMenuTrigger === this.currentSecondaryKey) {
             event.preventDefault();
             return;
@@ -219,6 +224,7 @@ class FeaturedCollectionMegaMenu {
     if (this.hasBrands && targetId) {
       this.activeBrandKey = targetId;
       this.activeBrandTitle = title || this.defaultTitle;
+      this.setCurrentSecondaryKey('frames');
       this.updateChrome({ showBack: 'brands', title: `${this.activeBrandTitle} - Shop by Frame` });
       this.transitionToStage(targetId, options);
       return;
@@ -234,6 +240,13 @@ class FeaturedCollectionMegaMenu {
     this.setCurrentSecondaryKey('frames');
     this.updateChrome({ showBack: false, title: this.defaultTitle });
     this.transitionToStage('frames', options);
+  }
+
+  showSecondaryFrames(targetId, title, options = {}) {
+    if (!targetId) return;
+    this.setCurrentSecondaryKey(targetId);
+    this.updateChrome({ showBack: 'frames', title: title || this.defaultTitle });
+    this.transitionToStage(targetId, options);
   }
 
   showVersions(targetId, titleOverride) {

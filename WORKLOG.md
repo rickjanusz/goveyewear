@@ -15,6 +15,10 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Recent Pulls
 - 2026-03-23: local edit in progress
+  - Intent: align the header Gatorz secondary menu behavior with the featured-section mega menu model, including `Shop by Frame`, triggerable secondary screens, and direct `Explore Brand Page` linking
+  - Files changed: `assets/featured-collection-mega-menu.js`, `snippets/header-view-all-mega-menu.liquid`
+  - Result: updated locally, not yet committed or pushed
+- 2026-03-23: local edit in progress
   - Intent: move the header Gatorz secondary menu markup out of the thumbnail column so the shop mega menu renders as a real two-column grid
   - Files changed: `snippets/header-view-all-mega-menu.liquid`
   - Result: updated locally, not yet committed or pushed
