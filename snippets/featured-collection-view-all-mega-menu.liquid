@@ -358,13 +358,13 @@
             <nav aria-label="Featured section secondary menu">
               <ul class="section-{{ section.id }}-view-all-menu-secondary-list" role="list">
                 <li>
-                  <button
-                    type="button"
-                    class="section-{{ section.id }}-view-all-menu-secondary-link section-{{ section.id }}-view-all-menu-secondary-link--button"
+                  <a
+                    href="#"
+                    class="section-{{ section.id }}-view-all-menu-secondary-link"
                     data-mega-menu-back="frames"
                   >
                     Shop by Frame
-                  </button>
+                  </a>
                 </li>
                 {%- for secondary_link in secondary_menu_links -%}
                 {%- liquid

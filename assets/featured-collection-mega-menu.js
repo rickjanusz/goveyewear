@@ -99,7 +99,8 @@ class FeaturedCollectionMegaMenu {
     });
 
     this.backButtons.forEach((button) => {
-      button.addEventListener('click', () => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
         const target = button.dataset.megaMenuBack;
         if (target === 'brands') {
           this.showBrands();
