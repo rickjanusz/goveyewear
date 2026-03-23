@@ -320,7 +320,7 @@
 
     .section-{{ section.id }}-view-all-menu--featured-two-column .section-{{ section.id }}-view-all-menu-grid.section-{{ section.id }}-view-all-menu-grid--has-secondary {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) fit-content(30rem);
+      grid-template-columns: minmax(0, 1fr) minmax(24rem, 30rem);
       gap: 4rem;
       align-items: start;
     }
@@ -341,8 +341,9 @@
     .section-{{ section.id }}-view-all-menu--featured-two-column .section-{{ section.id }}-view-all-menu-secondary {
       display: block;
       padding-top: 0.6rem;
-      width: max-content;
+      width: 100%;
       max-width: 30rem;
+      justify-self: end;
     }
 
     .section-{{ section.id }}-view-all-menu--featured-two-column .section-{{ section.id }}-view-all-menu-grid.is-secondary-hidden .section-{{ section.id }}-view-all-menu-secondary {
