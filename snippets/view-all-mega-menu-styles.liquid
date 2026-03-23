@@ -156,14 +156,10 @@
     border: 0;
     padding: 0;
     color: inherit;
-    cursor: default;
+    cursor: pointer;
     font: inherit;
     text-transform: inherit;
     letter-spacing: inherit;
-  }
-
-  .section-{{ menu_id }}-view-all-menu-crumb[data-mega-menu-back] {
-    cursor: pointer;
   }
 
   .section-{{ menu_id }}-view-all-menu-crumb.is-hidden,
@@ -192,65 +188,15 @@
   }
 
   .section-{{ menu_id }}-view-all-menu-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(20rem, 26rem);
-    gap: 4rem;
+    display: block;
     flex: 1 1 auto;
     min-height: 0;
     padding: 0 4rem 4rem;
   }
 
-  .section-{{ menu_id }}-view-all-menu-grid.is-secondary-hidden,
-  .section-{{ menu_id }}-view-all-menu-grid:not(.section-{{ menu_id }}-view-all-menu-grid--has-secondary) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .section-{{ menu_id }}-view-all-menu-frames {
     min-height: 0;
     width: 100%;
-  }
-
-  .section-{{ menu_id }}-view-all-menu-secondary {
-    display: block;
-    padding-top: 0.6rem;
-  }
-
-  .section-{{ menu_id }}-view-all-menu-grid.is-secondary-hidden .section-{{ menu_id }}-view-all-menu-secondary {
-    display: none;
-  }
-
-  .section-{{ menu_id }}-view-all-menu-secondary-heading {
-    margin: 0 0 1.2rem;
-    font-size: 1.3rem;
-    line-height: 1.2;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #141414;
-  }
-
-  .section-{{ menu_id }}-view-all-menu-secondary-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0.8rem;
-  }
-
-  .section-{{ menu_id }}-view-all-menu-secondary-link {
-    display: inline-block;
-    color: #141414;
-    text-decoration: none;
-    font-size: 1.5rem;
-    line-height: 1.35;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    padding: 0.6rem 0;
-  }
-
-  .section-{{ menu_id }}-view-all-menu-secondary-link:hover,
-  .section-{{ menu_id }}-view-all-menu-secondary-link:focus-visible {
-    text-decoration: underline;
-    text-underline-offset: 0.22em;
   }
 
   .section-{{ menu_id }}-view-all-menu-stage {
@@ -510,10 +456,6 @@
   .section-{{ menu_id }}-view-all-menu-grid {
     flex: 1 1 auto;
     padding: 1.6rem;
-  }
-
-  .section-{{ menu_id }}-view-all-menu-secondary {
-    display: none;
   }
 
   .section-{{ menu_id }}-view-all-menu-stage {
