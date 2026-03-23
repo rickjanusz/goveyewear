@@ -2,7 +2,7 @@
 {%- if section.settings.detail_button_label != blank and section.settings.detail_button_link != blank -%}
   {%- assign show_detail_button = true -%}
 {%- endif -%}
-{%- assign main_view_all_href = section.settings.detail_button_link | default: section.settings.collection.url -%}
+{%- assign main_view_all_href = section.settings.collection.url -%}
 {%- assign show_view_all_block = false -%}
 {%- if section.settings.show_view_all and more_in_collection -%}
   {%- assign show_view_all_block = true -%}
@@ -14,9 +14,6 @@
 {%- if show_view_all_block -%}
   <div class="center collection__view-all">
     <div class="section-{{ section.id }}-view-all-wrap{% if section.settings.view_all_mega_menu != blank and section.settings.view_all_mega_menu.links.size > 0 %} section-{{ section.id }}-view-all-wrap--has-menu{% endif %}">
-      {%- comment -%}
-        Collection-first main CTA resolution is temporarily disabled.
-      {%- endcomment -%}
       {%- if main_view_all_href != blank -%}
         <a href="{{ main_view_all_href }}"
           class="section-{{ section.id }}-view-all-trigger {% if section.settings.view_all_style == 'link' %}link underlined-link{% elsif section.settings.view_all_style == 'solid' %}button{% else %}button button--secondary{% endif %}"
