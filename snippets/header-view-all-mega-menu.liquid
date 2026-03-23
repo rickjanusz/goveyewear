@@ -1,6 +1,8 @@
 {%- assign menu_id = menu_id | default: section.id -%}
 {%- assign menu_title = menu_title | default: 'Shop' -%}
 {%- assign has_secondary_menu = false -%}
+{%- assign global_secondary_menu_links = blank -%}
+{%- assign global_secondary_menu_brand_key = blank -%}
 
 {%- for childlink in menu_links -%}
   {%- liquid
@@ -21,6 +23,8 @@
       assign secondary_menu_links = secondary_menu.links
       if secondary_menu_links != blank
         assign has_secondary_menu = true
+        assign global_secondary_menu_links = secondary_menu_links
+        assign global_secondary_menu_brand_key = menu_id | append: '-brand-' | append: forloop.index
         break
       endif
     endif
@@ -208,111 +212,108 @@
               {%- endfor -%}
             {%- endif -%}
           </div>
-          {%- if frame_links != blank or secondary_menu_links != blank -%}
-            {%- if frame_links != blank -%}
-              {%- for grandchildlink in frame_links -%}
-                {%- assign frame_key = menu_id | append: '-frame-' | append: forloop.parentloop.index | append: '-' | append: forloop.index -%}
-                <div class="section-{{ menu_id }}-view-all-menu-stage section-{{ menu_id }}-view-all-menu-stage--versions" data-mega-menu-stage="versions" data-mega-menu-versions="{{ frame_key }}">
-                  <h3 class="section-{{ menu_id }}-view-all-menu-version-heading">{{ grandchildlink.title | escape }}</h3>
-                  <div class="section-{{ menu_id }}-view-all-menu-version-grid" role="list">
-                    {%- liquid
-                      assign version_collection = grandchildlink.object
-                    -%}
-                    {%- if version_collection != blank and version_collection.all_products_count > 0 -%}
-                      {%- for version_product in version_collection.products limit: 12 -%}
-                        {%- liquid
-                          assign version_image = blank
-                          if version_product.featured_media != blank and version_product.featured_media.preview_image != blank
-                            assign version_image = version_product.featured_media.preview_image
-                          elsif version_product.featured_image != blank
-                            assign version_image = version_product.featured_image
-                          endif
-                        -%}
-                        <a href="{{ version_product.url }}" class="section-{{ menu_id }}-view-all-menu-version-card section-{{ menu_id }}-view-all-menu-card">
-                          <figure class="section-{{ menu_id }}-view-all-menu-frame-figure">
-                            <div class="section-{{ menu_id }}-view-all-menu-frame-image-wrap">
-                              {%- if version_image != blank -%}
-                                <img
-                                  class="section-{{ menu_id }}-view-all-menu-frame-image"
-                                  src="{{ version_image | image_url: width: 480 }}"
-                                  alt="{{ version_product.title | escape }}"
-                                  loading="lazy"
-                                  width="{{ version_image.width }}"
-                                  height="{{ version_image.height }}"
-                                >
-                              {%- else -%}
-                                <span class="section-{{ menu_id }}-view-all-menu-frame-image placeholder-svg-wrapper">
-                                  {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
-                                </span>
-                              {%- endif -%}
-                            </div>
-                            <figcaption class="section-{{ menu_id }}-view-all-menu-frame-title">
-                              {{ version_product.title | escape }}
-                            </figcaption>
-                          </figure>
-                        </a>
-                      {%- endfor -%}
-                    {%- elsif grandchildlink.links != blank -%}
-                      {%- for version_link in grandchildlink.links -%}
-                        {%- liquid
-                          assign version_object = version_link.object
-                          assign version_image = blank
-                          if version_object != blank
-                            if version_object.featured_image != blank
-                              assign version_image = version_object.featured_image
-                            elsif version_object.featured_media != blank and version_object.featured_media.preview_image != blank
-                              assign version_image = version_object.featured_media.preview_image
-                            endif
-                          endif
-                        -%}
-                        <a href="{{ version_link.url }}" class="section-{{ menu_id }}-view-all-menu-version-card section-{{ menu_id }}-view-all-menu-card">
-                          <figure class="section-{{ menu_id }}-view-all-menu-frame-figure">
-                            <div class="section-{{ menu_id }}-view-all-menu-frame-image-wrap">
-                              {%- if version_image != blank -%}
-                                <img
-                                  class="section-{{ menu_id }}-view-all-menu-frame-image"
-                                  src="{{ version_image | image_url: width: 480 }}"
-                                  alt="{{ version_link.title | escape }}"
-                                  loading="lazy"
-                                  width="{{ version_image.width }}"
-                                  height="{{ version_image.height }}"
-                                >
-                              {%- else -%}
-                                <span class="section-{{ menu_id }}-view-all-menu-frame-image placeholder-svg-wrapper">
-                                  {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
-                                </span>
-                              {%- endif -%}
-                            </div>
-                            <figcaption class="section-{{ menu_id }}-view-all-menu-frame-title">
-                              {{ version_link.title | escape }}
-                            </figcaption>
-                          </figure>
-                        </a>
-                      {%- endfor -%}
-                    {%- endif -%}
-                  </div>
-                </div>
-              {%- endfor -%}
-            {%- endif -%}
-
-            {%- if secondary_menu_links != blank -%}
-              <aside class="section-{{ menu_id }}-view-all-menu-secondary" data-mega-menu-secondary data-mega-menu-secondary-for="{{ brand_key }}">
-                <nav aria-label="Gatorz secondary menu">
-                  <ul class="section-{{ menu_id }}-view-all-menu-secondary-list" role="list">
-                    {%- for secondary_link in secondary_menu_links -%}
-                      <li>
-                        <a href="{{ secondary_link.url }}" class="section-{{ menu_id }}-view-all-menu-secondary-link">
-                          {{ secondary_link.title | escape }}
-                        </a>
-                      </li>
+          {%- if frame_links != blank -%}
+            {%- for grandchildlink in frame_links -%}
+              {%- assign frame_key = menu_id | append: '-frame-' | append: forloop.parentloop.index | append: '-' | append: forloop.index -%}
+              <div class="section-{{ menu_id }}-view-all-menu-stage section-{{ menu_id }}-view-all-menu-stage--versions" data-mega-menu-stage="versions" data-mega-menu-versions="{{ frame_key }}">
+                <h3 class="section-{{ menu_id }}-view-all-menu-version-heading">{{ grandchildlink.title | escape }}</h3>
+                <div class="section-{{ menu_id }}-view-all-menu-version-grid" role="list">
+                  {%- liquid
+                    assign version_collection = grandchildlink.object
+                  -%}
+                  {%- if version_collection != blank and version_collection.all_products_count > 0 -%}
+                    {%- for version_product in version_collection.products limit: 12 -%}
+                      {%- liquid
+                        assign version_image = blank
+                        if version_product.featured_media != blank and version_product.featured_media.preview_image != blank
+                          assign version_image = version_product.featured_media.preview_image
+                        elsif version_product.featured_image != blank
+                          assign version_image = version_product.featured_image
+                        endif
+                      -%}
+                      <a href="{{ version_product.url }}" class="section-{{ menu_id }}-view-all-menu-version-card section-{{ menu_id }}-view-all-menu-card">
+                        <figure class="section-{{ menu_id }}-view-all-menu-frame-figure">
+                          <div class="section-{{ menu_id }}-view-all-menu-frame-image-wrap">
+                            {%- if version_image != blank -%}
+                              <img
+                                class="section-{{ menu_id }}-view-all-menu-frame-image"
+                                src="{{ version_image | image_url: width: 480 }}"
+                                alt="{{ version_product.title | escape }}"
+                                loading="lazy"
+                                width="{{ version_image.width }}"
+                                height="{{ version_image.height }}"
+                              >
+                            {%- else -%}
+                              <span class="section-{{ menu_id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+                                {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                              </span>
+                            {%- endif -%}
+                          </div>
+                          <figcaption class="section-{{ menu_id }}-view-all-menu-frame-title">
+                            {{ version_product.title | escape }}
+                          </figcaption>
+                        </figure>
+                      </a>
                     {%- endfor -%}
-                  </ul>
-                </nav>
-              </aside>
-            {%- endif -%}
+                  {%- elsif grandchildlink.links != blank -%}
+                    {%- for version_link in grandchildlink.links -%}
+                      {%- liquid
+                        assign version_object = version_link.object
+                        assign version_image = blank
+                        if version_object != blank
+                          if version_object.featured_image != blank
+                            assign version_image = version_object.featured_image
+                          elsif version_object.featured_media != blank and version_object.featured_media.preview_image != blank
+                            assign version_image = version_object.featured_media.preview_image
+                          endif
+                        endif
+                      -%}
+                      <a href="{{ version_link.url }}" class="section-{{ menu_id }}-view-all-menu-version-card section-{{ menu_id }}-view-all-menu-card">
+                        <figure class="section-{{ menu_id }}-view-all-menu-frame-figure">
+                          <div class="section-{{ menu_id }}-view-all-menu-frame-image-wrap">
+                            {%- if version_image != blank -%}
+                              <img
+                                class="section-{{ menu_id }}-view-all-menu-frame-image"
+                                src="{{ version_image | image_url: width: 480 }}"
+                                alt="{{ version_link.title | escape }}"
+                                loading="lazy"
+                                width="{{ version_image.width }}"
+                                height="{{ version_image.height }}"
+                              >
+                            {%- else -%}
+                              <span class="section-{{ menu_id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+                                {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                              </span>
+                            {%- endif -%}
+                          </div>
+                          <figcaption class="section-{{ menu_id }}-view-all-menu-frame-title">
+                            {{ version_link.title | escape }}
+                          </figcaption>
+                        </figure>
+                      </a>
+                    {%- endfor -%}
+                  {%- endif -%}
+                </div>
+              </div>
+            {%- endfor -%}
           {%- endif -%}
         {%- endfor -%}
       </div>
+      {%- if global_secondary_menu_links != blank and global_secondary_menu_brand_key != blank -%}
+        <aside class="section-{{ menu_id }}-view-all-menu-secondary" data-mega-menu-secondary data-mega-menu-secondary-for="{{ global_secondary_menu_brand_key }}">
+          <nav aria-label="Gatorz secondary menu">
+            <ul class="section-{{ menu_id }}-view-all-menu-secondary-list" role="list">
+              {%- for secondary_link in global_secondary_menu_links -%}
+                <li>
+                  <a href="{{ secondary_link.url }}" class="section-{{ menu_id }}-view-all-menu-secondary-link">
+                    {{ secondary_link.title | escape }}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </nav>
+        </aside>
+      {%- endif -%}
     </div>
   </div>
 </div>

@@ -15,6 +15,10 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Recent Pulls
 - 2026-03-23: local edit in progress
+  - Intent: move the header Gatorz secondary menu markup out of the thumbnail column so the shop mega menu renders as a real two-column grid
+  - Files changed: `snippets/header-view-all-mega-menu.liquid`
+  - Result: updated locally, not yet committed or pushed
+- 2026-03-23: local edit in progress
   - Intent: move the Gatorz secondary-menu persistence fix into `assets/featured-collection-mega-menu.js`, which is the actual controller used by the header shop mega menu
   - Files changed: `assets/featured-collection-mega-menu.js`
   - Result: updated locally, not yet committed or pushed
