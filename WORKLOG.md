@@ -4,7 +4,7 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: 967823d8f070bb51c788af63296c82914a006816
+- HEAD commit: d49180c5c1397a4eb7c10e6f0e3e5e4f62ac3f77
 - Last pushed commit (GitHub): ae69caa
 - Local dev server:
   - Running? no
@@ -14,6 +14,10 @@ Keep this file updated so any agent can resume without overwriting files.
   - Live: 160510771450
 
 ## Recent Pulls
+- 2026-03-23: local edit in progress
+  - Intent: connect `gatorz-secondary-menu` into the main nav shop mega menu so the secondary text links stay visible after selecting Gatorz across that brand's deeper screens
+  - Files changed: `assets/header-mega-menu-fullscreen.js`, `snippets/header-view-all-mega-menu.liquid`
+  - Result: updated locally, not yet committed or pushed
 - 2026-03-23: local edit in progress
   - Intent: make the `blogs/news` index render on a white surface instead of the dark card/background treatment
   - Files changed: `assets/section-main-blog.css`
@@ -43,6 +47,15 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-3stage` @ `d49180c5c1397a4eb7c10e6f0e3e5e4f62ac3f77`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/section-main-blog.css`
+  - Files pushed: `assets/section-main-blog.css`
+  - Change: forced the blog index to a white base surface and neutralized the dark card skin so `blogs/news` no longer renders as a black block
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: none
 - 2026-03-23: target theme ID `160510771450` (live)
   - Branch + commit: `codex/mega-menu-3stage` @ `967823d8f070bb51c788af63296c82914a006816`
   - Commands:

@@ -1,9 +1,12 @@
 class HeaderMegaMenuFullscreenOverlay {
   constructor(container) {
     this.container = container;
+    this.grid = container.querySelector('[class*="view-all-menu-grid"]');
     this.triggers = Array.from(container.querySelectorAll('[data-mega-menu-trigger]'));
     this.stages = Array.from(container.querySelectorAll('[data-mega-menu-stage]'));
     this.backButtons = Array.from(container.querySelectorAll('[data-mega-menu-back]'));
+    this.secondaryMenu = container.querySelector('[data-mega-menu-secondary]');
+    this.secondaryMenuFor = this.secondaryMenu ? this.secondaryMenu.dataset.megaMenuSecondaryFor : '';
     this.titleElement = container.querySelector('[data-mega-menu-title]');
     this.defaultTitle = this.titleElement ? this.titleElement.textContent.trim() : 'Shop';
     this.closeButton = container.querySelector('[data-mega-menu-close]');
@@ -103,7 +106,12 @@ class HeaderMegaMenuFullscreenOverlay {
   }
 
   showBrands(options = {}) {
+    this.activeBrandKey = null;
+    this.activeBrandTitle = '';
+    this.activeFrameKey = null;
+    this.activeFrameTitle = '';
     this.updateChrome({ showBack: 'none', title: this.defaultTitle });
+    this.syncSecondaryMenuVisibility();
     this.transitionToStageByType('brands', null, options);
   }
 
@@ -112,6 +120,7 @@ class HeaderMegaMenuFullscreenOverlay {
     this.activeBrandKey = targetId;
     this.activeBrandTitle = title || this.defaultTitle;
     this.updateChrome({ showBack: 'brands', title: this.activeBrandTitle });
+    this.syncSecondaryMenuVisibility();
     this.transitionToStageByType('frames', targetId, options);
   }
 
@@ -120,6 +129,7 @@ class HeaderMegaMenuFullscreenOverlay {
     this.activeFrameKey = targetId;
     this.activeFrameTitle = title || this.defaultTitle;
     this.updateChrome({ showBack: 'frames', title: this.activeFrameTitle });
+    this.syncSecondaryMenuVisibility();
     this.transitionToStageByType('content', targetId, options);
   }
 
@@ -155,6 +165,13 @@ class HeaderMegaMenuFullscreenOverlay {
     this.stages.forEach((stage) => {
       stage.classList.toggle('is-active', stage === nextStage);
     });
+  }
+
+  syncSecondaryMenuVisibility() {
+    if (!this.grid || !this.secondaryMenu) return;
+    const shouldShowSecondary = !!this.activeBrandKey && this.activeBrandKey === this.secondaryMenuFor;
+    this.grid.classList.toggle('is-secondary-hidden', !shouldShowSecondary);
+    this.secondaryMenu.classList.toggle('is-hidden', !shouldShowSecondary);
   }
 
   updateChrome({ showBack, title }) {
