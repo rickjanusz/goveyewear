@@ -8,6 +8,12 @@ class FeaturedCollectionMegaMenu {
     this.wrapper = container.closest('[class*="view-all-wrap"]');
     this.grid = container.querySelector('[class*="view-all-menu-grid"]');
     this.secondaryMenu = container.querySelector('[data-mega-menu-secondary]');
+    this.secondaryLinkTriggers = this.secondaryMenu
+      ? Array.from(this.secondaryMenu.querySelectorAll('[data-mega-menu-trigger][data-mega-menu-next="frames"]'))
+      : [];
+    this.secondaryRootButton = this.secondaryMenu
+      ? this.secondaryMenu.querySelector('[data-mega-menu-back="frames"]')
+      : null;
     this.trigger = this.wrapper ? this.wrapper.querySelector('[data-mega-menu-open]') : null;
     this.shell = container.querySelector('[class*="view-all-menu-shell"]');
     this.triggers = Array.from(container.querySelectorAll('[data-mega-menu-trigger]'));
@@ -27,6 +33,7 @@ class FeaturedCollectionMegaMenu {
     };
     this.activeBrandKey = null;
     this.activeBrandTitle = '';
+    this.currentSecondaryKey = null;
     this.currentChromeTitle = this.defaultTitle;
     this.transitionToken = 0;
     this._hoverTimer = null;
@@ -71,6 +78,11 @@ class FeaturedCollectionMegaMenu {
       trigger.addEventListener('click', (event) => {
         const nextStage = trigger.dataset.megaMenuNext;
         if (nextStage === 'frames') {
+          const isSecondaryTrigger = !!trigger.closest('[data-mega-menu-secondary]');
+          if (!this.hasBrands && isSecondaryTrigger && trigger.dataset.megaMenuTrigger === this.currentSecondaryKey) {
+            event.preventDefault();
+            return;
+          }
           event.preventDefault();
           this.showFrames(trigger.dataset.megaMenuTrigger, trigger.textContent.trim());
           return;
@@ -94,6 +106,10 @@ class FeaturedCollectionMegaMenu {
           return;
         }
         if (target === 'frames') {
+          if (!this.hasBrands) {
+            const activeStage = this.stages.find((stage) => stage.classList.contains('is-active'));
+            if (activeStage && activeStage.dataset.megaMenuRootStage === 'true') return;
+          }
           this.showFrames(this.activeBrandKey, this.activeBrandTitle, { immediate: true });
           return;
         }
@@ -186,6 +202,7 @@ class FeaturedCollectionMegaMenu {
   }
 
   showBrands(options = {}) {
+    this.setCurrentSecondaryKey(null);
     this.updateChrome({ showBack: 'none', title: this.defaultTitle });
     this.transitionToStage('brands', options);
   }
@@ -202,11 +219,13 @@ class FeaturedCollectionMegaMenu {
     }
 
     if (!this.hasBrands && targetStage && targetId !== 'frames') {
+      this.setCurrentSecondaryKey(targetId);
       this.updateChrome({ showBack: true, title: title || this.defaultTitle });
       this.transitionToStage(targetId, options);
       return;
     }
 
+    this.setCurrentSecondaryKey('frames');
     this.updateChrome({ showBack: false, title: this.defaultTitle });
     this.transitionToStage('frames', options);
   }
@@ -380,6 +399,36 @@ class FeaturedCollectionMegaMenu {
   transitionDuration(cardCount) {
     if (!cardCount) return 0;
     return Math.max((cardCount - 1) * 28 + 110, 110);
+  }
+
+  setCurrentSecondaryKey(key) {
+    this.currentSecondaryKey = key;
+    this.syncSecondaryCurrentState();
+  }
+
+  syncSecondaryCurrentState() {
+    this.secondaryLinkTriggers.forEach((link) => {
+      const isCurrent = this.currentSecondaryKey && link.dataset.megaMenuTrigger === this.currentSecondaryKey;
+      link.classList.toggle('is-current', !!isCurrent);
+      if (isCurrent) {
+        link.setAttribute('aria-current', 'page');
+        link.setAttribute('aria-disabled', 'true');
+      } else {
+        link.removeAttribute('aria-current');
+        link.removeAttribute('aria-disabled');
+      }
+    });
+
+    if (!this.secondaryRootButton) return;
+    const rootIsCurrent = this.currentSecondaryKey === 'frames';
+    this.secondaryRootButton.classList.toggle('is-current', rootIsCurrent);
+    if (rootIsCurrent) {
+      this.secondaryRootButton.setAttribute('aria-current', 'page');
+      this.secondaryRootButton.setAttribute('aria-disabled', 'true');
+    } else {
+      this.secondaryRootButton.removeAttribute('aria-current');
+      this.secondaryRootButton.removeAttribute('aria-disabled');
+    }
   }
 }
 
