@@ -49,6 +49,7 @@
 
 ## Permissions Note
 - Committing and Shopify CLI operations (including launching local dev) may require elevated permissions and can reset Shopify CLI preferences.
+- Always reset Shopify CLI preferences before any commit or Shopify file sync/deploy operation (pull/push): `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`.
 - If Shopify CLI preferences are corrupted or blocking progress, remove them automatically.
 - The user has granted permission to proceed with these automatically when needed.
 
