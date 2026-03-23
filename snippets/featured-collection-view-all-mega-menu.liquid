@@ -179,6 +179,7 @@
                   assign secondary_has_collection_products = true
                 endif
               -%}
+              {%- unless forloop.first -%}
 
               <div class="section-{{ section.id }}-view-all-menu-stage section-{{ section.id }}-view-all-menu-stage--frames" data-mega-menu-stage="frames" data-mega-menu-frames="{{ secondary_key }}">
                 {%- if secondary_frame_links != blank -%}
@@ -342,6 +343,7 @@
                   </div>
                 {%- endfor -%}
               {%- endif -%}
+              {%- endunless -%}
             {%- endfor -%}
           {%- endif -%}
         </div>
@@ -352,10 +354,10 @@
             <nav aria-label="Featured section secondary menu">
               <ul class="section-{{ section.id }}-view-all-menu-secondary-list" role="list">
                 {%- for secondary_link in secondary_menu_links -%}
-                  {%- liquid
-                    assign secondary_key = section.id | append: '-secondary-' | append: forloop.index
-                    assign secondary_object = secondary_link.object
-                    assign secondary_handle = secondary_link.title | handleize
+                {%- liquid
+                  assign secondary_key = section.id | append: '-secondary-' | append: forloop.index
+                  assign secondary_object = secondary_link.object
+                  assign secondary_handle = secondary_link.title | handleize
                     if secondary_object != blank and secondary_object.handle != blank
                       assign secondary_handle = secondary_object.handle
                     endif
@@ -366,19 +368,25 @@
                       assign secondary_frame_links = secondary_link.links
                     endif
                     assign secondary_has_collection_products = false
-                    if secondary_object != blank and secondary_object.all_products_count > 0
-                      assign secondary_has_collection_products = true
-                    endif
-                  -%}
-                  <li>
-                    <a
-                      href="{{ secondary_link.url }}"
-                      class="section-{{ section.id }}-view-all-menu-secondary-link"
-                      {% if secondary_frame_links != blank or secondary_has_collection_products %}data-mega-menu-trigger="{{ secondary_key }}" data-mega-menu-next="frames"{% endif %}
-                    >
-                      {{ secondary_link.title | escape }}
-                    </a>
-                  </li>
+                  if secondary_object != blank and secondary_object.all_products_count > 0
+                    assign secondary_has_collection_products = true
+                  endif
+                  assign secondary_is_triggerable = true
+                  if forloop.first
+                    assign secondary_is_triggerable = false
+                  elsif secondary_frame_links == blank and secondary_has_collection_products == false
+                    assign secondary_is_triggerable = false
+                  endif
+                -%}
+                <li>
+                  <a
+                    href="{{ secondary_link.url }}"
+                    class="section-{{ section.id }}-view-all-menu-secondary-link"
+                    {% if secondary_is_triggerable %}data-mega-menu-trigger="{{ secondary_key }}" data-mega-menu-next="frames"{% endif %}
+                  >
+                    {{ secondary_link.title | escape }}
+                  </a>
+                </li>
                 {%- endfor -%}
               </ul>
             </nav>
