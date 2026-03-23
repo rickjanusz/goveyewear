@@ -6,6 +6,8 @@ class FeaturedCollectionMegaMenu {
   constructor(container) {
     this.container = container;
     this.wrapper = container.closest('[class*="view-all-wrap"]');
+    this.grid = container.querySelector('[class*="view-all-menu-grid"]');
+    this.secondaryMenu = container.querySelector('[data-mega-menu-secondary]');
     this.trigger = this.wrapper ? this.wrapper.querySelector('[data-mega-menu-open]') : null;
     this.shell = container.querySelector('[class*="view-all-menu-shell"]');
     this.triggers = Array.from(container.querySelectorAll('[data-mega-menu-trigger]'));
@@ -189,6 +191,8 @@ class FeaturedCollectionMegaMenu {
   }
 
   showFrames(targetId, title, options = {}) {
+    const targetStage = targetId ? this.resolveStage(targetId) : null;
+
     if (this.hasBrands && targetId) {
       this.activeBrandKey = targetId;
       this.activeBrandTitle = title || this.defaultTitle;
@@ -196,6 +200,13 @@ class FeaturedCollectionMegaMenu {
       this.transitionToStage(targetId, options);
       return;
     }
+
+    if (!this.hasBrands && targetStage && targetId !== 'frames') {
+      this.updateChrome({ showBack: true, title: title || this.defaultTitle });
+      this.transitionToStage(targetId, options);
+      return;
+    }
+
     this.updateChrome({ showBack: false, title: this.defaultTitle });
     this.transitionToStage('frames', options);
   }
@@ -272,6 +283,7 @@ class FeaturedCollectionMegaMenu {
   }
 
   setActiveStage(nextStage) {
+    this.syncSecondaryMenuVisibility(nextStage);
     this.stages.forEach((stage) => {
       stage.classList.toggle('is-active', stage === nextStage);
       stage.classList.remove('is-transitioning-in', 'is-transitioning-out');
@@ -279,6 +291,12 @@ class FeaturedCollectionMegaMenu {
         card.classList.toggle('is-visible', stage === nextStage);
       });
     });
+  }
+
+  syncSecondaryMenuVisibility(nextStage) {
+    if (!this.grid || !this.secondaryMenu) return;
+    const showSecondaryMenu = nextStage && nextStage.dataset.megaMenuRootStage === 'true';
+    this.grid.classList.toggle('is-secondary-hidden', !showSecondaryMenu);
   }
 
   updateChrome({ showBack, title }) {
