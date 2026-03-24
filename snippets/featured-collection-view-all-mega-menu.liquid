@@ -1,6 +1,18 @@
 {%- liquid
-  assign primary_menu_links = section.settings.view_all_mega_menu.links
-  assign secondary_menu_links = section.settings.view_all_mega_menu_secondary.links
+  assign primary_menu = section.settings.view_all_mega_menu
+  assign primary_menu_links = primary_menu.links
+  assign secondary_menu = section.settings.view_all_mega_menu_secondary
+  assign secondary_menu_links = secondary_menu.links
+  assign primary_menu_handle = ''
+
+  if primary_menu != blank and primary_menu.handle != blank
+    assign primary_menu_handle = primary_menu.handle
+  endif
+
+  if secondary_menu_links == blank and primary_menu_handle == 'gatorz-shop-by-frame'
+    assign secondary_menu = linklists['gatorz-secondary-menu']
+    assign secondary_menu_links = secondary_menu.links
+  endif
 -%}
 
 {%- if section.settings.view_all_mega_menu != blank and primary_menu_links.size > 0 -%}
@@ -50,6 +62,7 @@
                 href="{{ childlink.url }}"
                 class="section-{{ section.id }}-view-all-menu-frame section-{{ section.id }}-view-all-menu-card{% if forloop.first %} is-active{% endif %}"
                 data-mega-menu-trigger="{{ section.id }}-{{ forloop.index }}"
+                data-mega-menu-next="versions"
               >
                 <figure class="section-{{ section.id }}-view-all-menu-frame-figure">
                   <div class="section-{{ section.id }}-view-all-menu-frame-image-wrap">
@@ -355,7 +368,7 @@
 
         {%- if secondary_menu_links != blank -%}
           <aside class="section-{{ section.id }}-view-all-menu-secondary" data-mega-menu-secondary>
-            <nav aria-label="Featured section secondary menu">
+            <nav aria-label="{{ secondary_menu.title | default: 'Featured section secondary menu' | escape }}">
               <ul class="section-{{ section.id }}-view-all-menu-secondary-list" role="list">
                 <li>
                   <a

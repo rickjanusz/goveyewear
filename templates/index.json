@@ -132,6 +132,7 @@
         "show_view_all": true,
         "view_all_style": "outline",
         "view_all_mega_menu": "gatorz-shop-by-frame",
+        "view_all_mega_menu_secondary": "gatorz-secondary-menu",
         "detail_button_label": "Explore Gatorz",
         "detail_button_link": "/collections/gatorz",
         "enable_desktop_slider": true,
