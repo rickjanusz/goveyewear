@@ -37,10 +37,78 @@
   margin: 3.2rem auto 0;
   width: 100%;
   background-color: rgb(var(--color-background));
+  --color-base-text: 16, 20, 27;
+  --color-foreground: 16, 20, 27;
+  --color-base-outline-button-labels: 16, 20, 27;
+  --color-link: 16, 20, 27;
+  --alpha-foreground: 1;
+  --alpha-link: 1;
+  --color-badge-background: 16, 20, 27;
+  --color-badge-border: 16, 20, 27;
   overflow: hidden;
   max-width: var(--page-width);
   width: calc(100% - 3rem);
 }
+
+.quick-add-modal__content .badge {
+  color: #ffffff;
+}
+
+.quick-add-modal__content .product__text,
+.quick-add-modal__content .product__title,
+.quick-add-modal__content .price,
+.quick-add-modal__content .product__tax,
+.quick-add-modal__content .product-form__input .form__label {
+  color: #10141b;
+}
+
+.quick-add-modal__content .product-form__input input[type='radio'] + label {
+  color: #10141b;
+  border-color: #10141b;
+}
+
+.quick-add-modal__content .product-form__input input[type='radio']:checked + label {
+  color: #ffffff !important;
+}
+
+.quick-add-modal__content .product-form__submit,
+.quick-add-modal__content .button,
+.quick-add-modal__content .button--secondary {
+  color: #10141b !important;
+  border-color: #10141b !important;
+  background-color: transparent !important;
+  box-shadow: 0 0 0 0.1rem #10141b !important;
+}
+
+.quick-add-modal__content .shopify-payment-terms,
+.quick-add-modal__content .shopify-payment-terms__text,
+.quick-add-modal__content .shopify-payment-terms__more-options,
+.quick-add-modal__content .shopify-payment-terms a {
+  color: #10141b !important;
+  opacity: 1 !important;
+}
+
+.quick-add-modal__content .shopify-payment-terms__text span,
+.quick-add-modal__content .shopify-payment-terms__more-options span,
+.quick-add-modal__content .shopify-payment-terms__text *,
+.quick-add-modal__content .shopify-payment-terms__more-options * {
+  color: #10141b !important;
+  opacity: 1 !important;
+}
+
+.quick-add-modal__content .shopify-payment-terms [style*="color"] {
+  color: #10141b !important;
+}
+
+.quick-add-modal__content,
+.quick-add-modal__content .color-background-1,
+.quick-add-modal__content .color-background-2,
+.quick-add-modal__content .color-inverse,
+.quick-add-modal__content .color-accent-1,
+.quick-add-modal__content .color-accent-2 {
+  color: #10141b !important;
+}
+
 
 @media screen and (min-width: 750px) {
   .quick-add-modal__content {
@@ -198,4 +266,8 @@ quick-add-modal .product-form__buttons {
   padding: 0.8rem;
   min-width: 100%;
   box-sizing: border-box;
+}
+
+.card__content .quick-add {
+  margin-top: 0;
 }

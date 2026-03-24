@@ -1,0 +1,33 @@
+{%- assign show_detail_button = false -%}
+{%- if section.settings.detail_button_label != blank and section.settings.detail_button_link != blank -%}
+  {%- assign show_detail_button = true -%}
+{%- endif -%}
+{%- assign main_view_all_href = section.settings.collection.url -%}
+{%- assign show_view_all_block = false -%}
+{%- if section.settings.show_view_all and more_in_collection -%}
+  {%- assign show_view_all_block = true -%}
+{%- elsif section.settings.show_view_all and show_detail_button -%}
+  {%- assign show_view_all_block = true -%}
+{%- elsif section.settings.show_view_all and main_view_all_href != blank -%}
+  {%- assign show_view_all_block = true -%}
+{%- endif -%}
+{%- if show_view_all_block -%}
+  <div class="center collection__view-all">
+    <div class="section-{{ section.id }}-view-all-wrap{% if section.settings.view_all_mega_menu != blank and section.settings.view_all_mega_menu.links.size > 0 %} section-{{ section.id }}-view-all-wrap--has-menu{% endif %}">
+      {%- if main_view_all_href != blank -%}
+        <a href="{{ main_view_all_href }}"
+          class="section-{{ section.id }}-view-all-trigger {% if section.settings.view_all_style == 'link' %}link underlined-link{% elsif section.settings.view_all_style == 'solid' %}button{% else %}button button--secondary{% endif %}"
+          aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title | default: 'Collection' }}"
+        >
+          {{ 'sections.featured_collection.view_all' | t }}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.detail_button_label != blank and section.settings.detail_button_link != blank -%}
+        <a href="{{ section.settings.detail_button_link }}" class="section-{{ section.id }}-view-all-trigger {% if section.settings.view_all_style == 'link' %}link underlined-link{% elsif section.settings.view_all_style == 'solid' %}button{% else %}button button--secondary{% endif %}">
+          {{ section.settings.detail_button_label | escape }}
+        </a>
+      {%- endif -%}
+      {% render 'featured-collection-view-all-mega-menu', section: section %}
+    </div>
+  </div>
+{%- endif -%}

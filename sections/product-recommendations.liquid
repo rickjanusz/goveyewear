@@ -1,15 +1,49 @@
+{% render 'section-border-accent' %}
+
 <link rel="stylesheet" href="{{ 'component-card.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'section-product-recommendations.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-accordion.css' | asset_url }}" media="print" onload="this.media='all'">
 
 <noscript>{{ 'component-card.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'component-price.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'section-product-recommendations.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-accordion.css' | asset_url | stylesheet_tag }}</noscript>
 
 {%- style -%}
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  .section-{{ section.id }}-heading {
+    text-align: {{ section.settings.heading_alignment | default: 'left' }};
+  }
+
+  .product-recommendations__meta-accordion {
+    margin-top: 2.4rem;
+  }
+
+  .product-recommendations__meta-accordion .accordion + .accordion {
+    margin-top: 0.8rem;
+  }
+
+  .product-recommendations__meta-accordion-list {
+    margin: 1.2rem 0 0;
+    padding-left: 2rem;
+  }
+
+  .product-recommendations__meta-accordion-list li + li {
+    margin-top: 0.4rem;
+  }
+
+  .product-recommendations__meta-video {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 1.2rem;
+    border-radius: 0.4rem;
+    background: #000;
   }
 
   @media screen and (min-width: 750px) {
@@ -20,8 +54,38 @@
   }
 {%- endstyle -%}
 
+{%- liquid
+  assign mo_specs = product.metafields.custom.specs_tech_data_structured.value
+  assign mo_comparison = product.metafields.custom.comparison_table_structured.value
+  assign mo_use_cases = product.metafields.custom.mission_use_cases_structured.value
+  assign mo_media_callouts = product.metafields.custom.media_callouts_structured.value
+
+  if mo_specs.first != blank
+    assign mo_specs = mo_specs.first
+  endif
+  if mo_comparison.first != blank
+    assign mo_comparison = mo_comparison.first
+  endif
+  if mo_use_cases.first != blank
+    assign mo_use_cases = mo_use_cases.first
+  endif
+  if mo_media_callouts.first != blank
+    assign mo_media_callouts = mo_media_callouts.first
+  endif
+
+  assign mf_specs = product.metafields.custom.specs_tech_data
+  assign mf_comparison = product.metafields.custom.comparison_table
+  assign mf_use_cases = product.metafields.custom.mission_use_cases
+  assign mf_media_callouts = product.metafields.custom.media_callouts
+
+  assign has_meta_accordion = false
+  if mo_specs != blank or mo_comparison != blank or mo_use_cases != blank or mo_media_callouts != blank or mf_specs != blank or mf_comparison != blank or mf_use_cases != blank or mf_media_callouts != blank
+    assign has_meta_accordion = true
+  endif
+-%}
+
 <div class="color-{{ section.settings.color_scheme }} gradient">
-  <product-recommendations class="product-recommendations page-width section-{{ section.id }}-padding isolate" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}">
+  <product-recommendations class="product-recommendations collection collection--card-skin-tactical-white page-width section-{{ section.id }}-padding section-{{ section.id }}-heading isolate" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}">
     {% if recommendations.performed and recommendations.products_count > 0 %}
       <h2 class="product-recommendations__heading {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
       <ul class="grid product-grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down" role="list">
@@ -30,6 +94,7 @@
             {% render 'card-product',
               card_product: recommendation,
               media_aspect_ratio: section.settings.image_ratio,
+              card_image_fit: section.settings.card_image_fit,
               show_secondary_image: section.settings.show_secondary_image,
               show_vendor: section.settings.show_vendor,
               show_rating: section.settings.show_rating
@@ -38,6 +103,169 @@
         {% endfor %}
       </ul>
     {% endif %}
+
+    {%- if has_meta_accordion -%}
+      <div class="product-recommendations__meta-accordion" data-product-meta-accordion>
+        {%- if mo_specs != blank or mf_specs != blank -%}
+          <div class="accordion">
+            <details id="Details-specs-{{ section.id }}">
+              <summary>
+                <div class="summary__title">
+                  {% render 'icon-accordion', icon: 'clipboard' %}
+                  <h3 class="h4 accordion__title">
+                    {{ mo_specs.title.value | default: 'Specs / Tech Data' }}
+                  </h3>
+                </div>
+                {% render 'icon-caret' %}
+              </summary>
+              <div class="accordion__content rte">
+                {%- if mo_specs != blank -%}
+                  {%- if mo_specs.content != blank -%}
+                    {{ mo_specs.content | metafield_tag }}
+                  {%- endif -%}
+                  {%- if mo_specs.bullets.value != blank -%}
+                    <ul class="product-recommendations__meta-accordion-list">
+                      {%- for bullet in mo_specs.bullets.value -%}
+                        <li>{{ bullet }}</li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                {%- else -%}
+                  {{ mf_specs | metafield_tag }}
+                {%- endif -%}
+              </div>
+            </details>
+          </div>
+        {%- endif -%}
+
+        {%- if mo_comparison != blank or mf_comparison != blank -%}
+          <div class="accordion">
+            <details id="Details-comparison-{{ section.id }}">
+              <summary>
+                <div class="summary__title">
+                  {% render 'icon-accordion', icon: 'eye' %}
+                  <h3 class="h4 accordion__title">
+                    {{ mo_comparison.title.value | default: 'Comparison Table' }}
+                  </h3>
+                </div>
+                {% render 'icon-caret' %}
+              </summary>
+              <div class="accordion__content rte">
+                {%- if mo_comparison != blank -%}
+                  {%- if mo_comparison.content != blank -%}
+                    {{ mo_comparison.content | metafield_tag }}
+                  {%- endif -%}
+                  {%- if mo_comparison.bullets.value != blank -%}
+                    <ul class="product-recommendations__meta-accordion-list">
+                      {%- for bullet in mo_comparison.bullets.value -%}
+                        <li>{{ bullet }}</li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                {%- else -%}
+                  {{ mf_comparison | metafield_tag }}
+                {%- endif -%}
+              </div>
+            </details>
+          </div>
+        {%- endif -%}
+
+        {%- if mo_use_cases != blank or mf_use_cases != blank -%}
+          <div class="accordion">
+            <details id="Details-use-cases-{{ section.id }}">
+              <summary>
+                <div class="summary__title">
+                  {% render 'icon-accordion', icon: 'chat_bubble' %}
+                  <h3 class="h4 accordion__title">
+                    {{ mo_use_cases.title.value | default: 'Mission Use Cases' }}
+                  </h3>
+                </div>
+                {% render 'icon-caret' %}
+              </summary>
+              <div class="accordion__content rte">
+                {%- if mo_use_cases != blank -%}
+                  {%- if mo_use_cases.content != blank -%}
+                    {{ mo_use_cases.content | metafield_tag }}
+                  {%- endif -%}
+                  {%- if mo_use_cases.bullets.value != blank -%}
+                    <ul class="product-recommendations__meta-accordion-list">
+                      {%- for bullet in mo_use_cases.bullets.value -%}
+                        <li>{{ bullet }}</li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                {%- else -%}
+                  {{ mf_use_cases | metafield_tag }}
+                {%- endif -%}
+              </div>
+            </details>
+          </div>
+        {%- endif -%}
+
+        {%- if mo_media_callouts != blank or mf_media_callouts != blank -%}
+          <div class="accordion">
+            <details id="Details-media-callouts-{{ section.id }}" open>
+              <summary>
+                <div class="summary__title">
+                  {% render 'icon-accordion', icon: 'star' %}
+                  <h3 class="h4 accordion__title">
+                    {{ mo_media_callouts.title.value | default: 'Media + Callouts' }}
+                  </h3>
+                </div>
+                {% render 'icon-caret' %}
+              </summary>
+              <div class="accordion__content rte">
+                {%- if mo_media_callouts != blank -%}
+                  {%- if mo_media_callouts.content != blank -%}
+                    {{ mo_media_callouts.content | metafield_tag }}
+                  {%- endif -%}
+                  {%- if mo_media_callouts.bullets.value != blank -%}
+                    <ul class="product-recommendations__meta-accordion-list">
+                      {%- for bullet in mo_media_callouts.bullets.value -%}
+                        <li>{{ bullet }}</li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                  {%- assign media_callouts_video = mo_media_callouts.video.value -%}
+                  {%- if media_callouts_video != blank and media_callouts_video.media_type == 'video' -%}
+                    {%- assign media_callouts_video_source = blank -%}
+                    {%- for source in media_callouts_video.sources -%}
+                      {%- if source.mime_type contains 'mp4' -%}
+                        {%- assign media_callouts_video_source = source -%}
+                        {%- if source.width != blank and source.width <= 1280 -%}
+                          {%- break -%}
+                        {%- endif -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                    {%- if media_callouts_video_source == blank -%}
+                      {%- assign media_callouts_video_source = media_callouts_video.sources | first -%}
+                    {%- endif -%}
+                    {%- assign media_callouts_video_poster = media_callouts_video.preview_image -%}
+                    <video
+                      class="product-recommendations__meta-video"
+                      controls
+                      autoplay
+                      muted
+                      loop
+                      playsinline
+                      preload="metadata"
+                      {% if media_callouts_video_poster != blank %}poster="{{ media_callouts_video_poster | image_url: width: 1200 }}"{% endif %}
+                    >
+                      {%- if media_callouts_video_source != blank -%}
+                        <source src="{{ media_callouts_video_source.url }}" type="{{ media_callouts_video_source.mime_type }}">
+                      {%- endif -%}
+                      <track kind="captions" srclang="en" label="English captions" src="{{ 'captions-placeholder.vtt' | asset_url }}" default>
+                    </video>
+                  {%- endif -%}
+                {%- else -%}
+                  {{ mf_media_callouts | metafield_tag }}
+                {%- endif -%}
+              </div>
+            </details>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
   </product-recommendations>
 </div>
 
@@ -114,6 +342,17 @@
       "label": "t:sections.all.heading_size.label"
     },
     {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
       "type": "range",
       "id": "products_to_show",
       "min": 2,
@@ -185,6 +424,16 @@
       "label": "t:sections.product-recommendations.settings.image_ratio.label"
     },
     {
+      "type": "select",
+      "id": "card_image_fit",
+      "label": "Product image fit",
+      "default": "contain",
+      "options": [
+        { "value": "contain", "label": "Contain" },
+        { "value": "cover", "label": "Cover" }
+      ]
+    },
+    {
       "type": "checkbox",
       "id": "show_secondary_image",
       "default": false,
@@ -247,6 +496,128 @@
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
     }
-  ]
+,
+    {
+      "type": "image_picker",
+      "id": "border_accent_top",
+      "label": "Border Accent Top"
+    },
+    {
+      "type": "image_picker",
+      "id": "border_accent_bottom",
+      "label": "Border Accent Bottom"
+    },
+    {
+      "type": "range",
+      "id": "border_accent_height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60,
+      "label": "Border Accent Height"
+    }
+,
+    {
+      "type": "header",
+      "content": "Corner Accents"
+    },
+    {
+      "type": "select",
+      "id": "corner_accent_image_mode",
+      "label": "Corner image source",
+      "default": "all",
+      "options": [
+        { "value": "all", "label": "One image for all corners" },
+        { "value": "individual", "label": "Different image per corner" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_all",
+      "label": "Corner image (all)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'all' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_top_left",
+      "label": "Corner image (top left)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_top_right",
+      "label": "Corner image (top right)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_bottom_left",
+      "label": "Corner image (bottom left)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_bottom_right",
+      "label": "Corner image (bottom right)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_size",
+      "min": 8,
+      "max": 108,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "label": "Corner size"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_offset_x",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Corner horizontal offset"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_offset_y",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Corner vertical offset"
+    },
+    {
+      "type": "checkbox",
+      "id": "corner_accent_random_rotation",
+      "default": false,
+      "label": "Randomize corner rotation"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_rotation_min",
+      "min": -45,
+      "max": 0,
+      "step": 1,
+      "unit": "deg",
+      "default": -12,
+      "label": "Rotation min"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_rotation_max",
+      "min": 0,
+      "max": 45,
+      "step": 1,
+      "unit": "deg",
+      "default": 12,
+      "label": "Rotation max"
+    }
+    ]
 }
 {% endschema %}

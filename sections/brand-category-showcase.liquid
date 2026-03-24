@@ -1,0 +1,733 @@
+{% render 'section-border-accent' %}
+
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .brand-showcase-{{ section.id }} .brand-showcase__hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  @media screen and (min-width: 990px) {
+    .brand-showcase-{{ section.id }} .brand-showcase__hero {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+  }
+
+  .brand-showcase-{{ section.id }} .brand-showcase__headline {
+    margin: 0 0 0.8rem;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-showcase__tagline {
+    margin: 0 0 1.2rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    opacity: 0.8;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-showcase__intro > * {
+    margin: 0;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-showcase__media {
+    background: rgb(var(--color-background));
+    border: 0.1rem solid rgba(var(--color-foreground), 0.2);
+    min-height: 28rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-showcase__media img,
+  .brand-showcase-{{ section.id }} .brand-showcase__media iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 0;
+    display: block;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-showcase__section-title {
+    margin: 0 0 1.6rem;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-showcase__categories {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+    margin-bottom: 3.2rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .brand-showcase-{{ section.id }} .brand-showcase__categories {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .brand-showcase-{{ section.id }} .brand-showcase__categories {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .brand-showcase-{{ section.id }} .brand-category-card {
+    border: 0.1rem solid rgba(var(--color-foreground), 0.2);
+    background: rgba(var(--color-background), 0.75);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-category-card__media {
+    background: rgb(var(--color-background));
+    border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.16);
+    min-height: 18rem;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-category-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-category-card__content {
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    flex: 1;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-category-card__badge {
+    display: inline-block;
+    width: fit-content;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-beauty-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin-bottom: 3.2rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .brand-showcase-{{ section.id }} .brand-beauty-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .brand-showcase-{{ section.id }} .brand-beauty-grid__item {
+    border: 0.1rem solid rgba(var(--color-foreground), 0.2);
+    background: rgba(var(--color-background), 0.75);
+    overflow: hidden;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-beauty-grid__image {
+    min-height: 20rem;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-beauty-grid__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-beauty-grid__caption {
+    padding: 1rem 1.2rem;
+    margin: 0;
+  }
+
+  .brand-showcase-{{ section.id }} .brand-special-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .brand-showcase-{{ section.id }} .brand-special-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .brand-showcase-{{ section.id }} .brand-special-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient brand-showcase-{{ section.id }}">
+  <div class="page-width section-{{ section.id }}-padding">
+    <div class="brand-showcase__hero">
+      <div>
+        {%- if section.settings.brand_name != blank -%}
+          <h2 class="brand-showcase__headline {{ section.settings.heading_size }}">{{ section.settings.brand_name | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.brand_tagline != blank -%}
+          <p class="brand-showcase__tagline">{{ section.settings.brand_tagline | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <div class="brand-showcase__intro rte">{{ section.settings.intro }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.hero_image != blank or section.settings.hero_video_url != blank -%}
+        <div class="brand-showcase__media">
+          {%- if section.settings.hero_media_mode == 'video' and section.settings.hero_video_url != blank -%}
+            {%- if section.settings.hero_video_url.type == 'youtube' -%}
+              <iframe
+                src="https://www.youtube.com/embed/{{ section.settings.hero_video_url.id }}?playsinline=1&rel=0&modestbranding=1"
+                title="{{ section.settings.brand_name | default: 'Brand video' | escape }}"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            {%- elsif section.settings.hero_video_url.type == 'vimeo' -%}
+              <iframe
+                src="https://player.vimeo.com/video/{{ section.settings.hero_video_url.id }}"
+                title="{{ section.settings.brand_name | default: 'Brand video' | escape }}"
+                loading="lazy"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            {%- endif -%}
+          {%- else -%}
+            {%- if section.settings.hero_image.id != blank -%}
+              {{ section.settings.hero_image | image_url: width: 1800 | image_tag: loading: 'lazy', widths: '375, 550, 750, 1100, 1500, 1800', alt: section.settings.brand_name }}
+            {%- else -%}
+              <img
+                src="{{ section.settings.hero_image }}"
+                alt="{{ section.settings.brand_name | escape }}"
+                loading="lazy"
+                width="1800"
+                height="1013"
+              >
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_category_shopping and section.blocks.size > 0 -%}
+      <h3 class="brand-showcase__section-title {{ section.settings.subheading_size }}">{{ section.settings.category_heading | escape }}</h3>
+      <div class="brand-showcase__categories" role="list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'category_card' -%}
+            {%- assign linked_collection = block.settings.collection -%}
+            <article class="brand-category-card" role="listitem" {{ block.shopify_attributes }}>
+              {%- if block.settings.image != blank or linked_collection.featured_image != blank -%}
+                <a class="brand-category-card__media" href="{{ linked_collection.url | default: '#' }}">
+                  {%- assign category_image = block.settings.image | default: linked_collection.featured_image -%}
+                  {{ category_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '360, 533, 720, 900', alt: block.settings.title }}
+                </a>
+              {%- endif -%}
+              <div class="brand-category-card__content">
+                {%- if block.settings.badge_label != blank -%}
+                  <span class="badge color-{{ settings.sale_badge_color_scheme }} brand-category-card__badge">{{ block.settings.badge_label | escape }}</span>
+                {%- endif -%}
+
+                <h4 class="h4">
+                  <a class="full-unstyled-link" href="{{ linked_collection.url | default: '#' }}">
+                    {{ block.settings.title | default: linked_collection.title | escape }}
+                  </a>
+                </h4>
+
+                {%- if block.settings.description != blank -%}
+                  <p class="caption">{{ block.settings.description | escape }}</p>
+                {%- endif -%}
+
+                {%- if linked_collection.url != blank -%}
+                  <a href="{{ linked_collection.url }}" class="button button--secondary">{{ block.settings.button_label | default: 'Shop collection' | escape }}</a>
+                {%- endif -%}
+              </div>
+            </article>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- assign beauty_blocks = section.blocks | where: 'type', 'beauty_shot' -%}
+    {%- if section.settings.show_beauty_shots and beauty_blocks.size > 0 -%}
+      <h3 class="brand-showcase__section-title {{ section.settings.subheading_size }}">{{ section.settings.beauty_heading | escape }}</h3>
+      <div class="brand-beauty-grid">
+        {%- for block in beauty_blocks -%}
+          <figure class="brand-beauty-grid__item" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              <div class="brand-beauty-grid__image">
+                {{ block.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '375, 550, 750, 1100, 1200', alt: block.settings.caption }}
+              </div>
+            {%- endif -%}
+            {%- if block.settings.caption != blank -%}
+              <figcaption class="brand-beauty-grid__caption caption">{{ block.settings.caption | escape }}</figcaption>
+            {%- endif -%}
+          </figure>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.special_collection != blank -%}
+      <h3 class="brand-showcase__section-title {{ section.settings.subheading_size }}">{{ section.settings.special_heading | escape }}</h3>
+      <div class="brand-special-grid">
+        {%- assign special_tag_filter = section.settings.special_tag_filter | strip | downcase -%}
+        {%- assign special_tag_filters = special_tag_filter | split: ',' -%}
+        {%- assign shown_special_count = 0 -%}
+        {%- for product in section.settings.special_collection.products -%}
+          {%- assign include_product = false -%}
+          {%- if special_tag_filter == blank -%}
+            {%- assign include_product = true -%}
+          {%- else -%}
+            {%- assign product_tags_csv = product.tags | join: ',' | downcase -%}
+            {%- assign product_tags_wrapped = ',' | append: product_tags_csv | append: ',' -%}
+            {%- for tag_value in special_tag_filters -%}
+              {%- assign required_tag = tag_value | strip -%}
+              {%- assign required_tag_wrapped = ',' | append: required_tag | append: ',' -%}
+              {%- if required_tag != blank and product_tags_wrapped contains required_tag_wrapped -%}
+                {%- assign include_product = true -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+
+          {%- if include_product -%}
+            <div>
+              {% render 'card-product',
+                card_product: product,
+                media_aspect_ratio: section.settings.image_ratio,
+                card_image_fit: section.settings.card_image_fit,
+                show_secondary_image: section.settings.show_secondary_image,
+                show_vendor: section.settings.show_vendor,
+                show_rating: section.settings.show_rating,
+                show_quick_add: section.settings.show_quick_add,
+                section_id: section.id
+              %}
+            </div>
+            {%- assign shown_special_count = shown_special_count | plus: 1 -%}
+          {%- endif -%}
+
+          {%- if shown_special_count >= section.settings.special_products_to_show -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Brand Category Showcase",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "accent-1",
+      "options": [
+        { "value": "accent-1", "label": "Accent 1" },
+        { "value": "accent-2", "label": "Accent 2" },
+        { "value": "background-1", "label": "Background 1" },
+        { "value": "background-2", "label": "Background 2" },
+        { "value": "inverse", "label": "Inverse" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "Gatorz"
+    },
+    {
+      "type": "text",
+      "id": "brand_tagline",
+      "label": "Brand tagline",
+      "default": "Mission-ready performance eyewear"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "<p>Showcase the brand story, mission, and category-level value proposition here.</p>"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "default": "h1",
+      "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "subheading_size",
+      "label": "Section heading size",
+      "default": "h2",
+      "options": [
+        { "value": "h4", "label": "Small" },
+        { "value": "h3", "label": "Medium" },
+        { "value": "h2", "label": "Large" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Hero media"
+    },
+    {
+      "type": "select",
+      "id": "hero_media_mode",
+      "label": "Hero media type",
+      "default": "image",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "video_url",
+      "id": "hero_video_url",
+      "accept": ["youtube", "vimeo"],
+      "label": "Hero video URL",
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+    },
+    {
+      "type": "header",
+      "content": "Category shopping"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_category_shopping",
+      "label": "Show category shopping",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "category_heading",
+      "label": "Category heading",
+      "default": "Shop by category"
+    },
+    {
+      "type": "header",
+      "content": "Beauty shots"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_beauty_shots",
+      "label": "Show beauty shots",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "beauty_heading",
+      "label": "Beauty heading",
+      "default": "Beauty shots"
+    },
+    {
+      "type": "header",
+      "content": "Special editions"
+    },
+    {
+      "type": "text",
+      "id": "special_heading",
+      "label": "Special section heading",
+      "default": "Special editions"
+    },
+    {
+      "type": "collection",
+      "id": "special_collection",
+      "label": "Special editions collection"
+    },
+    {
+      "type": "text",
+      "id": "special_tag_filter",
+      "label": "Special products tag filter",
+      "info": "Optional. Only products with this exact tag are shown."
+    },
+    {
+      "type": "range",
+      "id": "special_products_to_show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4,
+      "label": "Products to show"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Product image ratio",
+      "default": "adapt",
+      "options": [
+        { "value": "adapt", "label": "Adapt" },
+        { "value": "portrait", "label": "Portrait" },
+        { "value": "square", "label": "Square" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "card_image_fit",
+      "label": "Product image fit",
+      "default": "contain",
+      "options": [
+        { "value": "contain", "label": "Contain" },
+        { "value": "cover", "label": "Cover" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "Show secondary image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_add",
+      "label": "Show quick add",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 40,
+      "label": "Top padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 40,
+      "label": "Bottom padding"
+    },
+    {
+      "type": "image_picker",
+      "id": "border_accent_top",
+      "label": "Border Accent Top"
+    },
+    {
+      "type": "image_picker",
+      "id": "border_accent_bottom",
+      "label": "Border Accent Bottom"
+    },
+    {
+      "type": "range",
+      "id": "border_accent_height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60,
+      "label": "Border Accent Height"
+    },
+    {
+      "type": "header",
+      "content": "Corner Accents"
+    },
+    {
+      "type": "select",
+      "id": "corner_accent_image_mode",
+      "label": "Corner image source",
+      "default": "all",
+      "options": [
+        { "value": "all", "label": "One image for all corners" },
+        { "value": "individual", "label": "Different image per corner" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_all",
+      "label": "Corner image (all)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'all' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_top_left",
+      "label": "Corner image (top left)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_top_right",
+      "label": "Corner image (top right)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_bottom_left",
+      "label": "Corner image (bottom left)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_bottom_right",
+      "label": "Corner image (bottom right)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_size",
+      "min": 8,
+      "max": 108,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "label": "Corner size"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_offset_x",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Corner horizontal offset"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_offset_y",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Corner vertical offset"
+    },
+    {
+      "type": "checkbox",
+      "id": "corner_accent_random_rotation",
+      "default": false,
+      "label": "Randomize corner rotation"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_rotation_min",
+      "min": -45,
+      "max": 0,
+      "step": 1,
+      "unit": "deg",
+      "default": -12,
+      "label": "Rotation min"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_rotation_max",
+      "min": 0,
+      "max": 45,
+      "step": 1,
+      "unit": "deg",
+      "default": 12,
+      "label": "Rotation max"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category_card",
+      "name": "Category card",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "badge_label",
+          "label": "Badge label"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Shop collection"
+        }
+      ]
+    },
+    {
+      "type": "beauty_shot",
+      "name": "Beauty shot",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Category Showcase"
+    }
+  ]
+}
+{% endschema %}

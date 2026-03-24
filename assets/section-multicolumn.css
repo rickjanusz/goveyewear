@@ -98,6 +98,12 @@
   transform: translateX(-50%);
 }
 
+.multicolumn-card__image {
+  image-rendering: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 @media screen and (max-width: 749px) {
   .multicolumn-list {
     margin: 0;

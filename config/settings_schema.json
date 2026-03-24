@@ -83,6 +83,278 @@
         "id": "gradient_background_2",
         "type": "color_background",
         "label": "t:settings_schema.colors.settings.gradient_background_2.label"
+      },
+      {
+        "type": "select",
+        "id": "non_home_main_content_scheme",
+        "label": "Non-home main content color scheme",
+        "default": "background-1",
+        "options": [
+          {
+            "value": "background-1",
+            "label": "Background 1"
+          },
+          {
+            "value": "background-2",
+            "label": "Background 2"
+          },
+          {
+            "value": "accent-1",
+            "label": "Accent 1"
+          },
+          {
+            "value": "accent-2",
+            "label": "Accent 2"
+          },
+          {
+            "value": "inverse",
+            "label": "Inverse"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "non_home_main_text_color",
+        "default": "#121212",
+        "label": "Non-home main content text color"
+      },
+      {
+        "type": "header",
+        "content": "Brand collection palettes"
+      },
+      {
+        "type": "paragraph",
+        "content": "These palettes auto-apply on matching collection handles."
+      },
+      {
+        "type": "header",
+        "content": "Gatorz (handle: gatorz)"
+      },
+      {
+        "type": "checkbox",
+        "id": "brand_palette_gatorz_enabled",
+        "default": false,
+        "label": "Enable Gatorz palette override"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_gatorz_text",
+        "default": "#E8D7B8",
+        "label": "Text color"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_gatorz_background_1",
+        "default": "#10141B",
+        "label": "Background 1"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_gatorz_background_2",
+        "default": "#1A232F",
+        "label": "Background 2"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_gatorz_accent_1",
+        "default": "#111821",
+        "label": "Accent 1"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_gatorz_accent_2",
+        "default": "#A98D60",
+        "label": "Accent 2"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_gatorz_solid_button_labels",
+        "default": "#10141B",
+        "label": "Solid button label color"
+      },
+      {
+        "type": "header",
+        "content": "Revision (handle: revision)"
+      },
+      {
+        "type": "checkbox",
+        "id": "brand_palette_revision_enabled",
+        "default": false,
+        "label": "Enable Revision palette override"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_revision_text",
+        "default": "#121212",
+        "label": "Text color"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_revision_background_1",
+        "default": "#FFFFFF",
+        "label": "Background 1"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_revision_background_2",
+        "default": "#F3F3F3",
+        "label": "Background 2"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_revision_accent_1",
+        "default": "#121212",
+        "label": "Accent 1"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_revision_accent_2",
+        "default": "#334FB4",
+        "label": "Accent 2"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_revision_solid_button_labels",
+        "default": "#FFFFFF",
+        "label": "Solid button label color"
+      },
+      {
+        "type": "header",
+        "content": "ESS (handle: ess)"
+      },
+      {
+        "type": "checkbox",
+        "id": "brand_palette_ess_enabled",
+        "default": false,
+        "label": "Enable ESS palette override"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_ess_text",
+        "default": "#121212",
+        "label": "Text color"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_ess_background_1",
+        "default": "#FFFFFF",
+        "label": "Background 1"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_ess_background_2",
+        "default": "#F3F3F3",
+        "label": "Background 2"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_ess_accent_1",
+        "default": "#121212",
+        "label": "Accent 1"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_ess_accent_2",
+        "default": "#334FB4",
+        "label": "Accent 2"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_ess_solid_button_labels",
+        "default": "#FFFFFF",
+        "label": "Solid button label color"
+      },
+      {
+        "type": "header",
+        "content": "Fast Metal (handle: fast-metal)"
+      },
+      {
+        "type": "checkbox",
+        "id": "brand_palette_fast_metal_enabled",
+        "default": false,
+        "label": "Enable Fast Metal palette override"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_fast_metal_text",
+        "default": "#121212",
+        "label": "Text color"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_fast_metal_background_1",
+        "default": "#FFFFFF",
+        "label": "Background 1"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_fast_metal_background_2",
+        "default": "#F3F3F3",
+        "label": "Background 2"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_fast_metal_accent_1",
+        "default": "#121212",
+        "label": "Accent 1"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_fast_metal_accent_2",
+        "default": "#334FB4",
+        "label": "Accent 2"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_fast_metal_solid_button_labels",
+        "default": "#FFFFFF",
+        "label": "Solid button label color"
+      },
+      {
+        "type": "header",
+        "content": "Bolle (handle: bolle)"
+      },
+      {
+        "type": "checkbox",
+        "id": "brand_palette_bolle_enabled",
+        "default": false,
+        "label": "Enable Bolle palette override"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_bolle_text",
+        "default": "#121212",
+        "label": "Text color"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_bolle_background_1",
+        "default": "#FFFFFF",
+        "label": "Background 1"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_bolle_background_2",
+        "default": "#F3F3F3",
+        "label": "Background 2"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_bolle_accent_1",
+        "default": "#121212",
+        "label": "Accent 1"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_bolle_accent_2",
+        "default": "#334FB4",
+        "label": "Accent 2"
+      },
+      {
+        "type": "color",
+        "id": "brand_palette_bolle_solid_button_labels",
+        "default": "#FFFFFF",
+        "label": "Solid button label color"
       }
     ]
   },
@@ -99,6 +371,23 @@
         "default": "assistant_n4",
         "label": "t:settings_schema.typography.settings.type_header_font.label",
         "info": "t:settings_schema.typography.settings.type_header_font.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_custom_heading_font",
+        "default": false,
+        "label": "Use custom heading font URL"
+      },
+      {
+        "type": "url",
+        "id": "custom_heading_font_url",
+        "label": "Custom heading font URL"
+      },
+      {
+        "type": "text",
+        "id": "custom_heading_font_family",
+        "label": "Custom heading font family name",
+        "default": "Black Ops One"
       },
       {
         "type": "range",

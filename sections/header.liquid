@@ -1,3 +1,5 @@
+{% render 'section-border-accent' %}
+
 <link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
@@ -10,6 +12,10 @@
 {%- if section.settings.menu_type_desktop == 'mega' -%}
   <link rel="stylesheet" href="{{ 'component-mega-menu.css' | asset_url }}" media="print" onload="this.media='all'">
   <noscript>{{ 'component-mega-menu.css' | asset_url | stylesheet_tag }}</noscript>
+  <script src="{{ 'featured-collection-mega-menu.js' | asset_url }}" defer="defer"></script>
+  {%- style -%}
+    {% render 'view-all-mega-menu-styles', menu_id: section.id %}
+  {%- endstyle -%}
 {%- endif -%}
 {%- if settings.cart_type == "drawer" -%}
   {{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
@@ -34,6 +40,25 @@
 
   .header__heading-logo {
     max-width: {{ section.settings.logo_width }}px;
+  }
+
+  .header .header__heading-link {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .header .header__heading-logo {
+    display: block;
+    width: {{ section.settings.logo_width }}px;
+    max-width: 100%;
+    height: auto;
+    transform: translateY({{ section.settings.logo_vertical_offset }}px);
+  }
+
+  @media screen and (max-width: 749px) {
+    .header .header__heading-logo {
+      width: min({{ section.settings.logo_mobile_width }}px, calc(100vw - 14rem));
+    }
   }
 
   @media screen and (min-width: 990px) {
@@ -74,6 +99,16 @@
     line-height: calc(1 + 0.8 / var(--font-body-scale));
   }
 
+  .header-wrapper .header .header__menu-item,
+  .header-wrapper .header .header__menu-item span,
+  .header-wrapper .header .header__icon,
+  .header-wrapper .header .list-menu__item,
+  .header-wrapper .header .menu-drawer__menu-item,
+  .header-wrapper .header details[open] > .header__menu-item,
+  .header-wrapper .header .header__active-menu-item {
+    color: rgb(var(--color-foreground));
+  }
+
   @media screen and (min-width: 750px) {
     .list-menu__item--link {
       padding-bottom: 0.5rem;
@@ -83,6 +118,82 @@
 </style>
 
 {%- style -%}
+  #shopify-section-{{ section.id }}::before,
+  #shopify-section-{{ section.id }}::after {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .header-wrapper {
+    position: relative;
+    isolation: isolate;
+  }
+
+  #shopify-section-{{ section.id }} .header-wrapper::before,
+  #shopify-section-{{ section.id }} .header-wrapper::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: {{ section.settings.border_accent_height | default: 60 }}px;
+    pointer-events: none;
+    z-index: 1;
+    background-repeat: repeat-x;
+    background-position: center;
+    background-size: auto 100%;
+  }
+
+  #shopify-section-{{ section.id }} .header-wrapper::before {
+    top: 0;
+    {%- if section.settings.border_accent_top != blank -%}
+      background-image: url('{{ section.settings.border_accent_top | image_url: width: 1920 }}');
+    {%- else -%}
+      display: none;
+    {%- endif -%}
+  }
+
+  #shopify-section-{{ section.id }} .header-wrapper::after {
+    bottom: 0;
+    {%- if section.settings.border_accent_bottom != blank -%}
+      background-image: url('{{ section.settings.border_accent_bottom | image_url: width: 1920 }}');
+    {%- else -%}
+      display: none;
+    {%- endif -%}
+  }
+
+  #shopify-section-{{ section.id }} .header-wrapper > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  #shopify-section-{{ section.id }} .header-rivet {
+    position: absolute;
+    top: 50%;
+    width: calc({{ section.settings.header_rivet_size | default: 18 }}px * 40 / 102);
+    height: {{ section.settings.header_rivet_size | default: 18 }}px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 3;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .header-rivet {
+      width: calc({{ section.settings.header_rivet_size_mobile | default: section.settings.header_rivet_size | default: 18 }}px * 40 / 102);
+      height: {{ section.settings.header_rivet_size_mobile | default: section.settings.header_rivet_size | default: 18 }}px;
+    }
+  }
+
+  #shopify-section-{{ section.id }} .header-rivet--left {
+    left: 0;
+    background-position: left center;
+  }
+
+  #shopify-section-{{ section.id }} .header-rivet--right {
+    right: 0;
+    background-position: right center;
+  }
+
   .header {
     padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
@@ -119,10 +230,28 @@
   </symbol>
 
   <symbol id="icon-close" class="icon icon-close" fill="none" viewBox="0 0 18 17">
-    <path d="M.865 15.978a.5.5 0 00.707.707l7.433-7.431 7.579 7.282a.501.501 0 00.846-.37.5.5 0 00-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 10-.707-.708L8.991 7.853 1.413.573a.5.5 0 10-.693.72l7.563 7.268-7.418 7.417z" fill="currentColor">
+    <path d="M.865 15.978a.5.5 0 00.707.707l7.433-7.431 7.579 7.282a.501.501 0 00.846-.37.5.5 0 00-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 10-.707-.708L8.991 7.853 1.413.573a.5.5 0 10-.693.72l7.563 7.268-7.418 7.417z" fill="currentColor"/>
   </symbol>
 </svg>
-<{% if section.settings.enable_sticky_header %}sticky-header{% else %}div{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
+{%- if section.settings.enable_sticky_header -%}
+  <sticky-header class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
+{%- else -%}
+  <div class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
+{%- endif -%}
+  {%- if section.settings.header_rivet_left != blank -%}
+    <span
+      class="header-rivet header-rivet--left"
+      aria-hidden="true"
+      style="background-image: url('{{ section.settings.header_rivet_left | image_url: width: 320 }}');"
+    ></span>
+  {%- endif -%}
+  {%- if section.settings.header_rivet_right != blank -%}
+    <span
+      class="header-rivet header-rivet--right"
+      aria-hidden="true"
+      style="background-image: url('{{ section.settings.header_rivet_right | image_url: width: 320 }}');"
+    ></span>
+  {%- endif -%}
   <header class="header header--{{ section.settings.logo_position }} page-width{% if section.settings.menu != blank %} header--has-menu{% endif %}">
     {%- if section.settings.menu != blank -%}
       <header-drawer data-breakpoint="tablet">
@@ -376,7 +505,7 @@
           {%- if section.settings.logo != blank -%}
             {%- assign logo_alt = section.settings.logo.alt | default: shop.name | escape -%}
             {%- assign logo_height = section.settings.logo_width | divided_by: section.settings.logo.aspect_ratio -%}
-            {{ section.settings.logo | image_url: width: section.settings.width | image_tag:
+            {{ section.settings.logo | image_url: width: section.settings.logo_width | image_tag:
               class: 'header__heading-logo',
               widths: '50, 100, 150, 200, 250, 300, 400, 500',
               height: logo_height,
@@ -449,6 +578,32 @@
               <li>
                 {%- if link.links != blank -%}
                   <header-menu>
+                    {%- assign is_fullscreen_mega_menu = false -%}
+                    {%- assign link_title_downcase = link.title | downcase | strip -%}
+                    {%- assign fullscreen_menu_label = section.settings.fullscreen_mega_menu_label | default: 'Catalog' -%}
+                    {%- assign fullscreen_menu_label_downcase = fullscreen_menu_label | downcase | strip -%}
+                    {%- if link_title_downcase == fullscreen_menu_label_downcase -%}
+                      {%- assign is_fullscreen_mega_menu = true -%}
+                    {%- endif -%}
+                    {%- assign menu_label = link.title | escape -%}
+                    {%- if is_fullscreen_mega_menu -%}
+                      {%- assign menu_label = 'Shop' -%}
+                    {%- endif -%}
+                    {%- if is_fullscreen_mega_menu -%}
+                      {%- assign fullscreen_menu_links = section.settings.fullscreen_mega_menu_links.links -%}
+                      {%- if fullscreen_menu_links == blank and section.settings.fullscreen_mega_menu_links != blank -%}
+                        {%- assign fullscreen_menu_links = linklists[section.settings.fullscreen_mega_menu_links].links -%}
+                      {%- endif -%}
+                      {%- if fullscreen_menu_links == blank -%}
+                        {%- assign fullscreen_menu_links = link.links -%}
+                      {%- endif -%}
+                      <div class="section-{{ section.id }}-view-all-wrap section-{{ section.id }}-view-all-wrap--has-menu">
+                        <a href="{{ link.url }}" class="header__menu-item header__menu-item list-menu__item link link--text focus-inset section-{{ section.id }}-view-all-detail-trigger" data-mega-menu-open{% if link.current %} aria-current="page"{% endif %}>
+                          <span {%- if link.current %} class="header__active-menu-item"{% endif %}>{{ menu_label }}</span>
+                        </a>
+                        {% render 'header-view-all-mega-menu', menu_links: fullscreen_menu_links, menu_id: section.id, menu_title: menu_label %}
+                      </div>
+                    {%- else -%}
                     <details id="Details-HeaderMenu-{{ forloop.index }}" class="mega-menu">
                       <summary class="header__menu-item list-menu__item link focus-inset">
                         <span {%- if link.child_active %} class="header__active-menu-item"{% endif %}>{{ link.title | escape }}</span>
@@ -477,11 +632,39 @@
                         </ul>
                       </div>
                     </details>
+                    {%- endif -%}
                   </header-menu>
                 {%- else -%}
-                  <a href="{{ link.url }}" class="header__menu-item header__menu-item list-menu__item link link--text focus-inset"{% if link.current %} aria-current="page"{% endif %}>
-                    <span {%- if link.current %} class="header__active-menu-item"{% endif %}>{{ link.title | escape }}</span>
-                  </a>
+                  {%- assign is_fullscreen_mega_menu = false -%}
+                  {%- assign link_title_downcase = link.title | downcase | strip -%}
+                  {%- assign fullscreen_menu_label = section.settings.fullscreen_mega_menu_label | default: 'Catalog' -%}
+                  {%- assign fullscreen_menu_label_downcase = fullscreen_menu_label | downcase | strip -%}
+                  {%- if link_title_downcase == fullscreen_menu_label_downcase -%}
+                    {%- assign is_fullscreen_mega_menu = true -%}
+                  {%- endif -%}
+                  {%- assign menu_label = link.title | escape -%}
+                  {%- if is_fullscreen_mega_menu -%}
+                    {%- assign menu_label = 'Shop' -%}
+                  {%- endif -%}
+                  {%- if is_fullscreen_mega_menu -%}
+                    {%- assign fullscreen_menu_links = section.settings.fullscreen_mega_menu_links.links -%}
+                    {%- if fullscreen_menu_links == blank and section.settings.fullscreen_mega_menu_links != blank -%}
+                      {%- assign fullscreen_menu_links = linklists[section.settings.fullscreen_mega_menu_links].links -%}
+                    {%- endif -%}
+                    {%- if fullscreen_menu_links == blank -%}
+                      {%- assign fullscreen_menu_links = link.links -%}
+                    {%- endif -%}
+                    <div class="section-{{ section.id }}-view-all-wrap section-{{ section.id }}-view-all-wrap--has-menu">
+                      <a href="{{ link.url }}" class="header__menu-item header__menu-item list-menu__item link link--text focus-inset section-{{ section.id }}-view-all-detail-trigger" data-mega-menu-open{% if link.current %} aria-current="page"{% endif %}>
+                        <span {%- if link.current %} class="header__active-menu-item"{% endif %}>{{ menu_label }}</span>
+                      </a>
+                      {% render 'header-view-all-mega-menu', menu_links: fullscreen_menu_links, menu_id: section.id, menu_title: menu_label %}
+                    </div>
+                  {%- else -%}
+                    <a href="{{ link.url }}" class="header__menu-item header__menu-item list-menu__item link link--text focus-inset"{% if link.current %} aria-current="page"{% endif %}>
+                      <span {%- if link.current %} class="header__active-menu-item"{% endif %}>{{ link.title | escape }}</span>
+                    </a>
+                  {%- endif -%}
                 {%- endif -%}
               </li>
             {%- endfor -%}
@@ -599,7 +782,11 @@
       </a>
     </div>
   </header>
-</{% if section.settings.enable_sticky_header %}sticky-header{% else %}div{% endif %}>
+{%- if section.settings.enable_sticky_header -%}
+  </sticky-header>
+{%- else -%}
+  </div>
+{%- endif -%}
 
 {%- if settings.cart_type == "notification" -%}
   {%- render 'cart-notification', color_scheme: section.settings.color_scheme -%}
@@ -643,13 +830,14 @@
 
     onScroll() {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const hideThreshold = 200;
 
       if (this.predictiveSearch && this.predictiveSearch.isOpen) return;
 
-      if (scrollTop > this.currentScrollTop && scrollTop > this.headerBounds.bottom) {
+      if (scrollTop > this.currentScrollTop && scrollTop > hideThreshold) {
         if (this.preventHide) return;
         requestAnimationFrame(this.hide.bind(this));
-      } else if (scrollTop < this.currentScrollTop && scrollTop > this.headerBounds.bottom) {
+      } else if (scrollTop < this.currentScrollTop && scrollTop > hideThreshold) {
         if (!this.preventReveal) {
           requestAnimationFrame(this.reveal.bind(this));
         } else {
@@ -776,6 +964,12 @@
       "label": "t:sections.header.settings.logo.label"
     },
     {
+      "type": "checkbox",
+      "id": "use_inline_logo_svg",
+      "default": false,
+      "label": "Use inline SVG logo"
+    },
+    {
       "type": "range",
       "id": "logo_width",
       "min": 50,
@@ -784,6 +978,39 @@
       "default": 100,
       "unit": "t:sections.header.settings.logo_width.unit",
       "label": "t:sections.header.settings.logo_width.label"
+    },
+    {
+      "type": "range",
+      "id": "logo_mobile_width",
+      "min": 50,
+      "max": 250,
+      "step": 10,
+      "default": 180,
+      "unit": "px",
+      "label": "Logo width (mobile)"
+    },
+    {
+      "type": "text",
+      "id": "fullscreen_mega_menu_label",
+      "label": "Fullscreen mega menu trigger label",
+      "default": "Catalog",
+      "info": "Menu item label that should open the fullscreen 3-stage mega menu."
+    },
+    {
+      "type": "link_list",
+      "id": "fullscreen_mega_menu_links",
+      "label": "Fullscreen mega menu source",
+      "info": "Leave blank to use the matched menu item's children."
+    },
+    {
+      "type": "range",
+      "id": "logo_vertical_offset",
+      "min": -16,
+      "max": 16,
+      "step": 1,
+      "default": 0,
+      "unit": "px",
+      "label": "Logo vertical offset"
     },
     {
       "type": "select",
@@ -880,6 +1107,71 @@
       "label": "t:sections.all.padding.padding_bottom",
       "default": 20
     }
-  ]
+,
+    {
+      "type": "image_picker",
+      "id": "border_accent_top",
+      "label": "Border Accent Top"
+    },
+    {
+      "type": "image_picker",
+      "id": "border_accent_bottom",
+      "label": "Border Accent Bottom"
+    },
+    {
+      "type": "range",
+      "id": "border_accent_height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60,
+      "label": "Border Accent Height"
+    },
+    {
+      "type": "header",
+      "content": "Header Rivets"
+    },
+    {
+      "type": "image_picker",
+      "id": "header_rivet_left",
+      "label": "Rivet image (left)"
+    },
+    {
+      "type": "image_picker",
+      "id": "header_rivet_right",
+      "label": "Rivet image (right)"
+    },
+    {
+      "type": "range",
+      "id": "header_rivet_size",
+      "min": 8,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 18,
+      "label": "Rivet size"
+    },
+    {
+      "type": "range",
+      "id": "header_rivet_size_mobile",
+      "min": 8,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 18,
+      "label": "Rivet size (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "header_rivet_horizontal_offset",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 6,
+      "label": "Rivet horizontal offset"
+    }
+    ]
 }
 {% endschema %}
