@@ -38,6 +38,12 @@
       assign default_category_menu_handle = default_category_handle | append: '-shop-by-frame'
       assign default_category_menu = linklists[default_category_menu_handle]
       assign default_category_links = default_category_menu.links
+      if default_category_links == blank and default_category_title_normalized == 'shop by frame' and primary_menu != blank and primary_menu.title != blank
+        assign parent_menu_handle = primary_menu.title | remove: ' Mega Menu' | remove: ' mega menu' | handleize
+        assign parent_shop_by_frame_handle = parent_menu_handle | append: '-shop-by-frame'
+        assign parent_shop_by_frame_menu = linklists[parent_shop_by_frame_handle]
+        assign default_category_links = parent_shop_by_frame_menu.links
+      endif
     endif
   endif
 
