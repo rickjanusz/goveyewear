@@ -181,8 +181,7 @@
               item_image: brand_image,
               is_active: forloop.first,
               trigger_key: brand_trigger_key,
-              next_stage: brand_next_stage,
-              item_class: 'section-' | append: menu_id | append: '-view-all-menu-frame section-' | append: menu_id | append: '-view-all-menu-card'
+              next_stage: brand_next_stage
             -%}
           {%- endfor -%}
         </div>
@@ -273,8 +272,7 @@
                   item_title: grandchildlink.title,
                   item_image: frame_image,
                   trigger_key: frame_key,
-                  next_stage: 'versions',
-                  item_class: 'section-' | append: menu_id | append: '-view-all-menu-frame section-' | append: menu_id | append: '-view-all-menu-card'
+                  next_stage: 'versions'
                 -%}
               {%- endfor -%}
             {%- endif -%}
@@ -348,8 +346,7 @@
                         item_title: secondary_childlink.title,
                         item_image: secondary_image,
                         trigger_key: secondary_frame_key,
-                        next_stage: 'versions',
-                        item_class: 'section-' | append: menu_id | append: '-view-all-menu-frame section-' | append: menu_id | append: '-view-all-menu-card'
+                        next_stage: 'versions'
                       -%}
                     {%- endfor -%}
                   {%- elsif secondary_has_collection_products -%}
@@ -367,8 +364,7 @@
                         item_url: secondary_product.url,
                         item_title: secondary_product.title,
                         item_image: secondary_product_image,
-                        placeholder_name: 'product-apparel-1',
-                        item_class: 'section-' | append: menu_id | append: '-view-all-menu-frame section-' | append: menu_id | append: '-view-all-menu-card'
+                        placeholder_name: 'product-apparel-1'
                       -%}
                     {%- endfor -%}
                   {%- endif -%}
