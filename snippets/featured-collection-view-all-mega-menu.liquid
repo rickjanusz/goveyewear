@@ -1,8 +1,7 @@
 {%- liquid
   assign primary_menu = section.settings.view_all_mega_menu
   assign primary_menu_links = primary_menu.links
-  assign secondary_menu = section.settings.view_all_mega_menu_secondary
-  assign secondary_menu_links = secondary_menu.links
+  assign secondary_menu_links = blank
   assign primary_menu_handle = ''
   assign default_category_link = blank
   assign default_category_title_normalized = ''
@@ -64,12 +63,7 @@
     endif
   endif
 
-  if secondary_menu_links == blank and primary_menu_handle == 'gatorz-shop-by-frame'
-    assign secondary_menu = linklists['gatorz-secondary-menu']
-    assign secondary_menu_links = secondary_menu.links
-  endif
-
-  if secondary_menu_links == blank and primary_menu_links != blank and default_category_link != blank
+  if primary_menu_links != blank and default_category_link != blank
     assign secondary_menu_links = primary_menu_links
   endif
 -%}

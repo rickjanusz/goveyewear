@@ -77,18 +77,6 @@
       endif
     endif
 
-    assign secondary_menu_handle = ''
-    if secondary_menu_links == blank
-      if brand_title_downcase == 'featured gatorz' or brand_handle == 'gatorz'
-        assign secondary_menu_handle = 'gatorz-secondary-menu'
-      endif
-
-      if secondary_menu_handle != blank
-        assign secondary_menu = linklists[secondary_menu_handle]
-        assign secondary_menu_links = secondary_menu.links
-      endif
-    endif
-
     if secondary_menu_links != blank
       assign has_secondary_menu = true
       assign global_secondary_menu_links = secondary_menu_links
@@ -321,17 +309,6 @@
             endif
 
             assign secondary_menu_links = nested_secondary_links
-            assign secondary_menu_handle = ''
-            if secondary_menu_links == blank
-              if brand_title_downcase == 'featured gatorz' or brand_handle == 'gatorz'
-                assign secondary_menu_handle = 'gatorz-secondary-menu'
-              endif
-
-              if secondary_menu_handle != blank
-                assign secondary_menu = linklists[secondary_menu_handle]
-                assign secondary_menu_links = secondary_menu.links
-              endif
-            endif
           -%}
 
           <div class="section-{{ menu_id }}-view-all-menu-stage section-{{ menu_id }}-view-all-menu-stage--frames" data-mega-menu-stage="frames" data-mega-menu-frames="{{ brand_key }}">
