@@ -1,9 +1,6 @@
 {%- assign menu_id = menu_id | default: section.id -%}
 {%- assign menu_title = menu_title | default: 'Shop' -%}
 {%- assign has_secondary_menu = false -%}
-{%- assign global_secondary_menu_links = blank -%}
-{%- assign global_secondary_menu_brand_key = blank -%}
-{%- assign global_secondary_menu_aria_label = 'Header secondary menu' -%}
 {%- assign direct_brand_titles = 'bolle,fast metal,ess' | split: ',' -%}
 
 {%- for childlink in menu_links -%}
@@ -76,10 +73,6 @@
 
     if secondary_menu_links != blank
       assign has_secondary_menu = true
-      assign global_secondary_menu_links = secondary_menu_links
-      assign global_secondary_menu_brand_key = menu_id | append: '-brand-' | append: forloop.index
-      assign global_secondary_menu_aria_label = childlink.title | replace: 'Featured ', '' | replace: 'featured ', '' | append: ' secondary menu'
-      break
     endif
   -%}
 {%- endfor -%}
@@ -435,7 +428,7 @@
           {%- if secondary_menu_links != blank -%}
             {%- for secondary_link in secondary_menu_links -%}
               {%- liquid
-                assign secondary_key = menu_id | append: '-secondary-' | append: forloop.index
+                assign secondary_key = menu_id | append: '-secondary-' | append: forloop.parentloop.index | append: '-' | append: forloop.index
                 assign secondary_object = secondary_link.object
                 assign secondary_handle = secondary_link.title | handleize
                 if secondary_object != blank and secondary_object.handle != blank
@@ -632,69 +625,140 @@
         {%- endfor -%}
       </div>
 
-      {%- if global_secondary_menu_links != blank and global_secondary_menu_brand_key != blank -%}
-        <aside class="section-{{ menu_id }}-view-all-menu-secondary" data-mega-menu-secondary data-mega-menu-secondary-for="{{ global_secondary_menu_brand_key }}">
-          <nav aria-label="{{ global_secondary_menu_aria_label | escape }}">
-            <ul class="section-{{ menu_id }}-view-all-menu-secondary-list" role="list">
-              <li>
-                <a
-                  href="#"
-                  class="section-{{ menu_id }}-view-all-menu-secondary-link"
-                  data-mega-menu-back="frames"
-                >
-                  Shop by Frame
-                </a>
-              </li>
-              {%- for secondary_link in global_secondary_menu_links -%}
-                {%- liquid
-                  assign secondary_key = menu_id | append: '-secondary-' | append: forloop.index
-                  assign secondary_object = secondary_link.object
-                  assign secondary_handle = secondary_link.title | handleize
-                  assign secondary_link_title_normalized = secondary_link.title | strip | downcase
-                  assign secondary_is_explore_brand_page = false
-                  if secondary_link_title_normalized == 'explore brand page'
-                    assign secondary_is_explore_brand_page = true
-                  endif
-                  if secondary_object != blank and secondary_object.handle != blank
-                    assign secondary_handle = secondary_object.handle
-                  endif
-                  assign secondary_menu_handle = secondary_handle | append: '-shop-by-frame'
-                  assign secondary_menu = linklists[secondary_menu_handle]
-                  assign secondary_frame_links = secondary_menu.links
-                  if secondary_frame_links == blank
-                    assign secondary_frame_links = secondary_link.links
-                  endif
-                  assign secondary_has_collection_products = false
-                  if secondary_object != blank and secondary_object.all_products_count > 0
-                    assign secondary_has_collection_products = true
-                  endif
-                  assign secondary_is_triggerable = true
-                  assign secondary_is_default_root = false
-                  if secondary_link_title_normalized == 'shop by frame'
-                    assign secondary_is_default_root = true
-                  endif
-                  if secondary_is_explore_brand_page or secondary_is_default_root
-                    assign secondary_is_triggerable = false
-                  elsif secondary_frame_links == blank and secondary_has_collection_products == false
-                    assign secondary_is_triggerable = false
-                  endif
-                -%}
-                {%- if secondary_is_default_root -%}
-                  {%- continue -%}
-                {%- endif -%}
-                <li>
-                  <a
-                    href="{{ secondary_link.url }}"
-                    class="section-{{ menu_id }}-view-all-menu-secondary-link"
-                    {% if secondary_is_triggerable %}data-mega-menu-trigger="{{ secondary_key }}" data-mega-menu-next="frames"{% endif %}
-                  >
-                    {{ secondary_link.title | escape }}
-                  </a>
-                </li>
-              {%- endfor -%}
-            </ul>
-          </nav>
-        </aside>
+      {%- if has_secondary_menu -%}
+        {%- for childlink in menu_links -%}
+          {%- liquid
+            assign brand_object = childlink.object
+            assign brand_key = menu_id | append: '-brand-' | append: forloop.index
+            assign brand_title_downcase = childlink.title | downcase | strip
+            assign brand_handle = childlink.title | handleize
+            if brand_object != blank and brand_object.handle != blank
+              assign brand_handle = brand_object.handle
+            endif
+
+            assign brand_menu_handle = brand_handle | append: '-shop-by-frame'
+            case brand_title_downcase
+              when 'featured gatorz'
+                assign brand_menu_handle = 'gatorz-shop-by-frame'
+              when 'featured revision'
+                assign brand_menu_handle = 'revision-shop-by-frame'
+            endcase
+
+            assign brand_menu = linklists[brand_menu_handle]
+            assign brand_category_links = childlink.links
+            assign default_category_link = blank
+            if brand_category_links != blank
+              for category_link in brand_category_links
+                assign category_title_normalized = category_link.title | strip | downcase
+                if category_title_normalized != 'explore brand page' and default_category_link == blank
+                  assign default_category_link = category_link
+                endif
+                if category_title_normalized == 'shop by frame'
+                  assign default_category_link = category_link
+                  break
+                endif
+              endfor
+            endif
+
+            assign default_category_links = blank
+            if default_category_link != blank
+              assign default_category_links = default_category_link.links
+              if default_category_links == blank
+                assign default_category_object = default_category_link.object
+                assign default_category_handle = default_category_link.title | handleize
+                if default_category_object != blank and default_category_object.handle != blank
+                  assign default_category_handle = default_category_object.handle
+                endif
+                assign default_category_menu_handle = default_category_handle | append: '-shop-by-frame'
+                assign default_category_menu = linklists[default_category_menu_handle]
+                assign default_category_links = default_category_menu.links
+              endif
+            endif
+
+            assign frame_links = brand_menu.links
+            if default_category_links != blank
+              assign frame_links = default_category_links
+            elsif frame_links == blank
+              assign frame_links = childlink.links
+            endif
+
+            assign brand_secondary_menu_links = blank
+            if brand_category_links != blank and default_category_link != blank
+              assign brand_secondary_menu_links = brand_category_links
+            elsif frame_links != blank
+              assign category_link = frame_links.last
+              if category_link != blank and category_link.links != blank
+                assign brand_secondary_menu_links = category_link.links
+              endif
+            endif
+
+            assign brand_secondary_aria_label = childlink.title | replace: 'Featured ', '' | replace: 'featured ', '' | append: ' secondary menu'
+          -%}
+          {%- if brand_secondary_menu_links != blank -%}
+            <aside class="section-{{ menu_id }}-view-all-menu-secondary is-hidden" data-mega-menu-secondary data-mega-menu-secondary-for="{{ brand_key }}">
+              <nav aria-label="{{ brand_secondary_aria_label | escape }}">
+                <ul class="section-{{ menu_id }}-view-all-menu-secondary-list" role="list">
+                  <li>
+                    <a
+                      href="#"
+                      class="section-{{ menu_id }}-view-all-menu-secondary-link"
+                      data-mega-menu-back="frames"
+                    >
+                      Shop by Frame
+                    </a>
+                  </li>
+                  {%- for secondary_link in brand_secondary_menu_links -%}
+                    {%- liquid
+                      assign secondary_key = menu_id | append: '-secondary-' | append: forloop.parentloop.index | append: '-' | append: forloop.index
+                      assign secondary_object = secondary_link.object
+                      assign secondary_handle = secondary_link.title | handleize
+                      assign secondary_link_title_normalized = secondary_link.title | strip | downcase
+                      assign secondary_is_explore_brand_page = false
+                      if secondary_link_title_normalized == 'explore brand page'
+                        assign secondary_is_explore_brand_page = true
+                      endif
+                      if secondary_object != blank and secondary_object.handle != blank
+                        assign secondary_handle = secondary_object.handle
+                      endif
+                      assign secondary_menu_handle = secondary_handle | append: '-shop-by-frame'
+                      assign secondary_menu = linklists[secondary_menu_handle]
+                      assign secondary_frame_links = secondary_menu.links
+                      if secondary_frame_links == blank
+                        assign secondary_frame_links = secondary_link.links
+                      endif
+                      assign secondary_has_collection_products = false
+                      if secondary_object != blank and secondary_object.all_products_count > 0
+                        assign secondary_has_collection_products = true
+                      endif
+                      assign secondary_is_triggerable = true
+                      assign secondary_is_default_root = false
+                      if secondary_link_title_normalized == 'shop by frame'
+                        assign secondary_is_default_root = true
+                      endif
+                      if secondary_is_explore_brand_page or secondary_is_default_root
+                        assign secondary_is_triggerable = false
+                      elsif secondary_frame_links == blank and secondary_has_collection_products == false
+                        assign secondary_is_triggerable = false
+                      endif
+                    -%}
+                    {%- if secondary_is_default_root -%}
+                      {%- continue -%}
+                    {%- endif -%}
+                    <li>
+                      <a
+                        href="{{ secondary_link.url }}"
+                        class="section-{{ menu_id }}-view-all-menu-secondary-link"
+                        {% if secondary_is_triggerable %}data-mega-menu-trigger="{{ secondary_key }}" data-mega-menu-next="frames"{% endif %}
+                      >
+                        {{ secondary_link.title | escape }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </nav>
+            </aside>
+          {%- endif -%}
+        {%- endfor -%}
       {%- endif -%}
     </div>
   </div>

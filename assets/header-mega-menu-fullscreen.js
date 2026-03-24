@@ -5,8 +5,7 @@ class HeaderMegaMenuFullscreenOverlay {
     this.triggers = Array.from(container.querySelectorAll('[data-mega-menu-trigger]'));
     this.stages = Array.from(container.querySelectorAll('[data-mega-menu-stage]'));
     this.backButtons = Array.from(container.querySelectorAll('[data-mega-menu-back]'));
-    this.secondaryMenu = container.querySelector('[data-mega-menu-secondary]');
-    this.secondaryMenuFor = this.secondaryMenu ? this.secondaryMenu.dataset.megaMenuSecondaryFor : '';
+    this.secondaryMenus = Array.from(container.querySelectorAll('[data-mega-menu-secondary]'));
     this.titleElement = container.querySelector('[data-mega-menu-title]');
     this.defaultTitle = this.titleElement ? this.titleElement.textContent.trim() : 'Shop';
     this.closeButton = container.querySelector('[data-mega-menu-close]');
@@ -121,7 +120,7 @@ class HeaderMegaMenuFullscreenOverlay {
     if (!targetId) return;
     this.activeBrandKey = targetId;
     this.activeBrandTitle = title || this.defaultTitle;
-    this.secondaryMenuVisible = targetId === this.secondaryMenuFor;
+    this.secondaryMenuVisible = this.secondaryMenus.some((menu) => menu.dataset.megaMenuSecondaryFor === targetId);
     this.updateChrome({ showBack: 'brands', title: this.activeBrandTitle });
     this.syncSecondaryMenuVisibility();
     this.transitionToStageByType('frames', targetId, options);
@@ -171,10 +170,13 @@ class HeaderMegaMenuFullscreenOverlay {
   }
 
   syncSecondaryMenuVisibility() {
-    if (!this.grid || !this.secondaryMenu) return;
+    if (!this.grid || !this.secondaryMenus.length) return;
     const shouldShowSecondary = this.secondaryMenuVisible;
+    this.secondaryMenus.forEach((menu) => {
+      const isActiveMenu = shouldShowSecondary && menu.dataset.megaMenuSecondaryFor === this.activeBrandKey;
+      menu.classList.toggle('is-hidden', !isActiveMenu);
+    });
     this.grid.classList.toggle('is-secondary-hidden', !shouldShowSecondary);
-    this.secondaryMenu.classList.toggle('is-hidden', !shouldShowSecondary);
   }
 
   updateChrome({ showBack, title }) {
