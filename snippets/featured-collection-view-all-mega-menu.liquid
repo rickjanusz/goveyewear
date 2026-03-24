@@ -4,14 +4,50 @@
   assign secondary_menu = section.settings.view_all_mega_menu_secondary
   assign secondary_menu_links = secondary_menu.links
   assign primary_menu_handle = ''
+  assign default_category_link = blank
+  assign default_category_title_normalized = ''
+  assign default_category_links = blank
 
   if primary_menu != blank and primary_menu.handle != blank
     assign primary_menu_handle = primary_menu.handle
   endif
 
+  if primary_menu_links != blank
+    for category_link in primary_menu_links
+      assign category_title_normalized = category_link.title | strip | downcase
+      if category_title_normalized != 'explore brand page' and default_category_link == blank
+        assign default_category_link = category_link
+        assign default_category_title_normalized = category_title_normalized
+      endif
+      if category_title_normalized == 'shop by frame'
+        assign default_category_link = category_link
+        assign default_category_title_normalized = category_title_normalized
+        break
+      endif
+    endfor
+  endif
+
+  if default_category_link != blank
+    assign default_category_links = default_category_link.links
+    if default_category_links == blank
+      assign default_category_object = default_category_link.object
+      assign default_category_handle = default_category_link.title | handleize
+      if default_category_object != blank and default_category_object.handle != blank
+        assign default_category_handle = default_category_object.handle
+      endif
+      assign default_category_menu_handle = default_category_handle | append: '-shop-by-frame'
+      assign default_category_menu = linklists[default_category_menu_handle]
+      assign default_category_links = default_category_menu.links
+    endif
+  endif
+
   if secondary_menu_links == blank and primary_menu_handle == 'gatorz-shop-by-frame'
     assign secondary_menu = linklists['gatorz-secondary-menu']
     assign secondary_menu_links = secondary_menu.links
+  endif
+
+  if secondary_menu_links == blank and primary_menu_links != blank and default_category_link != blank
+    assign secondary_menu_links = primary_menu_links
   endif
 -%}
 
@@ -50,7 +86,8 @@
       <div class="section-{{ section.id }}-view-all-menu-grid{% if secondary_menu_links != blank %} section-{{ section.id }}-view-all-menu-grid--has-secondary{% endif %}">
         <div class="section-{{ section.id }}-view-all-menu-frames" role="list">
           <div class="section-{{ section.id }}-view-all-menu-stage section-{{ section.id }}-view-all-menu-stage--frames is-active" data-mega-menu-stage="frames" data-mega-menu-root-stage="true">
-            {%- for childlink in primary_menu_links -%}
+            {%- assign featured_root_links = default_category_links | default: primary_menu_links -%}
+            {%- for childlink in featured_root_links -%}
               {%- liquid
                 assign frame_collection = childlink.object
                 assign frame_image = blank
@@ -89,7 +126,7 @@
             {%- endfor -%}
           </div>
 
-          {%- for childlink in primary_menu_links -%}
+          {%- for childlink in featured_root_links -%}
             <div class="section-{{ section.id }}-view-all-menu-stage section-{{ section.id }}-view-all-menu-stage--versions" data-mega-menu-stage="versions" data-mega-menu-versions="{{ section.id }}-{{ forloop.index }}">
               <h3 class="section-{{ section.id }}-view-all-menu-version-heading">{{ childlink.title | escape }}</h3>
               <div class="section-{{ section.id }}-view-all-menu-version-grid" role="list">
@@ -403,12 +440,19 @@
                     assign secondary_has_collection_products = true
                   endif
                   assign secondary_is_triggerable = true
-                  if secondary_is_explore_brand_page
+                  assign secondary_is_default_root = false
+                  if secondary_link_title_normalized == default_category_title_normalized or secondary_link_title_normalized == 'shop by frame'
+                    assign secondary_is_default_root = true
+                  endif
+                  if secondary_is_explore_brand_page or secondary_is_default_root
                     assign secondary_is_triggerable = false
                   elsif secondary_frame_links == blank and secondary_has_collection_products == false
                     assign secondary_is_triggerable = false
                   endif
                 -%}
+                {%- if secondary_is_default_root -%}
+                  {%- continue -%}
+                {%- endif -%}
                 <li>
                   <a
                     href="{{ secondary_link.url }}"
