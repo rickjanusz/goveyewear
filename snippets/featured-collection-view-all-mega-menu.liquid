@@ -85,8 +85,11 @@
       </div>
       <div class="section-{{ section.id }}-view-all-menu-grid{% if secondary_menu_links != blank %} section-{{ section.id }}-view-all-menu-grid--has-secondary{% endif %}">
         <div class="section-{{ section.id }}-view-all-menu-frames" role="list">
+          {%- assign featured_root_links = primary_menu_links -%}
+          {%- if default_category_links != blank -%}
+            {%- assign featured_root_links = default_category_links -%}
+          {%- endif -%}
           <div class="section-{{ section.id }}-view-all-menu-stage section-{{ section.id }}-view-all-menu-stage--frames is-active" data-mega-menu-stage="frames" data-mega-menu-root-stage="true">
-            {%- assign featured_root_links = default_category_links | default: primary_menu_links -%}
             {%- for childlink in featured_root_links -%}
               {%- liquid
                 assign frame_collection = childlink.object
