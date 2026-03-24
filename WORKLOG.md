@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/mega-menu-3stage
-- HEAD commit: 72a88f166d49c8897c816c7e72cdd1fb768ac757
-- Last pushed commit (GitHub): ae69caa
+- HEAD commit: 53ba41b6d03ee2f4fc647652d4d9fe4a9568eaab
+- Last pushed commit (GitHub): e43790d
 - Local dev server:
   - Running? no
   - Port:
@@ -14,6 +14,18 @@ Keep this file updated so any agent can resume without overwriting files.
   - Live: 160510771450
 
 ## Recent Pulls
+- 2026-03-23: local commit `53ba41b6d03ee2f4fc647652d4d9fe4a9568eaab`
+  - Intent: align the homepage featured-section mega menus with the main shop mega menu flow so Gatorz opens on its frame stage with a right rail and Revision opens directly on its frame stage without one
+  - Files changed: `snippets/featured-collection-view-all-mega-menu.liquid`, `templates/index.json`
+  - Result: committed locally and pushed to staging theme preview
+- 2026-03-23: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json`
+  - Intent: required settings-only sync from live before staging release of the featured mega menu right-rail fix
+  - Result: success
+  - Files updated: no local settings diffs
+- 2026-03-23: local commit `78801f856bb5dff7a2943083a2d6d309890614a7`
+  - Intent: keep the featured section mega menu right rail visible after navigating past the initial screen
+  - Files changed: `assets/featured-collection-mega-menu.js`
+  - Result: committed locally and pushed to staging theme preview
 - 2026-03-23: local edit in progress
   - Intent: align the header Gatorz secondary menu behavior with the featured-section mega menu model, including `Shop by Frame`, triggerable secondary screens, and direct `Explore Brand Page` linking
   - Files changed: `assets/featured-collection-mega-menu.js`, `snippets/header-view-all-mega-menu.liquid`
@@ -59,6 +71,36 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-3stage` @ `53ba41b6d03ee2f4fc647652d4d9fe4a9568eaab`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/featured-collection-view-all-mega-menu.liquid --only templates/index.json`
+  - Files pushed: `snippets/featured-collection-view-all-mega-menu.liquid`, `templates/index.json`
+  - Change: aligned the featured-section mega menus to open directly on each brand's shop-by-frame stage, added explicit homepage Gatorz secondary-menu wiring, and kept Revision as a no-rail variant
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: validate Gatorz against the main mega menu's post-brand view and confirm Revision stays single-column without a secondary rail
+- 2026-03-23: target theme ID `160581189882` (staging repair)
+  - Branch + commit: `codex/mega-menu-3stage` @ `78801f856bb5dff7a2943083a2d6d309890614a7`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/featured-collection-mega-menu.js --only assets/header-mega-menu-fullscreen.js --only snippets/header-view-all-mega-menu.liquid`
+  - Files pushed: `assets/featured-collection-mega-menu.js`, `assets/header-mega-menu-fullscreen.js`, `snippets/header-view-all-mega-menu.liquid`
+  - Change: repaired staging after a partial JS-only deploy by pushing the matching header mega-menu controller and markup bundle expected by the current shared mega-menu script
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: confirm the mega menu opens normally again in staging, then re-check the featured section right-rail persistence behavior
+- 2026-03-23: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-3stage` @ `78801f856bb5dff7a2943083a2d6d309890614a7`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/featured-collection-mega-menu.js`
+  - Files pushed: `assets/featured-collection-mega-menu.js`
+  - Change: kept the featured section mega menu right rail visible while drilling into deeper stages so the secondary menu does not disappear on the second screen
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: validate the featured section mega menu flow in staging, then request live approval if desired
 - 2026-03-23: target theme ID `160581189882` (staging)
   - Branch + commit: `codex/mega-menu-3stage` @ `72a88f166d49c8897c816c7e72cdd1fb768ac757`
   - Commands:
