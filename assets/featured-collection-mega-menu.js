@@ -340,7 +340,9 @@ class FeaturedCollectionMegaMenu {
     if (this.hasBrands && this.secondaryMenuFor) {
       showSecondaryMenu = this.activeBrandKey === this.secondaryMenuFor;
     } else {
-      showSecondaryMenu = !!(nextStage && nextStage.dataset.megaMenuRootStage === 'true');
+      // Featured section menus with a right rail should keep it visible while
+      // drilling into deeper stages of the same menu tree.
+      showSecondaryMenu = true;
     }
 
     this.grid.classList.toggle('is-secondary-hidden', !showSecondaryMenu);
