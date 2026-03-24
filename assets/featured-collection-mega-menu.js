@@ -7,16 +7,7 @@ class FeaturedCollectionMegaMenu {
     this.container = container;
     this.wrapper = container.closest('[class*="view-all-wrap"]');
     this.grid = container.querySelector('[class*="view-all-menu-grid"]');
-    this.secondaryMenu = container.querySelector('[data-mega-menu-secondary]');
-    this.secondaryMenuFor = this.secondaryMenu
-      ? this.secondaryMenu.dataset.megaMenuSecondaryFor || ''
-      : '';
-    this.secondaryLinkTriggers = this.secondaryMenu
-      ? Array.from(this.secondaryMenu.querySelectorAll('[data-mega-menu-trigger][data-mega-menu-next="frames"]'))
-      : [];
-    this.secondaryRootButton = this.secondaryMenu
-      ? this.secondaryMenu.querySelector('[data-mega-menu-back="frames"]')
-      : null;
+    this.secondaryMenus = Array.from(container.querySelectorAll('[data-mega-menu-secondary]'));
     this.trigger = this.wrapper ? this.wrapper.querySelector('[data-mega-menu-open]') : null;
     this.shell = container.querySelector('[class*="view-all-menu-shell"]');
     this.triggers = Array.from(container.querySelectorAll('[data-mega-menu-trigger]'));
@@ -334,11 +325,11 @@ class FeaturedCollectionMegaMenu {
   }
 
   syncSecondaryMenuVisibility(nextStage) {
-    if (!this.grid || !this.secondaryMenu) return;
+    if (!this.grid || !this.secondaryMenus.length) return;
     let showSecondaryMenu = false;
 
-    if (this.hasBrands && this.secondaryMenuFor) {
-      showSecondaryMenu = this.activeBrandKey === this.secondaryMenuFor;
+    if (this.hasBrands) {
+      showSecondaryMenu = this.secondaryMenus.some((menu) => menu.dataset.megaMenuSecondaryFor === this.activeBrandKey);
     } else {
       // Featured section menus with a right rail should keep it visible while
       // drilling into deeper stages of the same menu tree.
@@ -346,6 +337,12 @@ class FeaturedCollectionMegaMenu {
     }
 
     this.grid.classList.toggle('is-secondary-hidden', !showSecondaryMenu);
+    this.secondaryMenus.forEach((menu) => {
+      const shouldShowMenu = this.hasBrands
+        ? showSecondaryMenu && menu.dataset.megaMenuSecondaryFor === this.activeBrandKey
+        : showSecondaryMenu;
+      menu.classList.toggle('is-hidden', !shouldShowMenu);
+    });
   }
 
   updateChrome({ showBack, title }) {
@@ -437,28 +434,34 @@ class FeaturedCollectionMegaMenu {
   }
 
   syncSecondaryCurrentState() {
-    this.secondaryLinkTriggers.forEach((link) => {
-      const isCurrent = this.currentSecondaryKey && link.dataset.megaMenuTrigger === this.currentSecondaryKey;
-      link.classList.toggle('is-current', !!isCurrent);
-      if (isCurrent) {
-        link.setAttribute('aria-current', 'page');
-        link.setAttribute('aria-disabled', 'true');
+    this.secondaryMenus.forEach((menu) => {
+      const isActiveMenu = !this.hasBrands || menu.dataset.megaMenuSecondaryFor === this.activeBrandKey;
+      const secondaryLinkTriggers = Array.from(menu.querySelectorAll('[data-mega-menu-trigger][data-mega-menu-next="frames"]'));
+      const secondaryRootButton = menu.querySelector('[data-mega-menu-back="frames"]');
+
+      secondaryLinkTriggers.forEach((link) => {
+        const isCurrent = isActiveMenu && this.currentSecondaryKey && link.dataset.megaMenuTrigger === this.currentSecondaryKey;
+        link.classList.toggle('is-current', !!isCurrent);
+        if (isCurrent) {
+          link.setAttribute('aria-current', 'page');
+          link.setAttribute('aria-disabled', 'true');
+        } else {
+          link.removeAttribute('aria-current');
+          link.removeAttribute('aria-disabled');
+        }
+      });
+
+      if (!secondaryRootButton) return;
+      const rootIsCurrent = isActiveMenu && this.currentSecondaryKey === 'frames';
+      secondaryRootButton.classList.toggle('is-current', rootIsCurrent);
+      if (rootIsCurrent) {
+        secondaryRootButton.setAttribute('aria-current', 'page');
+        secondaryRootButton.setAttribute('aria-disabled', 'true');
       } else {
-        link.removeAttribute('aria-current');
-        link.removeAttribute('aria-disabled');
+        secondaryRootButton.removeAttribute('aria-current');
+        secondaryRootButton.removeAttribute('aria-disabled');
       }
     });
-
-    if (!this.secondaryRootButton) return;
-    const rootIsCurrent = this.currentSecondaryKey === 'frames';
-    this.secondaryRootButton.classList.toggle('is-current', rootIsCurrent);
-    if (rootIsCurrent) {
-      this.secondaryRootButton.setAttribute('aria-current', 'page');
-      this.secondaryRootButton.setAttribute('aria-disabled', 'true');
-    } else {
-      this.secondaryRootButton.removeAttribute('aria-current');
-      this.secondaryRootButton.removeAttribute('aria-disabled');
-    }
   }
 }
 
