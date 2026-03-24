@@ -3,9 +3,9 @@
 Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
-- Branch: codex/mega-menu-3stage
-- HEAD commit: 53ba41b6d03ee2f4fc647652d4d9fe4a9568eaab
-- Last pushed commit (GitHub): e43790d
+- Branch: codex/mega-menu-nested-categories
+- HEAD commit: bc77d4c8d5f60dbb9d6f77f75f3ba2d61e6106d0
+- Last pushed commit (GitHub): 724e199
 - Local dev server:
   - Running? no
   - Port:
@@ -14,6 +14,38 @@ Keep this file updated so any agent can resume without overwriting files.
   - Live: 160510771450
 
 ## Recent Pulls
+- 2026-03-24: local commit `bc77d4c8d5f60dbb9d6f77f75f3ba2d61e6106d0`
+  - Intent: remove the legacy secondary-menu dependency from both header and featured mega menus, and point the homepage featured section at `gatorz-mega-menu`
+  - Files changed: `snippets/header-view-all-mega-menu.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`, `templates/index.json`
+  - Result: committed locally and pushed to staging theme preview
+- 2026-03-24: local commit `3568f4a49fdb380b57d0cf29971ff4a5f39a4e0a`
+  - Intent: unwrap the outer brand node in the featured Gatorz mega menu so the actual category list is read from the nested `Gatorz -> Shop by Frame / Accessories / Lens Replacements` structure
+  - Files changed: `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Result: committed locally and pushed to staging theme preview
+- 2026-03-24: local commit `e3ae917e4900bf1531e95aa4b09f7b7bd4f7ee80`
+  - Intent: add a featured-menu fallback from `Gatorz Mega Menu` to the derived `gatorz-shop-by-frame` handle when `Shop by Frame` does not expose child links inline
+  - Files changed: `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Result: committed locally and pushed to staging theme preview
+- 2026-03-24: local commit `f565561b4cbc0a187c144fe4046ffd86465d2908`
+  - Intent: fix the featured mega menu root-stage resolver so it actually uses the default category's frame links instead of falling back to the top-level category list
+  - Files changed: `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Result: committed locally and pushed to staging theme preview
+- 2026-03-24: local commit `d0ac8748dbc4ad70cd699fc456482370779b81a6`
+  - Intent: refactor the featured collection mega menu to use the same default-category and right-rail nested menu model as the header mega menu
+  - Files changed: `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Result: committed locally and pushed to staging theme preview
+- 2026-03-24: local commit `bd61200553c63ad7c890604ed7ad68bb5f7af3ed`
+  - Intent: fix the nested mega-menu brand stage so screen 2 opens on the default category's frame thumbnails instead of rendering the category links as cards
+  - Files changed: `snippets/header-view-all-mega-menu.liquid`
+  - Result: committed locally and pushed to staging theme preview
+- 2026-03-24: local commit `5fcb2e9dc1e30e76052a8dfb27c4de78c9ef6657`
+  - Intent: refactor the header mega menu to derive its right-rail category stages from nested menu items while preserving the existing fullscreen styling and animation behavior
+  - Files changed: `snippets/header-view-all-mega-menu.liquid`
+  - Result: committed locally and pushed to staging theme preview
+- 2026-03-23: `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs && ./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json`
+  - Intent: final settings-only sync before promoting the approved mega-menu bundle to live
+  - Result: success
+  - Files updated: no local settings diffs
 - 2026-03-23: local commit `53ba41b6d03ee2f4fc647652d4d9fe4a9568eaab`
   - Intent: align the homepage featured-section mega menus with the main shop mega menu flow so Gatorz opens on its frame stage with a right rail and Revision opens directly on its frame stage without one
   - Files changed: `snippets/featured-collection-view-all-mega-menu.liquid`, `templates/index.json`
@@ -71,6 +103,86 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-03-24: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-nested-categories` @ `bc77d4c8d5f60dbb9d6f77f75f3ba2d61e6106d0`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/header-view-all-mega-menu.liquid --only snippets/featured-collection-view-all-mega-menu.liquid --only templates/index.json`
+  - Files pushed: `snippets/header-view-all-mega-menu.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`, `templates/index.json`
+  - Change: removed the legacy `gatorz-secondary-menu` fallback from both mega-menu implementations and updated the homepage featured section to use `gatorz-mega-menu` directly
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: staging validation only; after confirming both header and featured Gatorz menus still behave correctly, the old admin secondary menu can be deleted
+- 2026-03-24: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-nested-categories` @ `3568f4a49fdb380b57d0cf29971ff4a5f39a4e0a`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/featured-collection-view-all-mega-menu.liquid`
+  - Files pushed: `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Change: updated the featured mega menu to unwrap the outer `Gatorz` menu item and use its nested categories as the working root, so `Shop by Frame` can populate the frame-thumbnail grid instead of rendering category cards
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: reload the featured Gatorz mega menu and confirm it now opens with the frame grid from the nested `Shop by Frame` branch
+- 2026-03-24: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-nested-categories` @ `e3ae917e4900bf1531e95aa4b09f7b7bd4f7ee80`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/featured-collection-view-all-mega-menu.liquid`
+  - Files pushed: `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Change: added a fallback that derives the `gatorz-shop-by-frame` menu from the primary menu title when the default `Shop by Frame` category does not expose child links directly
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: validate against the current Shopify admin menu structure after the secondary menu removal
+- 2026-03-24: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-nested-categories` @ `f565561b4cbc0a187c144fe4046ffd86465d2908`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/featured-collection-view-all-mega-menu.liquid`
+  - Files pushed: `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Change: fixed the featured mega menu root stage to render the default category's frame thumbnails instead of the top-level category cards while preserving the right-rail category menu
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: reload the featured section preview and confirm the first featured mega-menu screen now matches the intended frame-grid layout
+- 2026-03-24: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-nested-categories` @ `d0ac8748dbc4ad70cd699fc456482370779b81a6`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/featured-collection-view-all-mega-menu.liquid`
+  - Files pushed: `snippets/featured-collection-view-all-mega-menu.liquid`
+  - Change: updated the featured collection mega menu to open on the default category's frame grid and keep the remaining categories in the right rail, matching the header mega-menu's nested navigation structure
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: validate featured section menus against the intended nested-navigation layout before any live push
+- 2026-03-24: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-nested-categories` @ `bd61200553c63ad7c890604ed7ad68bb5f7af3ed`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/header-view-all-mega-menu.liquid`
+  - Files pushed: `snippets/header-view-all-mega-menu.liquid`
+  - Change: corrected the nested menu resolver so the brand opens directly on the default category's frame grid and keeps the category list in the right rail instead of rendering those category links as the main cards
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: confirm stage-2 Gatorz matches the intended frame-grid layout before any live push
+- 2026-03-24: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/mega-menu-nested-categories` @ `5fcb2e9dc1e30e76052a8dfb27c4de78c9ef6657`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/header-view-all-mega-menu.liquid`
+  - Files pushed: `snippets/header-view-all-mega-menu.liquid`
+  - Change: refactored the header mega menu to use a nested menu category as the right-rail source and thumbnail-stage driver, with fallback to the legacy Gatorz secondary menu so the visual behavior stays unchanged while navigation data is migrated
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: validate the staged menu against the nested-navigation setup in Shopify admin; live push still requires explicit approval
+- 2026-03-23: target theme ID `160510771450` (live)
+  - Branch + commit: `codex/mega-menu-3stage` @ `724e19965cadce44388134839b7d57881b059d79`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --allow-live --only assets/featured-collection-mega-menu.js --only assets/header-mega-menu-fullscreen.js --only snippets/header-view-all-mega-menu.liquid --only snippets/featured-collection-view-all-mega-menu.liquid --only templates/index.json`
+  - Files pushed: `assets/featured-collection-mega-menu.js`, `assets/header-mega-menu-fullscreen.js`, `snippets/header-view-all-mega-menu.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`, `templates/index.json`
+  - Change: promoted the approved main and featured mega-menu bundle to live, including the Gatorz right-rail behavior and the direct-to-brand frame-stage featured-section flow for Gatorz and Revision
+  - Live preview: https://goveyewear.myshopify.com
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: none
 - 2026-03-23: target theme ID `160581189882` (staging)
   - Branch + commit: `codex/mega-menu-3stage` @ `53ba41b6d03ee2f4fc647652d4d9fe4a9568eaab`
   - Commands:
