@@ -13,6 +13,23 @@
   endif
 
   if primary_menu_links != blank
+    assign primary_menu_has_direct_categories = false
+    for category_link in primary_menu_links
+      assign category_title_normalized = category_link.title | strip | downcase
+      if category_title_normalized == 'shop by frame' or category_title_normalized == 'accessories' or category_title_normalized == 'nose piece replacements' or category_title_normalized == 'lens replacements' or category_title_normalized == 'explore brand page'
+        assign primary_menu_has_direct_categories = true
+      endif
+    endfor
+
+    if primary_menu_has_direct_categories == false
+      for brand_link in primary_menu_links
+        if brand_link.links != blank
+          assign primary_menu_links = brand_link.links
+          break
+        endif
+      endfor
+    endif
+
     for category_link in primary_menu_links
       assign category_title_normalized = category_link.title | strip | downcase
       if category_title_normalized != 'explore brand page' and default_category_link == blank
