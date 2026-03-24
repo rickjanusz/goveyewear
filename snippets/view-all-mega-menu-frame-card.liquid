@@ -1,0 +1,38 @@
+{%- liquid
+  assign resolved_item_class = item_class
+  if resolved_item_class == blank
+    assign resolved_item_class = 'section-' | append: menu_id | append: '-view-all-menu-frame section-' | append: menu_id | append: '-view-all-menu-card'
+  endif
+
+  assign resolved_placeholder = placeholder_name
+  if resolved_placeholder == blank
+    assign resolved_placeholder = 'collection-apparel-1'
+  endif
+-%}
+<a
+  href="{{ item_url }}"
+  class="{{ resolved_item_class }}{% if is_active %} is-active{% endif %}"
+  {%- if trigger_key != blank and next_stage != blank -%} data-mega-menu-trigger="{{ trigger_key }}" data-mega-menu-next="{{ next_stage }}"{%- endif -%}
+>
+  <figure class="section-{{ menu_id }}-view-all-menu-frame-figure">
+    <div class="section-{{ menu_id }}-view-all-menu-frame-image-wrap">
+      {%- if item_image != blank -%}
+        <img
+          class="section-{{ menu_id }}-view-all-menu-frame-image"
+          src="{{ item_image | image_url: width: 480 }}"
+          alt="{{ image_alt | default: item_title | escape }}"
+          loading="lazy"
+          width="{{ item_image.width }}"
+          height="{{ item_image.height }}"
+        >
+      {%- else -%}
+        <span class="section-{{ menu_id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+          {{ resolved_placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+        </span>
+      {%- endif -%}
+    </div>
+    <figcaption class="section-{{ menu_id }}-view-all-menu-frame-title">
+      {{ item_title | escape }}
+    </figcaption>
+  </figure>
+</a>
