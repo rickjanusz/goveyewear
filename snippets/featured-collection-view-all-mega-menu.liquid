@@ -1,35 +1,32 @@
 {%- liquid
   assign primary_menu = section.settings.view_all_mega_menu
-  assign primary_menu_links = primary_menu.links
+  assign featured_category_links = primary_menu.links
   assign secondary_menu_links = blank
-  assign primary_menu_handle = ''
   assign default_category_link = blank
   assign default_category_title_normalized = ''
   assign default_category_links = blank
 
-  if primary_menu != blank and primary_menu.handle != blank
-    assign primary_menu_handle = primary_menu.handle
-  endif
-
-  if primary_menu_links != blank
-    assign primary_menu_has_direct_categories = false
-    for category_link in primary_menu_links
+  if featured_category_links != blank
+    assign featured_menu_has_direct_categories = false
+    for category_link in featured_category_links
       assign category_title_normalized = category_link.title | strip | downcase
       if category_title_normalized == 'shop by frame' or category_title_normalized == 'accessories' or category_title_normalized == 'nose piece replacements' or category_title_normalized == 'lens replacements' or category_title_normalized == 'explore brand page'
-        assign primary_menu_has_direct_categories = true
+        assign featured_menu_has_direct_categories = true
       endif
     endfor
 
-    if primary_menu_has_direct_categories == false
-      for brand_link in primary_menu_links
+    if featured_menu_has_direct_categories == false
+      for brand_link in featured_category_links
         if brand_link.links != blank
-          assign primary_menu_links = brand_link.links
+          assign featured_category_links = brand_link.links
           break
         endif
       endfor
     endif
 
-    for category_link in primary_menu_links
+    assign primary_menu_links = featured_category_links
+
+    for category_link in featured_category_links
       assign category_title_normalized = category_link.title | strip | downcase
       if category_title_normalized != 'explore brand page' and default_category_link == blank
         assign default_category_link = category_link
