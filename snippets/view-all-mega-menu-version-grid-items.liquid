@@ -2,6 +2,7 @@
   {%- for version_product in version_collection.products limit: 12 -%}
     {%- liquid
       assign version_image = blank
+      assign version_card_class = 'section-' | append: menu_id | append: '-view-all-menu-version-card section-' | append: menu_id | append: '-view-all-menu-card'
       if version_product.featured_media != blank and version_product.featured_media.preview_image != blank
         assign version_image = version_product.featured_media.preview_image
       elsif version_product.featured_image != blank
@@ -14,7 +15,7 @@
       item_title: version_product.title,
       item_image: version_image,
       placeholder_name: 'product-apparel-1',
-      item_class: 'section-' | append: menu_id | append: '-view-all-menu-version-card section-' | append: menu_id | append: '-view-all-menu-card'
+      item_class: version_card_class
     -%}
   {%- endfor -%}
 {%- elsif version_links != blank -%}
@@ -22,6 +23,7 @@
     {%- liquid
       assign version_object = version_link.object
       assign version_image = blank
+      assign version_card_class = 'section-' | append: menu_id | append: '-view-all-menu-version-card section-' | append: menu_id | append: '-view-all-menu-card'
       if version_object != blank
         if version_object.featured_image != blank
           assign version_image = version_object.featured_image
@@ -36,7 +38,7 @@
       item_title: version_link.title,
       item_image: version_image,
       placeholder_name: 'product-apparel-1',
-      item_class: 'section-' | append: menu_id | append: '-view-all-menu-version-card section-' | append: menu_id | append: '-view-all-menu-card'
+      item_class: version_card_class
     -%}
   {%- endfor -%}
 {%- endif -%}

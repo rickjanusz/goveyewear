@@ -123,7 +123,10 @@
               assign brand_title_downcase = brand_meta_parts[1]
               assign brand_display_title = brand_meta_parts[3]
               assign brand_menu_handle = brand_meta_parts[4]
-              assign is_direct_brand = brand_meta_parts[5] == 'true'
+              assign is_direct_brand = false
+              if brand_meta_parts[5] == 'true'
+                assign is_direct_brand = true
+              endif
 
               assign brand_menu = linklists[brand_menu_handle]
               assign brand_category_links = childlink.links
