@@ -27,13 +27,50 @@
     endif
 
     assign brand_menu = linklists[brand_menu_handle]
+    assign brand_category_links = childlink.links
+    assign default_category_link = blank
+    assign default_category_title_normalized = ''
+    if brand_category_links != blank
+      for category_link in brand_category_links
+        assign category_title_normalized = category_link.title | strip | downcase
+        if category_title_normalized != 'explore brand page' and default_category_link == blank
+          assign default_category_link = category_link
+          assign default_category_title_normalized = category_title_normalized
+        endif
+        if category_title_normalized == 'shop by frame'
+          assign default_category_link = category_link
+          assign default_category_title_normalized = category_title_normalized
+          break
+        endif
+      endfor
+    endif
+
+    assign default_category_links = blank
+    if default_category_link != blank
+      assign default_category_links = default_category_link.links
+      if default_category_links == blank
+        assign default_category_object = default_category_link.object
+        assign default_category_handle = default_category_link.title | handleize
+        if default_category_object != blank and default_category_object.handle != blank
+          assign default_category_handle = default_category_object.handle
+        endif
+        assign default_category_menu_handle = default_category_handle | append: '-shop-by-frame'
+        assign default_category_menu = linklists[default_category_menu_handle]
+        assign default_category_links = default_category_menu.links
+      endif
+    endif
+
     assign frame_links = brand_menu.links
-    if frame_links == blank
+    if default_category_links != blank
+      assign frame_links = default_category_links
+    elsif frame_links == blank
       assign frame_links = childlink.links
     endif
 
     assign secondary_menu_links = blank
-    if frame_links != blank
+    if brand_category_links != blank and default_category_link != blank
+      assign secondary_menu_links = brand_category_links
+    elsif frame_links != blank
       assign category_link = frame_links.last
       if category_link != blank and category_link.links != blank
         assign secondary_menu_links = category_link.links
@@ -138,12 +175,44 @@
                 assign brand_menu_handle = brand_handle | append: '-shop-by-frame'
               endif
 
-              assign brand_menu = linklists[brand_menu_handle]
-              assign frame_links = brand_menu.links
-              if frame_links == blank
-                assign frame_links = childlink.links
+            assign brand_menu = linklists[brand_menu_handle]
+            assign brand_category_links = childlink.links
+            assign default_category_link = blank
+            if brand_category_links != blank
+              for category_link in brand_category_links
+                assign category_title_normalized = category_link.title | strip | downcase
+                if category_title_normalized != 'explore brand page' and default_category_link == blank
+                  assign default_category_link = category_link
+                endif
+                if category_title_normalized == 'shop by frame'
+                  assign default_category_link = category_link
+                  break
+                endif
+              endfor
+            endif
+
+            assign default_category_links = blank
+            if default_category_link != blank
+              assign default_category_links = default_category_link.links
+              if default_category_links == blank
+                assign default_category_object = default_category_link.object
+                assign default_category_handle = default_category_link.title | handleize
+                if default_category_object != blank and default_category_object.handle != blank
+                  assign default_category_handle = default_category_object.handle
+                endif
+                assign default_category_menu_handle = default_category_handle | append: '-shop-by-frame'
+                assign default_category_menu = linklists[default_category_menu_handle]
+                assign default_category_links = default_category_menu.links
               endif
-            -%}
+            endif
+
+            assign frame_links = brand_menu.links
+            if default_category_links != blank
+              assign frame_links = default_category_links
+            elsif frame_links == blank
+              assign frame_links = childlink.links
+            endif
+          -%}
             <a
               href="{{ childlink.url }}"
               class="section-{{ menu_id }}-view-all-menu-frame section-{{ menu_id }}-view-all-menu-card{% if forloop.first %} is-active{% endif %}"
@@ -197,14 +266,53 @@
             endif
 
             assign brand_menu = linklists[brand_menu_handle]
+            assign brand_category_links = childlink.links
+            assign default_category_link = blank
+            assign default_category_title_normalized = ''
+            if brand_category_links != blank
+              for category_link in brand_category_links
+                assign category_title_normalized = category_link.title | strip | downcase
+                if category_title_normalized != 'explore brand page' and default_category_link == blank
+                  assign default_category_link = category_link
+                  assign default_category_title_normalized = category_title_normalized
+                endif
+                if category_title_normalized == 'shop by frame'
+                  assign default_category_link = category_link
+                  assign default_category_title_normalized = category_title_normalized
+                  break
+                endif
+              endfor
+            endif
+
+            assign default_category_links = blank
+            if default_category_link != blank
+              assign default_category_links = default_category_link.links
+              if default_category_links == blank
+                assign default_category_object = default_category_link.object
+                assign default_category_handle = default_category_link.title | handleize
+                if default_category_object != blank and default_category_object.handle != blank
+                  assign default_category_handle = default_category_object.handle
+                endif
+                assign default_category_menu_handle = default_category_handle | append: '-shop-by-frame'
+                assign default_category_menu = linklists[default_category_menu_handle]
+                assign default_category_links = default_category_menu.links
+              endif
+            endif
+
             assign frame_links = brand_menu.links
-            if frame_links == blank
+            if default_category_links != blank
+              assign frame_links = default_category_links
+            elsif frame_links == blank
               assign frame_links = childlink.links
             endif
 
             assign nested_secondary_links = blank
             assign has_nested_secondary = false
-            if frame_links != blank
+            assign use_brand_category_links = false
+            if brand_category_links != blank and default_category_link != blank
+              assign nested_secondary_links = brand_category_links
+              assign use_brand_category_links = true
+            elsif frame_links != blank
               assign category_link = frame_links.last
               if category_link != blank and category_link.links != blank
                 assign nested_secondary_links = category_link.links
@@ -389,6 +497,9 @@
                   assign secondary_has_collection_products = true
                 endif
               -%}
+              {%- if use_brand_category_links and secondary_link_title_normalized == default_category_title_normalized -%}
+                {%- continue -%}
+              {%- endif -%}
               {%- unless secondary_is_explore_brand_page -%}
                 <div class="section-{{ menu_id }}-view-all-menu-stage section-{{ menu_id }}-view-all-menu-stage--frames" data-mega-menu-stage="frames" data-mega-menu-frames="{{ secondary_key }}">
                   {%- if secondary_frame_links != blank -%}
@@ -595,12 +706,19 @@
                     assign secondary_has_collection_products = true
                   endif
                   assign secondary_is_triggerable = true
-                  if secondary_is_explore_brand_page
+                  assign secondary_is_default_root = false
+                  if secondary_link_title_normalized == 'shop by frame'
+                    assign secondary_is_default_root = true
+                  endif
+                  if secondary_is_explore_brand_page or secondary_is_default_root
                     assign secondary_is_triggerable = false
                   elsif secondary_frame_links == blank and secondary_has_collection_products == false
                     assign secondary_is_triggerable = false
                   endif
                 -%}
+                {%- if secondary_is_default_root -%}
+                  {%- continue -%}
+                {%- endif -%}
                 <li>
                   <a
                     href="{{ secondary_link.url }}"
