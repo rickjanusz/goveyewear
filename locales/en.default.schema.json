@@ -1102,6 +1102,15 @@
         "image": {
           "label": "Image"
         },
+        "section_width": {
+          "options__1": {
+            "label": "Content width"
+          },
+          "options__2": {
+            "label": "Full width"
+          },
+          "label": "Section width"
+        },
         "height": {
           "options__1": {
             "label": "Adapt to image"
