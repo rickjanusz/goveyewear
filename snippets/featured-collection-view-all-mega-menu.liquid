@@ -48,8 +48,9 @@
 -%}
 
 {%- if section.settings.view_all_mega_menu != blank and primary_menu_links.size > 0 -%}
+  {%- assign mega_menu_button_label = settings.featured_collection_mega_menu_button_label | default: 'Full Specs' -%}
   <button type="button" class="section-{{ section.id }}-view-all-detail-trigger button button--secondary" data-mega-menu-open>
-    Full Specs
+    {{ mega_menu_button_label | escape }}
   </button>
   <div class="section-{{ section.id }}-view-all-menu{% if secondary_menu_links != blank %} section-{{ section.id }}-view-all-menu--featured-two-column{% endif %}" role="dialog" aria-modal="true" aria-label="{{ section.settings.view_all_mega_menu.title | escape }}" data-featured-collection-mega-menu data-open-on-hover="true">
     <div class="section-{{ section.id }}-view-all-menu-shell">

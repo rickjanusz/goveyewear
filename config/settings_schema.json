@@ -479,6 +479,13 @@
     "name": "t:settings_schema.buttons.name",
     "settings": [
       {
+        "type": "text",
+        "id": "featured_collection_mega_menu_button_label",
+        "label": "Featured collection mega menu button label",
+        "default": "Full Specs",
+        "info": "Controls the desktop trigger text for the featured collection mega menu button."
+      },
+      {
         "type": "header",
         "content": "t:settings_schema.global.settings.header__border.content"
       },
