@@ -46,11 +46,11 @@
       endif
     endif
 
-    assign frame_links = brand_menu.links
+    assign frame_links = childlink.links
     if default_category_links != blank
       assign frame_links = default_category_links
     elsif frame_links == blank
-      assign frame_links = childlink.links
+      assign frame_links = brand_menu.links
     endif
 
     assign secondary_menu_links = blank
@@ -159,11 +159,11 @@
                 endif
               endif
 
-              assign frame_links = brand_menu.links
+              assign frame_links = childlink.links
               if default_category_links != blank
                 assign frame_links = default_category_links
               elsif frame_links == blank
-                assign frame_links = childlink.links
+                assign frame_links = brand_menu.links
               endif
 
               assign brand_trigger_key = blank
@@ -230,11 +230,11 @@
               endif
             endif
 
-            assign frame_links = brand_menu.links
+            assign frame_links = childlink.links
             if default_category_links != blank
               assign frame_links = default_category_links
             elsif frame_links == blank
-              assign frame_links = childlink.links
+              assign frame_links = brand_menu.links
             endif
 
             assign nested_secondary_links = blank
@@ -313,11 +313,11 @@
                   assign secondary_is_explore_brand_page = true
                 endif
 
-                assign secondary_menu_handle = secondary_handle | append: '-shop-by-frame'
-                assign secondary_menu = linklists[secondary_menu_handle]
-                assign secondary_frame_links = secondary_menu.links
+                assign secondary_frame_links = secondary_link.links
                 if secondary_frame_links == blank
-                  assign secondary_frame_links = secondary_link.links
+                  assign secondary_menu_handle = secondary_handle | append: '-shop-by-frame'
+                  assign secondary_menu = linklists[secondary_menu_handle]
+                  assign secondary_frame_links = secondary_menu.links
                 endif
 
                 assign secondary_has_collection_products = false
@@ -433,11 +433,11 @@
               endif
             endif
 
-            assign frame_links = brand_menu.links
+            assign frame_links = childlink.links
             if default_category_links != blank
               assign frame_links = default_category_links
             elsif frame_links == blank
-              assign frame_links = childlink.links
+              assign frame_links = brand_menu.links
             endif
 
             assign brand_secondary_menu_links = blank
@@ -478,11 +478,11 @@
                       if secondary_object != blank and secondary_object.handle != blank
                         assign secondary_handle = secondary_object.handle
                       endif
-                      assign secondary_menu_handle = secondary_handle | append: '-shop-by-frame'
-                      assign secondary_menu = linklists[secondary_menu_handle]
-                      assign secondary_frame_links = secondary_menu.links
+                      assign secondary_frame_links = secondary_link.links
                       if secondary_frame_links == blank
-                        assign secondary_frame_links = secondary_link.links
+                        assign secondary_menu_handle = secondary_handle | append: '-shop-by-frame'
+                        assign secondary_menu = linklists[secondary_menu_handle]
+                        assign secondary_frame_links = secondary_menu.links
                       endif
                       assign secondary_has_collection_products = false
                       if secondary_object != blank and secondary_object.all_products_count > 0
