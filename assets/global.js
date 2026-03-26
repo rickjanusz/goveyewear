@@ -842,6 +842,15 @@ class VariantSelects extends HTMLElement {
         const source = html.getElementById(`price-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`);
         if (source && destination) destination.innerHTML = source.innerHTML;
 
+        const skuDestination = document.getElementById(`Sku-${this.dataset.section}`);
+        const skuSource = html.getElementById(
+          `Sku-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`
+        );
+        if (skuSource && skuDestination) {
+          skuDestination.innerHTML = skuSource.innerHTML;
+          skuDestination.className = skuSource.className;
+        }
+
         const price = document.getElementById(`price-${this.dataset.section}`);
 
         if (price) price.classList.remove('visibility-hidden');

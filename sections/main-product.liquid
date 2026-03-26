@@ -232,6 +232,9 @@
                   {{ product.title | escape }}
                 </h2>
               </a>
+              <p id="Sku-{{ section.id }}" class="product__sku caption-with-letter-spacing{% if product.selected_or_first_available_variant.sku == blank %} hidden{% endif %}">
+                SKU: <span>{{ product.selected_or_first_available_variant.sku }}</span>
+              </p>
             </div>
           {%- when 'price' -%}
             <div class="no-js-hidden" id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>

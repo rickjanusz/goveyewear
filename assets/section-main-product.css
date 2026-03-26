@@ -337,6 +337,11 @@ a.product__text {
   display: none;
 }
 
+.product__sku {
+  margin-top: 0.8rem;
+  color: rgba(var(--color-foreground), 0.75);
+}
+
 .product__title + .product__text.caption-with-letter-spacing {
   margin-top: -1.5rem;
 }
