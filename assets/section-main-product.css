@@ -340,6 +340,8 @@ a.product__text {
 .product__sku {
   margin-top: 0.8rem;
   color: rgba(var(--color-foreground), 0.75);
+  font-size: 1.4rem;
+  font-weight: 700;
 }
 
 .product__title + .product__text.caption-with-letter-spacing {
