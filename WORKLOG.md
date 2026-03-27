@@ -4,7 +4,7 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/pdf-download-section
-- HEAD commit: 6bc9ce4fdf6f7973690278ba91f37409766e1c46
+- HEAD commit: 2a21cdf5f2f89b8530129787c2d7646666c92daa
 - Last pushed commit (GitHub): 724e199
 - Local dev server:
   - Running? no
@@ -14,6 +14,26 @@ Keep this file updated so any agent can resume without overwriting files.
   - Live: 160510771450
 
 ## Recent Pulls
+- 2026-03-27: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/pdf-download-section` @ `2a21cdf5f2f89b8530129787c2d7646666c92daa`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/pdf-links.liquid`
+  - Files pushed: `sections/pdf-links.liquid`
+  - Change: removed the PDF button's custom sizing overrides so it inherits the site's standard button height and padding
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: verify the updated button sizing in the product template editor and sync live `templates/product*.json` into the branch before any template push
+- 2026-03-27: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/pdf-download-section` @ `56a76dcf26d6585dd2d0ce354da2f20ab7777d7c`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/pdf-links.liquid`
+  - Files pushed: `sections/pdf-links.liquid`
+  - Change: added the new `PDF Links` product section to staging so it can be inserted in product templates from the theme editor
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: verify the new section in the product template editor and sync live `templates/product*.json` into the branch before any template push
 - 2026-03-27: local WIP on branch `codex/pdf-download-section` @ `6bc9ce4fdf6f7973690278ba91f37409766e1c46`
   - Intent: add a new product-template section component named `PDF Links` for block-based PDF download buttons in Shopify admin
   - Files changed: `sections/pdf-links.liquid`, `AGENTS.md`, `.codex/skills/shopify-staging-release/SKILL.md`
