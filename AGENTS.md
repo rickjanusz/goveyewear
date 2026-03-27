@@ -24,11 +24,13 @@
 
 ## Settings Sync Protocol
 - Only pull settings from **live** or **staging** when the user explicitly says they’ve made admin/theme changes and requests a pull.
-- When pulling, **only sync user settings diffs** (do not pull development files/code).
-- `config/settings_data.json` and `config/settings_schema.json` can carry merchant config; do not overwrite blindly.
-- Use the settings-only pull commands:
-  - Live: `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json`
-  - Staging: `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160581189882 --nodelete --only config/settings_data.json --only config/settings_schema.json`
+- When pulling, sync only merchant-managed theme editor files and avoid general code pulls.
+- Merchant-managed files include `config/settings_data.json`, `config/settings_schema.json`, and theme-editor-managed product templates such as `templates/product*.json`.
+- Product template JSON files may be created or updated directly in Shopify admin by internal users or third-party editors; do not assume local template files are current.
+- Treat `templates/product*.json` with the same safety rules as settings files and do not overwrite blindly.
+- Use the merchant-config sync commands:
+  - Live: `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json --only "templates/product*.json"`
+  - Staging: `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160581189882 --nodelete --only config/settings_data.json --only config/settings_schema.json --only "templates/product*.json"`
 
 ## Scope Rules
 - Prefer small, localized, component-level edits.

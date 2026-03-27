@@ -3,8 +3,8 @@
 Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
-- Branch: codex/mega-menu-nested-categories
-- HEAD commit: bc77d4c8d5f60dbb9d6f77f75f3ba2d61e6106d0
+- Branch: codex/pdf-download-section
+- HEAD commit: 6bc9ce4fdf6f7973690278ba91f37409766e1c46
 - Last pushed commit (GitHub): 724e199
 - Local dev server:
   - Running? no
@@ -14,6 +14,24 @@ Keep this file updated so any agent can resume without overwriting files.
   - Live: 160510771450
 
 ## Recent Pulls
+- 2026-03-27: local WIP on branch `codex/pdf-download-section` @ `6bc9ce4fdf6f7973690278ba91f37409766e1c46`
+  - Intent: add a new product-template section component named `PDF Links` for block-based PDF download buttons in Shopify admin
+  - Files changed: `sections/pdf-links.liquid`, `AGENTS.md`, `.codex/skills/shopify-staging-release/SKILL.md`
+  - Result: added a new product-only section with per-block PDF buttons, section-level button layout control (`horizontal`/`vertical`), and configurable columns per row; documented that merchant-config syncs must include `templates/product*.json`
+  - Files pushed: none
+  - Staging preview: not pushed yet
+  - Live preview: not pushed
+  - Open TODOs/approvals needed: sync live `templates/product*.json` into the branch before any template push, then push the new section to staging so it becomes available in the product template editor
+- 2026-03-27: local commit `6bc9ce4fdf6f7973690278ba91f37409766e1c46`
+  - Intent: pull live merchant settings into the `codex/pdf-download-section` branch before starting section work
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json`
+  - Files changed: `config/settings_data.json`
+  - Result: merged current live settings into the branch working tree; `config/settings_schema.json` unchanged
+  - Live preview: https://goveyewear.myshopify.com/?preview_theme_id=160510771450
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: commit the settings sync if we want a clean checkpoint before section edits
 - 2026-03-24: local commit `bc77d4c8d5f60dbb9d6f77f75f3ba2d61e6106d0`
   - Intent: remove the legacy secondary-menu dependency from both header and featured mega menus, and point the homepage featured section at `gatorz-mega-menu`
   - Files changed: `snippets/header-view-all-mega-menu.liquid`, `snippets/featured-collection-view-all-mega-menu.liquid`, `templates/index.json`
