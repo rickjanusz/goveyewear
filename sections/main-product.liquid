@@ -38,6 +38,7 @@
 
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
 
+  {%- assign product_media_fallback_url = 'https://cdn.shopify.com/s/files/1/0662/8438/8602/files/img-fallback.png?v=1774654439' -%}
   {%- assign first_3d_model = product.media | where: "media_type", "model" | first -%}
   {%- if first_3d_model -%}
     {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
@@ -45,7 +46,7 @@
     <link id="ModelViewerOverride" rel="stylesheet" href="{{ 'component-model-viewer-ui.css' | asset_url }}" media="print" onload="this.media='all'">
   {%- endif -%}
 
-  <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.gallery_layout }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
+  <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.gallery_layout }} grid grid--1-col grid--2-col-tablet">
     <div class="grid__item product__media-wrapper">
       <media-gallery id="MediaGallery-{{ section.id }}" role="region" {% if section.settings.enable_sticky_info %}class="product__media-gallery"{% endif %} aria-label="{{ 'products.product.media.gallery_viewer' | t }}" data-desktop-layout="{{ section.settings.gallery_layout }}">
         <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
@@ -90,6 +91,19 @@
                 </li>
               {%- endunless -%}
             {%- endfor -%}
+            {%- if product.media.size == 0 -%}
+              <li id="Slide-{{ section.id }}-placeholder" class="product__media-item grid__item slider__slide is-active" data-media-id="{{ section.id }}-placeholder">
+                <div class="product__media media media--transparent gradient global-media-settings product__media-placeholder" style="padding-top: 100%;">
+                  <img
+                    src="{{ product_media_fallback_url }}"
+                    alt="Product image coming soon"
+                    loading="lazy"
+                    width="1600"
+                    height="1600"
+                  >
+                </div>
+              </li>
+            {%- endif -%}
           </ul>
           <div class="slider-buttons no-js-hidden quick-add-hidden{% if media_count < 2 or section.settings.mobile_thumbnails == 'show' %} small-hide{% endif %}">
             <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}">{% render 'icon-caret' %}</button>

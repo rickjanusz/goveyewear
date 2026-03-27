@@ -22,6 +22,7 @@
 {%- if card_product and card_product != empty -%}
   {%- liquid
     assign resolved_card_image_fit = card_image_fit | default: 'contain'
+    assign card_media_fallback_url = 'https://cdn.shopify.com/s/files/1/0662/8438/8602/files/img-fallback.png?v=1774654439'
   -%}
   {%- liquid
     assign ratio = 1
@@ -29,13 +30,13 @@
   <div class="card-wrapper card-wrapper--image-fit-{{ resolved_card_image_fit }} underline-links-hover">
     <div class="card
       card--{{ settings.card_style }}
-      {% if card_product.featured_media %} card--media{% else %} card--text{% endif %}
+      card--media
       {% if settings.card_style == 'card' %} color-{{ settings.card_color_scheme }} gradient{% endif %}
       {% if extend_height %} card--extend-height{% endif %}
-      {% if card_product.featured_media == nil and settings.card_style == 'card' %} ratio{% endif %}"
+      ratio"
       style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
     >
-      <div class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if card_product.featured_media or settings.card_style == 'standard' %} ratio{% endif %}" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;">
+      <div class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %} ratio" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;">
         {%- if card_product.featured_media -%}
           <div class="card__media">
             <div class="media media--transparent media--hover-effect">
@@ -76,6 +77,19 @@
                   height="{{ card_product.media[1].height }}"
                 >
               {%- endif -%}
+            </div>
+          </div>
+        {%- else -%}
+          <div class="card__media">
+            <div class="media media--transparent media--hover-effect card__media-placeholder">
+              <img
+                src="{{ card_media_fallback_url }}"
+                alt="Product image coming soon"
+                class="motion-reduce"
+                {% unless lazy_load == false %}loading="lazy"{% endunless %}
+                width="1200"
+                height="1200"
+              >
             </div>
           </div>
         {%- endif -%}

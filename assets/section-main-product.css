@@ -15,6 +15,22 @@
   padding-left: 0;
 }
 
+.product__media-placeholder {
+  align-items: center;
+  background: rgba(var(--color-foreground), 0.04);
+  display: flex;
+  justify-content: center;
+}
+
+.product__media-placeholder img,
+.product__media-placeholder .placeholder-svg {
+  height: 100%;
+  max-height: 36rem;
+  max-width: 36rem;
+  object-fit: contain;
+  width: 100%;
+}
+
 .product__info-wrapper {
   padding-left: 0;
   padding-bottom: 0;
