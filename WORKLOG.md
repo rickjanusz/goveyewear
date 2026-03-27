@@ -4,7 +4,7 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/pdf-download-section
-- HEAD commit: 2a21cdf5f2f89b8530129787c2d7646666c92daa
+- HEAD commit: d1d7671bb7b866f6cd028af522a7fb42d2785502
 - Last pushed commit (GitHub): 724e199
 - Local dev server:
   - Running? no
@@ -14,6 +14,36 @@ Keep this file updated so any agent can resume without overwriting files.
   - Live: 160510771450
 
 ## Recent Pulls
+- 2026-03-27: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/pdf-download-section` @ `d1d7671bb7b866f6cd028af522a7fb42d2785502`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/card-product.liquid --only assets/component-card.css`
+  - Files pushed: `snippets/card-product.liquid`, `assets/component-card.css`
+  - Change: applied the fallback image only to products with no `featured_media`, while leaving the normal real-image card layout unchanged
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: verify that no-image cards now show the fallback without changing the proportions of cards that already have product images
+- 2026-03-27: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/pdf-download-section` @ `2337a9d9e79e1848d9884fab55ee32f5f63176f6`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/card-product.liquid --only assets/component-card.css`
+  - Files pushed: `snippets/card-product.liquid`, `assets/component-card.css`
+  - Change: restored the original shared product card layout after the fallback-image attempt changed card proportions
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: re-approach missing-image fallback without altering shared card behavior
+- 2026-03-27: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/pdf-download-section` @ `b5fb18cc9e71c27844dd5c88690d49e69bb37315`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only snippets/card-product.liquid --only assets/component-card.css --only sections/main-product.liquid --only assets/section-main-product.css`
+  - Files pushed: `snippets/card-product.liquid`, `assets/component-card.css`, `sections/main-product.liquid`, `assets/section-main-product.css`
+  - Change: replaced the generic apparel placeholder with the branded `img-fallback.png` image and applied it to shared product cards plus product pages with no media
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: visually verify missing-image products across collection grids, search results, and product pages before promoting to live
 - 2026-03-27: target theme ID `160581189882` (staging)
   - Branch + commit: `codex/pdf-download-section` @ `2a21cdf5f2f89b8530129787c2d7646666c92daa`
   - Commands:

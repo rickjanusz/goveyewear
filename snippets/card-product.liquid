@@ -22,13 +22,6 @@
 {%- if card_product and card_product != empty -%}
   {%- liquid
     assign resolved_card_image_fit = card_image_fit | default: 'contain'
-    assign card_media_fallback_url = 'https://cdn.shopify.com/s/files/1/0662/8438/8602/files/img-fallback.png?v=1774654439'
-    assign card_has_media = false
-    if card_product.featured_media != blank
-      assign card_has_media = true
-    elsif card_media_fallback_url != blank
-      assign card_has_media = true
-    endif
   -%}
   {%- liquid
     assign ratio = 1
@@ -36,13 +29,13 @@
   <div class="card-wrapper card-wrapper--image-fit-{{ resolved_card_image_fit }} underline-links-hover">
     <div class="card
       card--{{ settings.card_style }}
-      {% if card_has_media %} card--media{% else %} card--text{% endif %}
+      {% if card_product.featured_media %} card--media{% else %} card--text{% endif %}
       {% if settings.card_style == 'card' %} color-{{ settings.card_color_scheme }} gradient{% endif %}
       {% if extend_height %} card--extend-height{% endif %}
-      {% if card_has_media or settings.card_style == 'card' %} ratio{% endif %}"
+      {% if card_product.featured_media == nil and settings.card_style == 'card' %} ratio{% endif %}"
       style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
     >
-      <div class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if card_has_media or settings.card_style == 'standard' %} ratio{% endif %}" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;">
+      <div class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if card_product.featured_media or settings.card_style == 'standard' %} ratio{% endif %}" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;">
         {%- if card_product.featured_media -%}
           <div class="card__media">
             <div class="media media--transparent media--hover-effect">
@@ -85,19 +78,6 @@
               {%- endif -%}
             </div>
           </div>
-        {%- elsif card_media_fallback_url != blank -%}
-          <div class="card__media">
-            <div class="media media--transparent media--hover-effect card__media-placeholder">
-              <img
-                src="{{ card_media_fallback_url }}"
-                alt="Product image coming soon"
-                class="motion-reduce"
-                {% unless lazy_load == false %}loading="lazy"{% endunless %}
-                width="1200"
-                height="1200"
-              >
-            </div>
-          </div>
         {%- endif -%}
         <div class="card__content">
           <div class="card__information">
@@ -122,7 +102,7 @@
             <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
             <div class="card__vendor caption-with-letter-spacing light">{{ card_product.vendor }}</div>
           {%- endif -%}
-          <h3 class="card__heading{% if card_has_media or settings.card_style == 'standard' %} h5{% endif %}"{% if card_has_media or settings.card_style == 'card' %} id="title-{{ section_id }}-{{ card_product.id }}"{% endif %}>
+          <h3 class="card__heading{% if card_product.featured_media or settings.card_style == 'standard' %} h5{% endif %}"{% if card_product.featured_media or settings.card_style == 'card' %} id="title-{{ section_id }}-{{ card_product.id }}"{% endif %}>
             <a href="{{ card_product.url }}" id="CardLink-{{ section_id }}-{{ card_product.id }}" class="full-unstyled-link" aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }} Badge-{{ section_id }}-{{ card_product.id }}">
               {{ card_product.title | escape }}
             </a>
