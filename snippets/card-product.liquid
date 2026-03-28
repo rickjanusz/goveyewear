@@ -22,6 +22,12 @@
 {%- if card_product and card_product != empty -%}
   {%- liquid
     assign resolved_card_image_fit = card_image_fit | default: 'contain'
+    assign card_media_fallback_url = 'https://cdn.shopify.com/s/files/1/0662/8438/8602/files/img-fallback.png?v=1774654439'
+    assign card_resolved_media = card_product.featured_media
+    assign card_has_visual_media = false
+    if card_resolved_media != blank or card_media_fallback_url != blank
+      assign card_has_visual_media = true
+    endif
   -%}
   {%- liquid
     assign ratio = 1
@@ -29,32 +35,36 @@
   <div class="card-wrapper card-wrapper--image-fit-{{ resolved_card_image_fit }} underline-links-hover">
     <div class="card
       card--{{ settings.card_style }}
-      {% if card_product.featured_media %} card--media{% else %} card--text{% endif %}
+      {% if card_has_visual_media %} card--media{% else %} card--text{% endif %}
       {% if settings.card_style == 'card' %} color-{{ settings.card_color_scheme }} gradient{% endif %}
       {% if extend_height %} card--extend-height{% endif %}
       {% if card_product.featured_media == nil and settings.card_style == 'card' %} ratio{% endif %}"
       style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
     >
-      <div class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if card_product.featured_media or settings.card_style == 'standard' %} ratio{% endif %}" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;">
-        {%- if card_product.featured_media -%}
+      <div class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if card_has_visual_media or settings.card_style == 'standard' %} ratio{% endif %}" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;">
+        {%- if card_has_visual_media -%}
           <div class="card__media">
             <div class="media media--transparent media--hover-effect">
               {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
               <img
-                srcset="{%- if card_product.featured_media.width >= 165 -%}{{ card_product.featured_media | image_url: width: 165 }} 165w,{%- endif -%}
-                  {%- if card_product.featured_media.width >= 360 -%}{{ card_product.featured_media | image_url: width: 360 }} 360w,{%- endif -%}
-                  {%- if card_product.featured_media.width >= 533 -%}{{ card_product.featured_media | image_url: width: 533 }} 533w,{%- endif -%}
-                  {%- if card_product.featured_media.width >= 720 -%}{{ card_product.featured_media | image_url: width: 720 }} 720w,{%- endif -%}
-                  {%- if card_product.featured_media.width >= 940 -%}{{ card_product.featured_media | image_url: width: 940 }} 940w,{%- endif -%}
-                  {%- if card_product.featured_media.width >= 1066 -%}{{ card_product.featured_media | image_url: width: 1066 }} 1066w,{%- endif -%}
-                  {{ card_product.featured_media | image_url }} {{ card_product.featured_media.width }}w"
-                src="{{ card_product.featured_media | image_url: width: 533 }}"
+                {% if card_resolved_media != blank %}
+                  srcset="{%- if card_resolved_media.width >= 165 -%}{{ card_resolved_media | image_url: width: 165 }} 165w,{%- endif -%}
+                    {%- if card_resolved_media.width >= 360 -%}{{ card_resolved_media | image_url: width: 360 }} 360w,{%- endif -%}
+                    {%- if card_resolved_media.width >= 533 -%}{{ card_resolved_media | image_url: width: 533 }} 533w,{%- endif -%}
+                    {%- if card_resolved_media.width >= 720 -%}{{ card_resolved_media | image_url: width: 720 }} 720w,{%- endif -%}
+                    {%- if card_resolved_media.width >= 940 -%}{{ card_resolved_media | image_url: width: 940 }} 940w,{%- endif -%}
+                    {%- if card_resolved_media.width >= 1066 -%}{{ card_resolved_media | image_url: width: 1066 }} 1066w,{%- endif -%}
+                    {{ card_resolved_media | image_url }} {{ card_resolved_media.width }}w"
+                  src="{{ card_resolved_media | image_url: width: 533 }}"
+                {% else %}
+                  src="{{ card_media_fallback_url }}"
+                {% endif %}
                 sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
-                alt="{{ card_product.featured_media.alt | escape }}"
+                alt="{% if card_resolved_media != blank %}{{ card_resolved_media.alt | escape }}{% else %}Product image coming soon{% endif %}"
                 class="motion-reduce"
                 {% unless lazy_load == false %}loading="lazy"{% endunless %}
-                width="{{ card_product.featured_media.width }}"
-                height="{{ card_product.featured_media.height }}"
+                width="{% if card_resolved_media != blank %}{{ card_resolved_media.width }}{% else %}1200{% endif %}"
+                height="{% if card_resolved_media != blank %}{{ card_resolved_media.height }}{% else %}1200{% endif %}"
               >
               {% comment %}theme-check-enable ImgLazyLoading{% endcomment %}
 
@@ -102,7 +112,7 @@
             <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
             <div class="card__vendor caption-with-letter-spacing light">{{ card_product.vendor }}</div>
           {%- endif -%}
-          <h3 class="card__heading{% if card_product.featured_media or settings.card_style == 'standard' %} h5{% endif %}"{% if card_product.featured_media or settings.card_style == 'card' %} id="title-{{ section_id }}-{{ card_product.id }}"{% endif %}>
+          <h3 class="card__heading{% if card_has_visual_media or settings.card_style == 'standard' %} h5{% endif %}"{% if card_has_visual_media or settings.card_style == 'card' %} id="title-{{ section_id }}-{{ card_product.id }}"{% endif %}>
             <a href="{{ card_product.url }}" id="CardLink-{{ section_id }}-{{ card_product.id }}" class="full-unstyled-link" aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }} Badge-{{ section_id }}-{{ card_product.id }}">
               {{ card_product.title | escape }}
             </a>
