@@ -182,6 +182,16 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Recent Pushes
 - 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `2f9cee2`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/main-product.liquid --only assets/section-main-product.css --only assets/sentix-product-configurator.js`
+  - Files pushed: `sections/main-product.liquid`, `assets/section-main-product.css`, `assets/sentix-product-configurator.js`
+  - Change: added Sentix swatch fallbacks (handles missing Shopify Files) and improved product photo switching by mapping variant IDs to expected image filenames in the gallery when `featured_media` is not set
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: confirm swatch files exist in Shopify Files (otherwise swatches will fall back to solid colors), and confirm product media switches on variant changes for the Sentix test PDP
+- 2026-04-05: target theme ID `160581189882` (staging)
   - Branch + commit: `codex/gatorz-variants` @ `a091cd7`
   - Commands:
     - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
