@@ -44,9 +44,6 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.lensColorSupportBody = this.querySelector('[data-lens-color-support-body]');
 
       const rawSellableVariants = this.parseJson('sellable-variants');
-      if (this.shouldInferOptionPositions()) {
-        this.inferOptionPositionsFromSwatches(rawSellableVariants);
-      }
       this.variantData = this.normalizeVariants(rawSellableVariants);
       this.sellableVariants = this.getSellableVariants(this.variantData);
 
@@ -75,47 +72,6 @@ if (!customElements.get('sentix-variant-configurator')) {
         map[group][this.normalizeSwatchKey(value)] = image;
       });
       return map;
-    }
-
-    inferOptionPositionsFromSwatches(variants) {
-      const lensKeys = new Set(Object.keys(this.swatchMap?.lens_color || {}));
-      const frameKeys = new Set(Object.keys(this.swatchMap?.frame_color || {}));
-      if (!lensKeys.size && !frameKeys.size) return;
-
-      const scores = {
-        1: { lens: 0, frame: 0 },
-        2: { lens: 0, frame: 0 },
-        3: { lens: 0, frame: 0 },
-      };
-
-      (variants || []).forEach((variant) => {
-        for (let pos = 1; pos <= 3; pos += 1) {
-          const value = this.getVariantOptionValue(variant, pos);
-          if (!value) continue;
-          const key = this.normalizeSwatchKey(value);
-          if (lensKeys.has(key)) scores[pos].lens += 1;
-          if (frameKeys.has(key)) scores[pos].frame += 1;
-        }
-      });
-
-      const bestLensPos = [1, 2, 3].sort((a, b) => scores[b].lens - scores[a].lens)[0];
-      const bestFramePos = [1, 2, 3].sort((a, b) => scores[b].frame - scores[a].frame)[0];
-      if (scores[bestLensPos].lens > 0) this.optionPositions.lens_color = bestLensPos;
-      if (scores[bestFramePos].frame > 0) this.optionPositions.frame_color = bestFramePos;
-
-      // Lens type is whatever position isn't lens/frame (or fallback to 1).
-      const used = new Set([this.optionPositions.lens_color, this.optionPositions.frame_color]);
-      const remaining = [1, 2, 3].find((pos) => !used.has(pos));
-      if (remaining) this.optionPositions.lens_type = remaining;
-    }
-
-    shouldInferOptionPositions() {
-      const positions = Object.values(this.optionPositions)
-        .map((value) => Number(value))
-        .filter((value) => Number.isFinite(value) && value >= 1 && value <= 3);
-
-      if (positions.length !== 3) return true;
-      return new Set(positions).size !== 3;
     }
 
     normalizeSwatchKey(value) {
