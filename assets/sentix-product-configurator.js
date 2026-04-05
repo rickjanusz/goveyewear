@@ -29,6 +29,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       };
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants'));
       this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map'));
+      this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files'));
       this.lensColorContent = this.parseJson('lens-color-content');
       this.swatchMap = this.buildSwatchMap(this.parseJson('swatch-entries'));
       this.groupNodes = {
@@ -153,6 +154,31 @@ if (!customElements.get('sentix-variant-configurator')) {
         if (unique.length) {
           normalized[key] = unique;
         }
+      });
+
+      return normalized;
+    }
+
+    normalizeVariantGalleryFiles(rawMap) {
+      const entries = rawMap && typeof rawMap === 'object' ? Object.entries(rawMap) : [];
+      const normalized = {};
+
+      entries.forEach(([variantId, urls]) => {
+        const key = String(variantId || '').trim();
+        if (!key) return;
+
+        const source = Array.isArray(urls) ? urls : [];
+        const unique = [];
+        const seen = new Set();
+
+        source.forEach((url) => {
+          const filename = this.extractFilename(url);
+          if (!filename || seen.has(filename)) return;
+          seen.add(filename);
+          unique.push(filename);
+        });
+
+        if (unique.length) normalized[key] = unique;
       });
 
       return normalized;
@@ -393,7 +419,7 @@ if (!customElements.get('sentix-variant-configurator')) {
 
       if (mappedMediaIds.length) {
         this.applyVariantMediaSelection(mediaGallery, mappedMediaIds);
-        this.moveActiveModalMedia(String(mappedMediaIds[0]));
+        this.moveActiveModalMedia(String(mappedMediaIds[0]), mappedMediaIds);
         return;
       }
 
@@ -405,7 +431,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       }
 
       const numericMediaId = String(primaryMediaId || '').split('-')[1] || '';
-      if (numericMediaId) this.moveActiveModalMedia(numericMediaId);
+      if (numericMediaId) this.moveActiveModalMedia(numericMediaId, []);
     }
 
     getPrimaryMediaId() {
@@ -416,15 +442,69 @@ if (!customElements.get('sentix-variant-configurator')) {
     getMappedMediaIdsForCurrentVariant(mediaGallery) {
       const key = String(this.currentVariant?.id || '');
       const configuredIds = this.variantMediaMap?.[key] || [];
-      if (!configuredIds.length) return [];
+      if (configuredIds.length) {
+        const available = new Set(
+          Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+            .map((node) => Number(String(node.getAttribute('data-media-id') || '').split('-')[1]))
+            .filter((value) => Number.isInteger(value) && value > 0),
+        );
 
-      const available = new Set(
-        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
-          .map((node) => Number(String(node.getAttribute('data-media-id') || '').split('-')[1]))
-          .filter((value) => Number.isInteger(value) && value > 0),
-      );
+        return configuredIds.filter((id) => available.has(id));
+      }
 
-      return configuredIds.filter((id) => available.has(id));
+      const configuredFiles = this.variantGalleryFiles?.[key] || [];
+      if (!configuredFiles.length) return [];
+
+      return this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
+    }
+
+    resolveMediaIdsByFilenames(mediaGallery, filenames) {
+      const mediaEntries = Array.from(mediaGallery.querySelectorAll('[data-media-id]')).map((node) => {
+        const id = Number(String(node.getAttribute('data-media-id') || '').split('-')[1]);
+        const fileSet = new Set();
+
+        node.querySelectorAll('img').forEach((img) => {
+          this.collectFilenameFromSrc(fileSet, img.getAttribute('src'));
+          this.collectFilenamesFromSrcset(fileSet, img.getAttribute('srcset'));
+        });
+        node.querySelectorAll('source').forEach((source) => {
+          this.collectFilenamesFromSrcset(fileSet, source.getAttribute('srcset'));
+        });
+
+        return { id, fileSet };
+      }).filter((entry) => Number.isInteger(entry.id) && entry.id > 0);
+
+      const ordered = [];
+      const seen = new Set();
+
+      filenames.forEach((filename) => {
+        const match = mediaEntries.find((entry) => entry.fileSet.has(filename));
+        if (!match || seen.has(match.id)) return;
+        seen.add(match.id);
+        ordered.push(match.id);
+      });
+
+      return ordered;
+    }
+
+    collectFilenameFromSrc(targetSet, src) {
+      const filename = this.extractFilename(src);
+      if (filename) targetSet.add(filename);
+    }
+
+    collectFilenamesFromSrcset(targetSet, srcset) {
+      String(srcset || '')
+        .split(',')
+        .map((part) => part.trim().split(/\s+/)[0])
+        .forEach((urlPart) => this.collectFilenameFromSrc(targetSet, urlPart));
+    }
+
+    extractFilename(url) {
+      const raw = String(url || '').trim();
+      if (!raw) return '';
+      const clean = raw.split('?')[0].split('#')[0];
+      const last = clean.split('/').pop() || '';
+      return last.toLowerCase();
     }
 
     applyVariantMediaSelection(mediaGallery, mediaIds) {
@@ -473,7 +553,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       });
     }
 
-    moveActiveModalMedia(numericMediaId) {
+    moveActiveModalMedia(numericMediaId, mappedMediaIds) {
       const modalContent = document.querySelector(`#ProductModal-${this.sectionId} .product-media-modal__content`);
       if (!modalContent) return;
 
@@ -481,7 +561,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       const activeMedia = modalContent.querySelector(`[data-media-id="${selected}"]`);
       if (activeMedia) modalContent.prepend(activeMedia);
 
-      const selectedIds = new Set(this.variantMediaMap?.[String(this.currentVariant?.id || '')] || []);
+      const selectedIds = new Set(mappedMediaIds || []);
       if (!selectedIds.size) {
         modalContent.querySelectorAll('.sentix-configurator__modal-media-hidden').forEach((node) => {
           node.classList.remove('sentix-configurator__modal-media-hidden');

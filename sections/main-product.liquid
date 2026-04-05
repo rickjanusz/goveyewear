@@ -474,6 +474,23 @@
                       {%- endfor -%}
                     }
                   </script>
+                  <script type="application/json" data-variant-gallery-files>
+                    {
+                      {%- assign gallery_map_first = true -%}
+                      {%- for mapped_variant in product.variants -%}
+                        {%- assign gallery_files = mapped_variant.metafields.custom.gatorz_gallery_images.value -%}
+                        {%- if gallery_files != blank -%}
+                          {%- unless gallery_map_first -%},{%- endunless -%}
+                          {%- assign gallery_map_first = false -%}
+                          {{ mapped_variant.id | json }}: [
+                            {%- for gallery_file in gallery_files -%}
+                              {{ gallery_file | image_url: width: 4096 | json }}{%- unless forloop.last -%},{%- endunless -%}
+                            {%- endfor -%}
+                          ]
+                        {%- endif -%}
+                      {%- endfor -%}
+                    }
+                  </script>
                   <script type="application/json" data-lens-color-content>
                     {
                       "Smoke": {
