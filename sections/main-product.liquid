@@ -37,7 +37,10 @@
   {%- endstyle -%}
 
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
-  {%- assign use_sentix_configurator = product.handle == 'sentix' and product.options.size == 3 -%}
+  {%- assign use_sentix_configurator = false -%}
+  {%- if product.handle == 'sentix' and product.options.size == 3 -%}
+    {%- assign use_sentix_configurator = true -%}
+  {%- endif -%}
   {%- if use_sentix_configurator -%}
     <script src="{{ 'sentix-product-configurator.js' | asset_url }}" defer="defer"></script>
   {%- endif -%}
