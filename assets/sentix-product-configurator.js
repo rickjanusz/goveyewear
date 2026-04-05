@@ -30,7 +30,9 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants', []));
       this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map', {}));
       this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
-      this.lensColorContent = this.parseJson('lens-color-content', {});
+      const defaultLensColorContent = this.parseJson('lens-color-content', {});
+      const lensColorContentOverrides = this.parseJson('lens-color-content-overrides', {});
+      this.lensColorContent = this.mergeLensColorContent(defaultLensColorContent, lensColorContentOverrides);
       this.swatchMap = this.buildSwatchMap(this.parseJson('swatch-entries', []));
       this.groupNodes = {
         lens_type: this.querySelector('[data-option-group="lens_type"]'),
@@ -44,6 +46,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       };
       this.lensColorSupportTitle = this.querySelector('[data-lens-color-support-title]');
       this.lensColorSupportBody = this.querySelector('[data-lens-color-support-body]');
+      this.lensColorSupportBodySecondary = this.querySelector('[data-lens-color-support-body-secondary]');
       this.clearVariantMediaSelection();
 
       this.variantData = this.normalizeVariants(this.parseJson('sellable-variants', []));
@@ -79,6 +82,17 @@ if (!customElements.get('sentix-variant-configurator')) {
         map[group][this.normalizeSwatchKey(value)] = image;
       });
       return map;
+    }
+
+    mergeLensColorContent(defaults, overrides) {
+      const merged = { ...(defaults || {}) };
+      Object.entries(overrides || {}).forEach(([key, value]) => {
+        merged[key] = {
+          ...(merged[key] || {}),
+          ...(value || {}),
+        };
+      });
+      return merged;
     }
 
     normalizeSwatchKey(value) {
@@ -389,10 +403,25 @@ if (!customElements.get('sentix-variant-configurator')) {
       const content = this.lensColorContent[variant.lens_color] || {
         title: variant.lens_color,
         body: '',
+        secondary_body: '',
       };
+      const selectedLensColor = String(variant.lens_color || '').trim();
+      const title = String(content.title || variant.lens_color || '').trim();
+      const body = String(content.body || '').trim();
+      const secondaryBody = String(content.secondary_body || '').trim();
+      const hideTitle = !title || title.toLowerCase() === selectedLensColor.toLowerCase();
 
-      this.lensColorSupportTitle.textContent = content.title || variant.lens_color;
-      this.lensColorSupportBody.textContent = content.body || '';
+      if (this.lensColorSupportTitle) {
+        this.lensColorSupportTitle.textContent = title;
+        this.lensColorSupportTitle.hidden = hideTitle;
+      }
+      if (this.lensColorSupportBody) {
+        this.lensColorSupportBody.textContent = body;
+      }
+      if (this.lensColorSupportBodySecondary) {
+        this.lensColorSupportBodySecondary.textContent = secondaryBody;
+        this.lensColorSupportBodySecondary.hidden = !secondaryBody;
+      }
     }
 
     syncUIFromVariant(variant) {

@@ -38,13 +38,20 @@
 
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
   {%- assign use_gatorz_configurator = false -%}
-  {%- assign normalized_options = product.options | join: '||' | downcase -%}
-  {%- assign template_suffix = template.suffix | default: '' -%}
-  {%- assign has_gatorz_option_triplet = false -%}
-  {%- if normalized_options contains 'lens type' and normalized_options contains 'lens color' and normalized_options contains 'frame color' -%}
-    {%- assign has_gatorz_option_triplet = true -%}
-  {%- endif -%}
-  {%- if has_gatorz_option_triplet -%}
+  {%- assign has_lens_type_option = false -%}
+  {%- assign has_lens_color_option = false -%}
+  {%- assign has_frame_color_option = false -%}
+  {%- for opt in product.options_with_values -%}
+    {%- assign opt_name = opt.name | downcase | strip -%}
+    {%- if opt_name == 'lens type' -%}
+      {%- assign has_lens_type_option = true -%}
+    {%- elsif opt_name == 'lens color' -%}
+      {%- assign has_lens_color_option = true -%}
+    {%- elsif opt_name == 'frame color' -%}
+      {%- assign has_frame_color_option = true -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if has_lens_type_option and has_lens_color_option and has_frame_color_option -%}
     {%- assign use_gatorz_configurator = true -%}
   {%- endif -%}
   {%- if use_gatorz_configurator -%}
@@ -420,6 +427,7 @@
                     <div class="sentix-configurator__support">
                       <p class="sentix-configurator__support-title" data-lens-color-support-title></p>
                       <p class="sentix-configurator__support-body" data-lens-color-support-body></p>
+                      <p class="sentix-configurator__support-body-secondary" data-lens-color-support-body-secondary></p>
                     </div>
                   </div>
 
@@ -545,6 +553,22 @@
                         "title": "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog",
                         "body": "Ballistic-rated polarized lens designed to reduce glare while maintaining screen visibility."
                       }
+                    }
+                  </script>
+                  <script type="application/json" data-lens-color-content-overrides>
+                    {
+                      {%- assign lens_copy_count = 0 -%}
+                      {%- for lens_copy_block in section.blocks -%}
+                        {%- if lens_copy_block.type == 'gatorz_lens_copy' and lens_copy_block.settings.option_value != blank -%}
+                          {%- if lens_copy_count > 0 -%},{%- endif -%}
+                          {{ lens_copy_block.settings.option_value | json }}: {
+                            "title": {{ lens_copy_block.settings.title | json }},
+                            "body": {{ lens_copy_block.settings.body | json }},
+                            "secondary_body": {{ lens_copy_block.settings.secondary_body | json }}
+                          }
+                          {%- assign lens_copy_count = lens_copy_count | plus: 1 -%}
+                        {%- endif -%}
+                      {%- endfor -%}
                     }
                   </script>
                 </sentix-variant-configurator>
@@ -904,6 +928,34 @@
           "id": "media_ids",
           "label": "Gallery media IDs (comma separated)",
           "info": "Enter product media IDs in display order, e.g. 1234567890,1234567891,1234567892"
+        }
+      ]
+    },
+    {
+      "type": "gatorz_lens_copy",
+      "name": "Gatorz lens copy",
+      "settings": [
+        {
+          "type": "text",
+          "id": "option_value",
+          "label": "Lens Color option value (exact match)",
+          "info": "Must exactly match the Lens Color variant option value."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Support title (optional)",
+          "info": "Leave blank to hide the support title."
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Primary support text"
+        },
+        {
+          "type": "textarea",
+          "id": "secondary_body",
+          "label": "Secondary support text (optional)"
         }
       ]
     },

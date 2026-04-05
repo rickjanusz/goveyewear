@@ -431,6 +431,14 @@ fieldset.product-form__input .form__label {
   font-size: 1.2rem;
   line-height: 1.5;
   margin: 0;
+  white-space: pre-line;
+}
+
+.sentix-configurator__support-body-secondary {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  margin: 0.6rem 0 0;
+  white-space: pre-line;
 }
 
 @media screen and (max-width: 749px) {
