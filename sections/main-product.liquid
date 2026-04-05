@@ -53,8 +53,10 @@
   {%- if vendor_name contains 'gatorz' -%}
     {%- assign is_gatorz_vendor_product = true -%}
   {%- endif -%}
-  {%- if has_gatorz_option_triplet and (section.settings.enable_gatorz_configurator or is_gatorz_product_template or is_gatorz_vendor_product) -%}
-    {%- assign use_gatorz_configurator = true -%}
+  {%- if has_gatorz_option_triplet -%}
+    {%- if section.settings.enable_gatorz_configurator or is_gatorz_product_template or is_gatorz_vendor_product -%}
+      {%- assign use_gatorz_configurator = true -%}
+    {%- endif -%}
   {%- endif -%}
   {%- if use_gatorz_configurator -%}
     <script src="{{ 'sentix-product-configurator.js' | asset_url }}" defer="defer"></script>
