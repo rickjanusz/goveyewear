@@ -1,5 +1,5 @@
-if (!customElements.get('sentix-variant-configurator')) {
-  class SentixVariantConfigurator extends HTMLElement {
+(() => {
+  class GatorzVariantConfigurator extends HTMLElement {
     constructor() {
       super();
 
@@ -854,5 +854,12 @@ if (!customElements.get('sentix-variant-configurator')) {
     }
   }
 
-  customElements.define('sentix-variant-configurator', SentixVariantConfigurator);
-}
+  if (!customElements.get('gatorz-variant-configurator')) {
+    customElements.define('gatorz-variant-configurator', GatorzVariantConfigurator);
+  }
+
+  // Backward compatibility for templates that still render the old Sentix tag.
+  if (!customElements.get('sentix-variant-configurator')) {
+    customElements.define('sentix-variant-configurator', GatorzVariantConfigurator);
+  }
+})();
