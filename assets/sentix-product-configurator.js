@@ -506,16 +506,6 @@ if (!customElements.get('sentix-variant-configurator')) {
 
       addId(this.currentVariant?.featured_media_id);
 
-      const featuredFilename = this.extractFilename(this.currentVariant?.featured_image_src);
-      if (featuredFilename) {
-        addId(this.productMediaIndex?.get(featuredFilename));
-      }
-
-      // Last-resort fallback to first available gallery item to avoid blank state.
-      if (!ordered.length) {
-        addId(Array.from(available)[0]);
-      }
-
       return ordered;
     }
 
