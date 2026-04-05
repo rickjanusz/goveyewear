@@ -4,8 +4,8 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/gatorz-variants
-- HEAD commit: 2cf631d
-- Last pushed commit (GitHub): 724e199
+- HEAD commit: e61718e
+- Last pushed commit (GitHub): e61718e
 - Local dev server:
   - Running? no
   - Port:
@@ -14,6 +14,16 @@ Keep this file updated so any agent can resume without overwriting files.
   - Live: 160510771450
 
 ## Recent Pulls
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `8038bfe`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/sentix-product-configurator.js`
+  - Files pushed: `assets/sentix-product-configurator.js`
+  - Change: fixed deterministic gallery filtering by parsing trailing numeric Shopify media IDs (handles IDs like `template--...__main-123456789`) so mapped variant media now resolves and non-mapped gallery items are hidden correctly.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: verify Sentix PDP now shows only assigned variant images on each selector change.
 - 2026-04-05: target theme ID `160510771450` (live)
   - Branch + commit: `codex/gatorz-variants` @ `3faf278`
   - Commands:
@@ -201,6 +211,61 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `e61718e`
+  - Files pushed: `assets/sentix-product-configurator.js`
+  - Fix that unlocked gallery: strip Shopify upload UUID suffix from filenames before series matching, so selected variant cover `-1` correctly resolves sibling `-2/-3/-4` images (up to 4 total).
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `6adfe57`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/sentix-product-configurator.js`
+  - Files pushed: `assets/sentix-product-configurator.js`
+  - Change: gallery selection now prioritizes selected variant cover-image series (`-1` + `-2/-3/-4`) and caps to 4 images before other fallbacks.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: verify Sentix variants now show cover + up to 3 sibling images in gallery on selector change.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `5759796`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/sentix-product-configurator.js`
+  - Files pushed: `assets/sentix-product-configurator.js`
+  - Change: normalized Shopify CDN filename size suffixes (`_small`, `_1024x1024`, etc.) before variant media matching so deterministic `-1/-2/-3` image-series resolution works across transformed image URLs.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: verify Sentix variant switches now show all assigned series images instead of only one.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `db4ed31`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/sentix-product-configurator.js`
+  - Files pushed: `assets/sentix-product-configurator.js`
+  - Change: fixed deterministic media resolution order so variants without `custom.gatorz_gallery_*` metafields still use Shopify variant-assigned gallery images (instead of falling back to a single featured image).
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: hard-refresh Sentix staging PDP and verify each variant now shows its full assigned image set (3+), not only the primary image.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `2608bbe`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/sentix-product-configurator.js --only sections/main-product.liquid`
+  - Files pushed: `assets/sentix-product-configurator.js`, `sections/main-product.liquid`
+  - Change: added deterministic variant-metafield gallery mapping via `variant.metafields.custom.gatorz_gallery_images` (list of file references) so admins can pick images per variant without media IDs; ID-based map remains fallback
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: create metafield definition `custom.gatorz_gallery_images` on Product Variant as `List of files`, then set per variant images in admin
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `a18c5f6`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/sentix-product-configurator.js --only sections/main-product.liquid --only assets/section-main-product.css`
+  - Files pushed: `assets/sentix-product-configurator.js`, `sections/main-product.liquid`, `assets/section-main-product.css`
+  - Change: removed heuristic Sentix combo/option remapping, now resolves option groups deterministically from Shopify option positions and available variants; added explicit admin-managed `gatorz_variant_media_map` block type (`variant_id` + ordered `media_ids`) so each variant can deterministically drive a 3+ image gallery set
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: in theme editor, add `Gatorz variant media map` blocks on each enabled Gatorz template with real media IDs to activate multi-image per variant behavior
 - 2026-04-05: target theme ID `160581189882` (staging)
   - Branch + commit: `codex/gatorz-variants` @ `2cf631d`
   - Commands:
