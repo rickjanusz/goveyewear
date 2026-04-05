@@ -38,9 +38,8 @@
 
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
   {%- assign use_sentix_configurator = false -%}
-  {%- assign normalized_product_handle = product.handle | downcase -%}
-  {%- assign normalized_product_title = product.title | downcase -%}
-  {%- if normalized_product_handle == 'sentix' or normalized_product_title == 'sentix' -%}
+  {%- assign normalized_options = product.options | join: '||' | downcase -%}
+  {%- if normalized_options contains 'lens type' and normalized_options contains 'lens color' and normalized_options contains 'frame color' -%}
     {%- assign use_sentix_configurator = true -%}
   {%- endif -%}
   {%- if use_sentix_configurator -%}
@@ -411,87 +410,10 @@
                   </div>
 
                   <script type="application/json" data-sellable-variants>
-                    [
-                      {
-                        "id": 45336576000177,
-                        "lens_type": "Non-Polarized",
-                        "lens_color": "Smoke",
-                        "frame_color": "Black w/Silver Logo",
-                        "price": 16500,
-                        "available": true
-                      },
-                      {
-                        "id": 45336576032945,
-                        "lens_type": "OPZ POLARIZED",
-                        "lens_color": "Smoke Optimized Polarized (OPz)",
-                        "frame_color": "Black w/Black Logo",
-                        "price": 23500,
-                        "available": true
-                      },
-                      {
-                        "id": 45336576098481,
-                        "lens_type": "OPZ POLARIZED",
-                        "lens_color": "Rose Optimized Polarized (OPz) w/ Sunburst Mirror",
-                        "frame_color": "Graphite w/Black Logo",
-                        "price": 24500,
-                        "available": true
-                      },
-                      {
-                        "id": 45336576131249,
-                        "lens_type": "Ballistics",
-                        "lens_color": "MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog",
-                        "frame_color": "Black w/Black Logo",
-                        "price": 30500,
-                        "available": true
-                      },
-                      {
-                        "id": 45336576196785,
-                        "lens_type": "Ballistics",
-                        "lens_color": "MILSPEC Ballistic Smoke w/Anti-Fog",
-                        "frame_color": "Black w/Black Logo",
-                        "price": 27000,
-                        "available": true
-                      },
-                      {
-                        "id": 45336576229553,
-                        "lens_type": "Ballistics",
-                        "lens_color": "MILSPEC Ballistic Smoke w/Anti-Fog",
-                        "frame_color": "Tan w/Black Logo",
-                        "price": 27000,
-                        "available": true
-                      },
-                      {
-                        "id": 45336576262321,
-                        "lens_type": "Ballistics",
-                        "lens_color": "MILSPEC Ballistic Inferno Photochromic w/Anti-Fog",
-                        "frame_color": "Black w/Black Logo",
-                        "price": 31500,
-                        "available": true
-                      },
-                      {
-                        "id": 45339009941681,
-                        "lens_type": "Ballistics",
-                        "lens_color": "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog",
-                        "frame_color": "Black w/Black Logo",
-                        "price": 29500,
-                        "available": true
-                      }
-                    ]
+                    {{ product.variants | where: 'available', true | json }}
                   </script>
                   <script type="application/json" data-native-variants>
                     {{ product.variants | json }}
-                  </script>
-                  <script type="application/json" data-variant-image-filenames>
-                    {
-                      "45336576000177": "Sentix_Smoke_Black-1.png",
-                      "45336576032945": "Sentix_Smoke_Black_OPz-1.png",
-                      "45336576098481": "Sentix_Sunburst_Graphite-1.png",
-                      "45336576131249": "Sentix_Gold_Black-1.png",
-                      "45336576196785": "Sentix_Smoke_Black_MILSPEC-1.png",
-                      "45336576229553": "Sentix_Smoke_Tan-1.png",
-                      "45336576262321": "Sentix_Photochromic_Black_MILSPEC-1.png",
-                      "45339009941681": "Sentix_Smoke_Black_MILSPEC-1.png"
-                    }
                   </script>
                   <script type="application/json" data-lens-color-content>
                     {
@@ -528,19 +450,19 @@
                   <script type="application/json" data-swatch-map>
                     {
                       "Lens Color": {
-                        "Smoke": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small.png",
-                        "Smoke Optimized Polarized (OPz)": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small.png",
-                        "Rose Optimized Polarized (OPz) w/ Sunburst Mirror": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/rose-optimized-polarized-opz-w-sunburst-mirror_small.png",
-                        "MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-rose-optimized-polarized-opz-w-gold-mirror-w-anti-fog_small.png",
-                        "MILSPEC Ballistic Smoke w/Anti-Fog": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small.png",
-                        "MILSPEC Ballistic Inferno Photochromic w/Anti-Fog": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-inferno-photochromic-w-anti-fog_small.png",
-                        "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small.png"
+                        "Smoke": {{ 'smoke_small.png' | file_url | json }},
+                        "Smoke Optimized Polarized (OPz)": {{ 'smoke-optimized-polarized-opz_small.png' | file_url | json }},
+                        "Rose Optimized Polarized (OPz) w/ Sunburst Mirror": {{ 'rose-optimized-polarized-opz-w-sunburst-mirror_small.png' | file_url | json }},
+                        "MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog": {{ 'milspec-ballistic-rose-optimized-polarized-opz-w-gold-mirror-w-anti-fog_small.png' | file_url | json }},
+                        "MILSPEC Ballistic Smoke w/Anti-Fog": {{ 'milspec-ballistic-smoke-w-anti-fog_small.png' | file_url | json }},
+                        "MILSPEC Ballistic Inferno Photochromic w/Anti-Fog": {{ 'milspec-ballistic-inferno-photochromic-w-anti-fog_small.png' | file_url | json }},
+                        "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog": {{ 'milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small.png' | file_url | json }}
                       },
                       "Frame Color": {
-                        "Black w/Silver Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/black-w-silver-logo_small.png",
-                        "Black w/Black Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/black-w-black-logo_small.png",
-                        "Graphite w/Black Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/graphite-w-black-logo_small.png",
-                        "Tan w/Black Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/tan-w-black-logo_small.png"
+                        "Black w/Silver Logo": {{ 'black-w-silver-logo_small.png' | file_url | json }},
+                        "Black w/Black Logo": {{ 'black-w-black-logo_small.png' | file_url | json }},
+                        "Graphite w/Black Logo": {{ 'graphite-w-black-logo_small.png' | file_url | json }},
+                        "Tan w/Black Logo": {{ 'tan-w-black-logo_small.png' | file_url | json }}
                       }
                     }
                   </script>

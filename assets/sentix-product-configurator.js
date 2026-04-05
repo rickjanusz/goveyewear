@@ -308,15 +308,17 @@ if (!customElements.get('sentix-variant-configurator')) {
 
       const mediaIdFromVariant = this.currentVariant?.featured_media_id ? `${this.sectionId}-${this.currentVariant.featured_media_id}` : '';
       const mediaIdFromFilename = this.findMediaIdForVariantFilename(mediaGallery);
+      const mediaIdFromAlt = this.findMediaIdForVariantAlt(mediaGallery);
       const mediaId = mediaIdFromVariant || mediaIdFromFilename;
+      const resolvedMediaId = mediaId || mediaIdFromAlt;
 
-      if (mediaId && mediaGallery.setActiveMedia) {
-        mediaGallery.setActiveMedia(mediaId, true);
+      if (resolvedMediaId && mediaGallery.setActiveMedia) {
+        mediaGallery.setActiveMedia(resolvedMediaId, true);
       }
 
       const modalContent = document.querySelector(`#ProductModal-${this.sectionId} .product-media-modal__content`);
       if (!modalContent) return;
-      const numericMediaId = String(mediaId || '').split('-')[1] || '';
+      const numericMediaId = String(resolvedMediaId || '').split('-')[1] || '';
       const newMediaModal = numericMediaId ? modalContent.querySelector(`[data-media-id="${numericMediaId}"]`) : null;
       if (newMediaModal) modalContent.prepend(newMediaModal);
     }
@@ -333,6 +335,24 @@ if (!customElements.get('sentix-variant-configurator')) {
       ].join(',');
       const node = mediaGallery.querySelector(selector);
       const li = node?.closest?.('[data-media-id]');
+      return li?.getAttribute?.('data-media-id') || '';
+    }
+
+    findMediaIdForVariantAlt(mediaGallery) {
+      const lensColor = String(this.currentVariant?.lens_color || '').toLowerCase();
+      const frameColor = String(this.currentVariant?.frame_color || '').toLowerCase();
+      if (!lensColor && !frameColor) return '';
+
+      const candidates = Array.from(mediaGallery.querySelectorAll('img[alt], img[data-media-alt]'));
+      const match = candidates.find((img) => {
+        const alt = String(img.getAttribute('alt') || img.getAttribute('data-media-alt') || '').toLowerCase();
+        if (!alt) return false;
+        if (lensColor && alt.includes(lensColor)) return true;
+        if (frameColor && alt.includes(frameColor)) return true;
+        return false;
+      });
+
+      const li = match?.closest?.('[data-media-id]');
       return li?.getAttribute?.('data-media-id') || '';
     }
 
