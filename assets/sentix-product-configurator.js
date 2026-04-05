@@ -480,7 +480,7 @@ if (!customElements.get('sentix-variant-configurator')) {
         mediaGallery.setActiveMedia(primaryMediaId, true);
       }
 
-      const numericMediaId = String(primaryMediaId || '').split('-')[1] || '';
+      const numericMediaId = this.extractTrailingNumericId(primaryMediaId);
       if (numericMediaId) this.moveActiveModalMedia(numericMediaId, []);
     }
 
@@ -495,7 +495,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       if (configuredIds.length) {
         const available = new Set(
           Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
-            .map((node) => Number(String(node.getAttribute('data-media-id') || '').split('-')[1]))
+            .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
             .filter((value) => Number.isInteger(value) && value > 0),
         );
 
@@ -527,7 +527,7 @@ if (!customElements.get('sentix-variant-configurator')) {
 
     resolveMediaIdsByFilenames(mediaGallery, filenames) {
       const mediaEntries = Array.from(mediaGallery.querySelectorAll('[data-media-id]')).map((node) => {
-        const id = Number(String(node.getAttribute('data-media-id') || '').split('-')[1]);
+        const id = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
         const fileSet = new Set();
 
         node.querySelectorAll('img').forEach((img) => {
@@ -574,18 +574,25 @@ if (!customElements.get('sentix-variant-configurator')) {
       return last.toLowerCase();
     }
 
+    extractTrailingNumericId(value) {
+      const text = String(value || '');
+      const match = text.match(/(\d+)(?!.*\d)/);
+      if (!match) return NaN;
+      return Number(match[1]);
+    }
+
     applyVariantMediaSelection(mediaGallery, mediaIds) {
       const selectedIds = new Set(mediaIds.map((id) => Number(id)));
 
       mediaGallery.querySelectorAll('[data-media-id]').forEach((node) => {
-        const numeric = Number(String(node.getAttribute('data-media-id') || '').split('-')[1]);
+        const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
         const shouldShow = selectedIds.has(numeric);
         node.classList.toggle('sentix-configurator__media-hidden', !shouldShow);
         if (!shouldShow) node.classList.remove('is-active');
       });
 
       mediaGallery.querySelectorAll('[data-target]').forEach((node) => {
-        const numeric = Number(String(node.dataset.target || '').split('-')[1]);
+        const numeric = this.extractTrailingNumericId(node.dataset.target);
         const shouldShow = selectedIds.has(numeric);
         node.classList.toggle('sentix-configurator__thumb-hidden', !shouldShow);
       });
@@ -637,7 +644,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       }
 
       modalContent.querySelectorAll('[data-media-id]').forEach((node) => {
-        const mediaId = Number(node.getAttribute('data-media-id'));
+        const mediaId = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
         node.classList.toggle('sentix-configurator__modal-media-hidden', !selectedIds.has(mediaId));
       });
     }
