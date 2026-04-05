@@ -60,12 +60,12 @@ if (!customElements.get('sentix-variant-configurator')) {
         available: Boolean(variant.available),
         price: variant.price,
         sku: variant.sku || '',
-        option1: variant.option1 || variant.options?.[0] || '',
-        option2: variant.option2 || variant.options?.[1] || '',
-        option3: variant.option3 || variant.options?.[2] || '',
-        lens_type: variant.option1 || variant.options?.[0] || '',
-        lens_color: variant.option2 || variant.options?.[1] || '',
-        frame_color: variant.option3 || variant.options?.[2] || '',
+        option1: variant.option1 || variant.lens_type || variant.options?.[0] || '',
+        option2: variant.option2 || variant.lens_color || variant.options?.[1] || '',
+        option3: variant.option3 || variant.frame_color || variant.options?.[2] || '',
+        lens_type: variant.lens_type || variant.option1 || variant.options?.[0] || '',
+        lens_color: variant.lens_color || variant.option2 || variant.options?.[1] || '',
+        frame_color: variant.frame_color || variant.option3 || variant.options?.[2] || '',
         featured_media_id: variant.featured_media?.id || null,
       }));
     }
