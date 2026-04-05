@@ -37,6 +37,10 @@
   {%- endstyle -%}
 
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+  {%- assign use_sentix_configurator = product.handle == 'sentix' and product.options.size == 3 -%}
+  {%- if use_sentix_configurator -%}
+    <script src="{{ 'sentix-product-configurator.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
 
   {%- assign product_media_fallback_url = 'https://cdn.shopify.com/s/files/1/0662/8438/8602/files/img-fallback.png?v=1774654439' -%}
   {%- assign first_3d_model = product.media | where: "media_type", "model" | first -%}
@@ -366,7 +370,98 @@
             <script src="{{ 'share.js' | asset_url }}" defer="defer"></script>
           {%- when 'variant_picker' -%}
             {%- unless product.has_only_default_variant -%}
-              {%- if block.settings.picker_type == 'button' -%}
+              {%- if use_sentix_configurator -%}
+                <sentix-variant-configurator
+                  class="no-js-hidden sentix-configurator"
+                  data-section="{{ section.id }}"
+                  data-url="{{ product.url }}"
+                  data-initial-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                  {{ block.shopify_attributes }}
+                >
+                  <div class="sentix-configurator__group">
+                    <div class="sentix-configurator__heading">
+                      <span class="form__label">Lens Type:</span>
+                      <span class="sentix-configurator__selected-value" data-selected-label="lens_type">{{ product.selected_or_first_available_variant.option1 }}</span>
+                    </div>
+                    <div class="sentix-configurator__options" role="radiogroup" aria-label="Lens Type" data-option-group="lens_type"></div>
+                  </div>
+
+                  <div class="sentix-configurator__group">
+                    <div class="sentix-configurator__heading">
+                      <span class="form__label">Lens Color:</span>
+                      <span class="sentix-configurator__selected-value" data-selected-label="lens_color">{{ product.selected_or_first_available_variant.option2 }}</span>
+                    </div>
+                    <div class="sentix-configurator__options sentix-configurator__options--swatches" role="radiogroup" aria-label="Lens Color" data-option-group="lens_color"></div>
+                    <div class="sentix-configurator__support">
+                      <p class="sentix-configurator__support-title" data-lens-color-support-title></p>
+                      <p class="sentix-configurator__support-body" data-lens-color-support-body></p>
+                    </div>
+                  </div>
+
+                  <div class="sentix-configurator__group">
+                    <div class="sentix-configurator__heading">
+                      <span class="form__label">Frame Color:</span>
+                      <span class="sentix-configurator__selected-value" data-selected-label="frame_color">{{ product.selected_or_first_available_variant.option3 }}</span>
+                    </div>
+                    <div class="sentix-configurator__options sentix-configurator__options--swatches" role="radiogroup" aria-label="Frame Color" data-option-group="frame_color"></div>
+                  </div>
+
+                  <script type="application/json" data-sellable-variants>
+                    {{ product.variants | where: 'available', true | json }}
+                  </script>
+                  <script type="application/json" data-lens-color-content>
+                    {
+                      "Smoke": {
+                        "title": "Smoke",
+                        "body": "Neutral tint for bright conditions."
+                      },
+                      "Smoke Optimized Polarized (OPz)": {
+                        "title": "Smoke Optimized Polarized (OPz)",
+                        "body": "Cuts glare from reflective surfaces without blocking your view of digital screens."
+                      },
+                      "Rose Optimized Polarized (OPz) w/ Sunburst Mirror": {
+                        "title": "Rose Optimized Polarized (OPz) w/ Sunburst Mirror",
+                        "body": "Enhanced contrast with mirrored finish for bright outdoor conditions."
+                      },
+                      "MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog": {
+                        "title": "MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog",
+                        "body": "Ballistic-rated protection with glare reduction, anti-fog coating, and mirrored finish."
+                      },
+                      "MILSPEC Ballistic Smoke w/Anti-Fog": {
+                        "title": "MILSPEC Ballistic Smoke w/Anti-Fog",
+                        "body": "Ballistic-rated smoke lens with anti-fog coating for duty and range use."
+                      },
+                      "MILSPEC Ballistic Inferno Photochromic w/Anti-Fog": {
+                        "title": "MILSPEC Ballistic Inferno Photochromic w/Anti-Fog",
+                        "body": "Provides clear protection indoors and darkens automatically in UV exposure for changing environments."
+                      },
+                      "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog": {
+                        "title": "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog",
+                        "body": "Ballistic-rated polarized lens designed to reduce glare while maintaining screen visibility."
+                      }
+                    }
+                  </script>
+                  <script type="application/json" data-swatch-map>
+                    {
+                      "Lens Color": {
+                        "Smoke": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small.png",
+                        "Smoke Optimized Polarized (OPz)": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small.png",
+                        "Rose Optimized Polarized (OPz) w/ Sunburst Mirror": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/rose-optimized-polarized-opz-w-sunburst-mirror_small.png",
+                        "MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-rose-optimized-polarized-opz-w-gold-mirror-w-anti-fog_small.png",
+                        "MILSPEC Ballistic Smoke w/Anti-Fog": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small.png",
+                        "MILSPEC Ballistic Inferno Photochromic w/Anti-Fog": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-inferno-photochromic-w-anti-fog_small.png",
+                        "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small.png"
+                      },
+                      "Frame Color": {
+                        "Black w/Silver Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/black-w-silver-logo_small.png",
+                        "Black w/Black Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/black-w-black-logo_small.png",
+                        "Graphite w/Black Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/graphite-w-black-logo_small.png",
+                        "Tan w/Black Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/tan-w-black-logo_small.png"
+                      }
+                    }
+                  </script>
+                </sentix-variant-configurator>
+              {%- elsif block.settings.picker_type == 'button' -%}
                 <variant-radios class="no-js-hidden" data-section="{{ section.id }}" data-url="{{ product.url }}" {{ block.shopify_attributes }}>
                   {%- for option in product.options_with_values -%}
                       <fieldset class="js product-form__input">

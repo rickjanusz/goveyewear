@@ -283,6 +283,144 @@ fieldset.product-form__input .form__label {
   max-width: 25rem;
 }
 
+.sentix-configurator {
+  display: block;
+  margin: 0 0 2.4rem;
+  max-width: 64rem;
+}
+
+.sentix-configurator__group + .sentix-configurator__group {
+  margin-top: 2.6rem;
+}
+
+.sentix-configurator__heading {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+}
+
+.sentix-configurator__heading .form__label {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.sentix-configurator__selected-value {
+  color: rgb(var(--color-foreground));
+  font-size: 2rem;
+  line-height: 1.3;
+}
+
+.sentix-configurator__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+}
+
+.sentix-configurator__option {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sentix-configurator__option[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.sentix-configurator__option:focus-visible {
+  outline: 0.2rem solid rgba(var(--color-foreground), 0.45);
+  outline-offset: 0.4rem;
+}
+
+.sentix-configurator__option--text {
+  background-color: rgb(var(--color-background));
+  border: 0.1rem solid rgba(var(--color-foreground), 0.12);
+  min-width: 18rem;
+  padding: 1.5rem 2rem;
+  text-align: center;
+}
+
+.sentix-configurator__option-text {
+  display: block;
+  font-size: 2rem;
+  letter-spacing: 0.3rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.sentix-configurator__option--text[aria-checked='true'] {
+  background-color: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+
+.sentix-configurator__option--swatch {
+  border-radius: 50%;
+  height: 6.4rem;
+  width: 6.4rem;
+}
+
+.sentix-configurator__swatch-visual,
+.sentix-configurator__swatch-visual img {
+  border-radius: 50%;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.sentix-configurator__option--swatch[aria-checked='true'] .sentix-configurator__swatch-visual {
+  box-shadow: 0 0 0 0.2rem rgb(var(--color-background)), 0 0 0 0.35rem rgb(var(--color-foreground));
+}
+
+.sentix-configurator__support {
+  border: 0.1rem solid rgba(var(--color-foreground), 0.18);
+  margin-top: 1.8rem;
+  padding: 1.8rem 2rem;
+}
+
+.sentix-configurator__support-title {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 0.8rem;
+}
+
+.sentix-configurator__support-body {
+  font-size: 1.7rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+@media screen and (max-width: 749px) {
+  .sentix-configurator__heading .form__label,
+  .sentix-configurator__selected-value {
+    font-size: 1.8rem;
+  }
+
+  .sentix-configurator__option--text {
+    min-width: calc(50% - 0.8rem);
+    padding: 1.2rem 1.4rem;
+  }
+
+  .sentix-configurator__option-text {
+    font-size: 1.6rem;
+    letter-spacing: 0.22rem;
+  }
+
+  .sentix-configurator__option--swatch {
+    height: 5.6rem;
+    width: 5.6rem;
+  }
+
+  .sentix-configurator__support {
+    padding: 1.6rem;
+  }
+}
+
 .product-form__submit {
   margin-bottom: 1rem;
 }
