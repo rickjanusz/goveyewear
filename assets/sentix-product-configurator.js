@@ -23,6 +23,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.productUrl = this.dataset.url;
       this.initialVariantId = Number(this.dataset.initialVariantId || 0);
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants'));
+      this.variantImageFilenames = this.parseJson('variant-image-filenames');
       this.variantData = this.normalizeVariants(this.parseJson('sellable-variants'));
       this.sellableVariants = this.getSellableVariants(this.variantData);
       this.lensColorContent = this.parseJson('lens-color-content');
@@ -199,6 +200,8 @@ if (!customElements.get('sentix-variant-configurator')) {
 
         node.innerHTML = values.map((value) => this.renderOptionButton(key, position, value)).join('');
       });
+
+      this.bindSwatchFallbackHandlers();
     }
 
     renderOptionButton(key, position, value) {
@@ -209,8 +212,9 @@ if (!customElements.get('sentix-variant-configurator')) {
         swatchUrl ? 'sentix-configurator__option--swatch' : 'sentix-configurator__option--text',
         `sentix-configurator__option--${key.replace('_', '-')}`,
       ].join(' ');
+      const swatchFallback = this.getSwatchFallbackColor(key, value);
       const swatchMarkup = swatchUrl
-        ? `<span class="sentix-configurator__swatch-visual"><img src="${swatchUrl}" alt="" loading="lazy"></span><span class="visually-hidden">${value}</span>`
+        ? `<span class="sentix-configurator__swatch-visual" data-swatch-visual style="--sentix-swatch-fallback:${swatchFallback}"><img src="${swatchUrl}" alt="" loading="lazy" decoding="async"></span><span class="visually-hidden">${value}</span>`
         : `<span class="sentix-configurator__option-text">${value}</span>`;
 
       return `
@@ -228,6 +232,35 @@ if (!customElements.get('sentix-variant-configurator')) {
           ${swatchMarkup}
         </button>
       `;
+    }
+
+    bindSwatchFallbackHandlers() {
+      const images = Array.from(this.querySelectorAll('[data-swatch-visual] img'));
+      images.forEach((img) => {
+        if (img.dataset.sentixBound === 'true') return;
+        img.dataset.sentixBound = 'true';
+
+        img.addEventListener('error', () => {
+          const visual = img.closest('[data-swatch-visual]');
+          if (visual) visual.setAttribute('data-swatch-broken', 'true');
+        });
+      });
+    }
+
+    getSwatchFallbackColor(key, value) {
+      const normalized = String(value || '').toLowerCase();
+
+      if (key === 'frame_color') {
+        if (normalized.includes('tan')) return '#c9a57a';
+        if (normalized.includes('graphite')) return '#5a5f66';
+        if (normalized.includes('gunmetal')) return '#5f6b73';
+        return '#111111';
+      }
+
+      if (normalized.includes('inferno') || normalized.includes('photochromic')) return '#9aa0a6';
+      if (normalized.includes('rose')) return '#b26b7b';
+      if (normalized.includes('smoke')) return '#4a4a4a';
+      return '#777777';
     }
 
     syncSelectedLabels(variant) {
@@ -270,17 +303,37 @@ if (!customElements.get('sentix-variant-configurator')) {
     }
 
     updateMedia() {
-      if (!this.currentVariant?.featured_media_id) return;
-
       const mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`);
-      if (mediaGallery?.setActiveMedia) {
-        mediaGallery.setActiveMedia(`${this.sectionId}-${this.currentVariant.featured_media_id}`, true);
+      if (!mediaGallery) return;
+
+      const mediaIdFromVariant = this.currentVariant?.featured_media_id ? `${this.sectionId}-${this.currentVariant.featured_media_id}` : '';
+      const mediaIdFromFilename = this.findMediaIdForVariantFilename(mediaGallery);
+      const mediaId = mediaIdFromVariant || mediaIdFromFilename;
+
+      if (mediaId && mediaGallery.setActiveMedia) {
+        mediaGallery.setActiveMedia(mediaId, true);
       }
 
       const modalContent = document.querySelector(`#ProductModal-${this.sectionId} .product-media-modal__content`);
       if (!modalContent) return;
-      const newMediaModal = modalContent.querySelector(`[data-media-id="${this.currentVariant.featured_media_id}"]`);
+      const numericMediaId = String(mediaId || '').split('-')[1] || '';
+      const newMediaModal = numericMediaId ? modalContent.querySelector(`[data-media-id="${numericMediaId}"]`) : null;
       if (newMediaModal) modalContent.prepend(newMediaModal);
+    }
+
+    findMediaIdForVariantFilename(mediaGallery) {
+      if (!this.currentVariant?.id || !this.variantImageFilenames) return '';
+      const filename = this.variantImageFilenames[String(this.currentVariant.id)] || '';
+      if (!filename) return '';
+
+      const selector = [
+        `img[src*="${CSS.escape(filename)}"]`,
+        `img[srcset*="${CSS.escape(filename)}"]`,
+        `source[srcset*="${CSS.escape(filename)}"]`,
+      ].join(',');
+      const node = mediaGallery.querySelector(selector);
+      const li = node?.closest?.('[data-media-id]');
+      return li?.getAttribute?.('data-media-id') || '';
     }
 
     updateURL() {

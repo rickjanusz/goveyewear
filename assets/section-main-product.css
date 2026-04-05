@@ -366,7 +366,7 @@ fieldset.product-form__input .form__label {
 
 .sentix-configurator__swatch-visual {
   align-items: center;
-  background: rgb(var(--color-background));
+  background: var(--sentix-swatch-fallback, rgb(var(--color-background)));
   border: 0.1rem solid rgba(var(--color-foreground), 0.18);
   border-radius: 50%;
   display: flex;
@@ -381,6 +381,10 @@ fieldset.product-form__input .form__label {
   height: 100%;
   max-width: 100%;
   width: 100%;
+}
+
+.sentix-configurator__swatch-visual[data-swatch-broken='true'] img {
+  display: none;
 }
 
 .sentix-configurator__option--lens-color .sentix-configurator__swatch-visual img {
