@@ -146,13 +146,29 @@ if (!customElements.get('sentix-variant-configurator')) {
         'Ballistics||MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog||Black w/Black Logo',
       ]);
 
-      return (variants || []).filter((variant) => {
-        const lensType = this.getVariantOptionValue(variant, this.optionPositions.lens_type);
-        const frameColor = this.getVariantOptionValue(variant, this.optionPositions.frame_color);
-        const lensColor = this.getVariantOptionValue(variant, this.optionPositions.lens_color);
-        const comboKey = `${lensType}||${lensColor}||${frameColor}`;
-        return allowedCombos.has(comboKey);
-      });
+      const byPositions = (lensTypePos, lensColorPos, frameColorPos) =>
+        (variants || []).filter((variant) => {
+          const lensType = this.getVariantOptionValue(variant, lensTypePos);
+          const frameColor = this.getVariantOptionValue(variant, frameColorPos);
+          const lensColor = this.getVariantOptionValue(variant, lensColorPos);
+          const comboKey = `${lensType}||${lensColor}||${frameColor}`;
+          return allowedCombos.has(comboKey);
+        });
+
+      const lensTypePos = Number(this.optionPositions.lens_type) || 1;
+      const lensColorPos = Number(this.optionPositions.lens_color) || 2;
+      const frameColorPos = Number(this.optionPositions.frame_color) || 3;
+
+      const directMatches = byPositions(lensTypePos, lensColorPos, frameColorPos);
+      const swappedMatches = byPositions(lensTypePos, frameColorPos, lensColorPos);
+
+      if (swappedMatches.length > directMatches.length) {
+        this.optionPositions.lens_color = frameColorPos;
+        this.optionPositions.frame_color = lensColorPos;
+        return swappedMatches;
+      }
+
+      return directMatches;
     }
 
     getOrderedOptionKeys() {
