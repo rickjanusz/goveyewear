@@ -4,7 +4,7 @@ Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
 - Branch: codex/gatorz-variants
-- HEAD commit: a091cd7
+- HEAD commit: 2cf631d
 - Last pushed commit (GitHub): 724e199
 - Local dev server:
   - Running? no
@@ -14,6 +14,26 @@ Keep this file updated so any agent can resume without overwriting files.
   - Live: 160510771450
 
 ## Recent Pulls
+- 2026-04-05: target theme ID `160510771450` (live)
+  - Branch + commit: `codex/gatorz-variants` @ `3faf278`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json --only "templates/product*.json"`
+  - Files changed: `templates/product.gatorz-sentix.json` (live sync)
+  - Change: validated live merchant-config state to compare template option/swatch configuration
+  - Live preview: https://goveyewear.myshopify.com/?preview_theme_id=160510771450
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: none
+- 2026-04-05: target theme ID `160510771450` (live)
+  - Branch + commit: `codex/gatorz-variants` @ `08d563d`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json --only "templates/product*.json"`
+  - Files updated locally by pull: `templates/product.json`, `templates/product.gatorz-sentix.json`, plus untracked `templates/product*.json` files from live snapshot sync
+  - Result: merchant-config sync completed before staging push; no code files pulled
+  - Live preview: https://goveyewear.myshopify.com/?preview_theme_id=160510771450
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: keep template/settings changes out of code-only pushes unless explicitly requested
 - 2026-03-27: target theme ID `160581189882` (staging)
   - Branch + commit: `codex/pdf-download-section` @ `d1d7671bb7b866f6cd028af522a7fb42d2785502`
   - Commands:
@@ -181,6 +201,46 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `2cf631d`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/sentix-product-configurator.js`
+  - Files pushed: `assets/sentix-product-configurator.js`
+  - Change: fixed option rendering/selection logic to honor real Shopify option positions, preventing Lens Color / Frame Color swap when option order is `Lens Type`, `Frame Color`, `Lens Color`
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: verify swatch visuals now appear and option groups no longer cross-map
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `5652838`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only templates/product.gatorz-sentix.json`
+  - Files pushed: `templates/product.gatorz-sentix.json`
+  - Change: restored Sentix `gatorz_swatch` block `swatch_image` paths so Lens/Frame swatch entries can emit real Shopify-hosted image URLs
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: hard refresh staging Sentix PDP and verify swatches now render with image assets
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `3faf278`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/sentix-product-configurator.js`
+  - Files pushed: `assets/sentix-product-configurator.js`
+  - Change: locked variant grouping to explicit option-name mapping (`Lens Type`, `Lens Color`, `Frame Color`) and removed runtime remapping logic
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: confirm Lens/Frame grouping is correct on Sentix PDP
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `08d563d`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/sentix-product-configurator.js --only assets/section-main-product.css`
+  - Files pushed: `assets/sentix-product-configurator.js`, `assets/section-main-product.css`
+  - Change: removed aggressive option-position inference that could swap Lens/Frame groups, trusted explicit option-name mapping, always renders Lens/Frame as swatch circles with color fallback, and enforced active-state styling for current selections
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: hard-refresh Sentix staging PDP and verify Lens/Frame groups are no longer swapped, selected values remain visibly active, and product media switching now tracks resolved variant
 - 2026-04-05: target theme ID `160581189882` (staging)
   - Branch + commit: `codex/gatorz-variants` @ `2f9cee2`
   - Commands:
