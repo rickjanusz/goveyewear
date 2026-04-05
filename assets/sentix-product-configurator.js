@@ -194,7 +194,7 @@ if (!customElements.get('sentix-variant-configurator')) {
         const seen = new Set();
 
         source.forEach((url) => {
-          const filename = this.extractFilename(url);
+          const filename = this.normalizeFilename(this.extractFilename(url));
           if (!filename || seen.has(filename)) return;
           seen.add(filename);
           unique.push(filename);
@@ -212,7 +212,7 @@ if (!customElements.get('sentix-variant-configurator')) {
 
       rows.forEach((row) => {
         const id = Number(row?.id);
-        const filename = this.extractFilename(row?.src);
+        const filename = this.normalizeFilename(this.extractFilename(row?.src));
         if (!Number.isInteger(id) || id <= 0 || !filename) return;
         if (!filenameToId.has(filename)) filenameToId.set(filename, id);
       });
@@ -517,9 +517,10 @@ if (!customElements.get('sentix-variant-configurator')) {
     }
 
     getSeriesMediaIdsFromFeaturedFilename(featuredFilename, availableIds) {
-      if (!featuredFilename) return [];
+      const normalizedFeaturedFilename = this.normalizeFilename(featuredFilename);
+      if (!normalizedFeaturedFilename) return [];
 
-      const match = featuredFilename.match(/^(.*?)-(\d+)(\.[a-z0-9]+)$/i);
+      const match = normalizedFeaturedFilename.match(/^(.*?)-(\d+)(\.[a-z0-9]+)$/i);
       if (!match) return [];
 
       const [, baseName, , extension] = match;
@@ -527,7 +528,7 @@ if (!customElements.get('sentix-variant-configurator')) {
 
       this.productMediaIndex.forEach((id, filename) => {
         if (!availableIds.has(id)) return;
-        const filenameMatch = filename.match(/^(.*?)-(\d+)(\.[a-z0-9]+)$/i);
+        const filenameMatch = this.normalizeFilename(filename).match(/^(.*?)-(\d+)(\.[a-z0-9]+)$/i);
         if (!filenameMatch) return;
 
         const [, candidateBase, candidateIndex, candidateExtension] = filenameMatch;
@@ -603,8 +604,11 @@ if (!customElements.get('sentix-variant-configurator')) {
 
       const ordered = [];
       const seen = new Set();
+      const normalizedFilenames = (filenames || [])
+        .map((filename) => this.normalizeFilename(filename))
+        .filter(Boolean);
 
-      filenames.forEach((filename) => {
+      normalizedFilenames.forEach((filename) => {
         const match = mediaEntries.find((entry) => entry.fileSet.has(filename));
         if (!match || seen.has(match.id)) return;
         seen.add(match.id);
@@ -615,7 +619,7 @@ if (!customElements.get('sentix-variant-configurator')) {
     }
 
     collectFilenameFromSrc(targetSet, src) {
-      const filename = this.extractFilename(src);
+      const filename = this.normalizeFilename(this.extractFilename(src));
       if (filename) targetSet.add(filename);
     }
 
@@ -632,6 +636,26 @@ if (!customElements.get('sentix-variant-configurator')) {
       const clean = raw.split('?')[0].split('#')[0];
       const last = clean.split('/').pop() || '';
       return last.toLowerCase();
+    }
+
+    normalizeFilename(filename) {
+      const value = String(filename || '').trim().toLowerCase();
+      if (!value) return '';
+
+      const dotIndex = value.lastIndexOf('.');
+      if (dotIndex <= 0) return value;
+
+      let stem = value.slice(0, dotIndex);
+      const extension = value.slice(dotIndex);
+
+      // Shopify CDN frequently appends size tokens to filenames
+      // (for example: _small, _large, _1024x1024, _800x, _x800, and @2x variants).
+      stem = stem.replace(
+        /_(pico|icon|thumb|small|compact|medium|large|grande|original|master|\d+x\d+|\d+x|x\d+)(@[\dx]+)?$/i,
+        '',
+      );
+
+      return `${stem}${extension}`;
     }
 
     extractTrailingNumericId(value) {
