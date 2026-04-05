@@ -473,20 +473,50 @@ if (!customElements.get('sentix-variant-configurator')) {
         return;
       }
 
-      this.clearVariantMediaSelection(mediaGallery);
-      const primaryMediaId = this.getPrimaryMediaId();
-
-      if (primaryMediaId && mediaGallery.setActiveMedia) {
-        mediaGallery.setActiveMedia(primaryMediaId, true);
+      const fallbackMediaIds = this.getFallbackMediaIdsForCurrentVariant(mediaGallery);
+      if (fallbackMediaIds.length) {
+        this.applyVariantMediaSelection(mediaGallery, fallbackMediaIds);
+        this.moveActiveModalMedia(String(fallbackMediaIds[0]), fallbackMediaIds);
+        return;
       }
 
-      const numericMediaId = this.extractTrailingNumericId(primaryMediaId);
-      if (numericMediaId) this.moveActiveModalMedia(numericMediaId, []);
+      this.clearVariantMediaSelection(mediaGallery);
     }
 
     getPrimaryMediaId() {
       const featuredMediaId = Number(this.currentVariant?.featured_media_id || 0);
       return featuredMediaId ? `${this.sectionId}-${featuredMediaId}` : '';
+    }
+
+    getFallbackMediaIdsForCurrentVariant(mediaGallery) {
+      const available = new Set(
+        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+          .filter((value) => Number.isInteger(value) && value > 0),
+      );
+
+      const ordered = [];
+      const seen = new Set();
+      const addId = (id) => {
+        const numeric = Number(id);
+        if (!Number.isInteger(numeric) || numeric <= 0 || seen.has(numeric) || !available.has(numeric)) return;
+        seen.add(numeric);
+        ordered.push(numeric);
+      };
+
+      addId(this.currentVariant?.featured_media_id);
+
+      const featuredFilename = this.extractFilename(this.currentVariant?.featured_image_src);
+      if (featuredFilename) {
+        addId(this.productMediaIndex?.get(featuredFilename));
+      }
+
+      // Last-resort fallback to first available gallery item to avoid blank state.
+      if (!ordered.length) {
+        addId(Array.from(available)[0]);
+      }
+
+      return ordered;
     }
 
     getMappedMediaIdsForCurrentVariant(mediaGallery) {
