@@ -704,8 +704,12 @@ if (!customElements.get('sentix-variant-configurator')) {
       const pickUpAvailability = document.querySelector('pickup-availability');
       if (!pickUpAvailability) return;
 
+      const canFetchAvailability = typeof pickUpAvailability.fetchAvailability === 'function';
+
       if (this.currentVariant?.available) {
-        pickUpAvailability.fetchAvailability(this.currentVariant.id);
+        if (canFetchAvailability) {
+          pickUpAvailability.fetchAvailability(this.currentVariant.id);
+        }
       } else {
         pickUpAvailability.removeAttribute('available');
         pickUpAvailability.innerHTML = '';
