@@ -27,7 +27,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.variantData = this.normalizeVariants(this.parseJson('sellable-variants'));
       this.sellableVariants = this.getSellableVariants(this.variantData);
       this.lensColorContent = this.parseJson('lens-color-content');
-      this.swatchMap = this.parseJson('swatch-map');
+      this.swatchMap = this.buildSwatchMap(this.parseJson('swatch-entries'));
       this.groupNodes = {
         lens_type: this.querySelector('[data-option-group="lens_type"]'),
         lens_color: this.querySelector('[data-option-group="lens_color"]'),
@@ -53,6 +53,19 @@ if (!customElements.get('sentix-variant-configurator')) {
     parseJson(key) {
       const node = this.querySelector(`[data-${key}]`);
       return node ? JSON.parse(node.textContent) : {};
+    }
+
+    buildSwatchMap(entries) {
+      const map = {};
+      (entries || []).forEach((entry) => {
+        const group = entry?.group;
+        const value = entry?.value;
+        const image = entry?.image;
+        if (!group || !value || !image) return;
+        map[group] ||= {};
+        map[group][value] = image;
+      });
+      return map;
     }
 
     normalizeVariants(variants) {
@@ -206,7 +219,7 @@ if (!customElements.get('sentix-variant-configurator')) {
 
     renderOptionButton(key, position, value) {
       const selected = this.selected[key] === value;
-      const swatchUrl = this.swatchMap?.[this.optionNames[key]]?.[value] || '';
+      const swatchUrl = this.swatchMap?.[key]?.[value] || '';
       const classes = [
         'sentix-configurator__option',
         swatchUrl ? 'sentix-configurator__option--swatch' : 'sentix-configurator__option--text',

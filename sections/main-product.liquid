@@ -37,12 +37,17 @@
   {%- endstyle -%}
 
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
-  {%- assign use_sentix_configurator = false -%}
+  {%- assign use_gatorz_configurator = false -%}
   {%- assign normalized_options = product.options | join: '||' | downcase -%}
-  {%- if normalized_options contains 'lens type' and normalized_options contains 'lens color' and normalized_options contains 'frame color' -%}
-    {%- assign use_sentix_configurator = true -%}
+  {%- assign template_suffix = template.suffix | default: '' -%}
+  {%- assign is_gatorz_product_template = false -%}
+  {%- if template.name == 'product' and template_suffix contains 'gatorz-' -%}
+    {%- assign is_gatorz_product_template = true -%}
   {%- endif -%}
-  {%- if use_sentix_configurator -%}
+  {%- if section.settings.enable_gatorz_configurator and is_gatorz_product_template and normalized_options contains 'lens type' and normalized_options contains 'lens color' and normalized_options contains 'frame color' -%}
+    {%- assign use_gatorz_configurator = true -%}
+  {%- endif -%}
+  {%- if use_gatorz_configurator -%}
     <script src="{{ 'sentix-product-configurator.js' | asset_url }}" defer="defer"></script>
   {%- endif -%}
 
@@ -373,7 +378,7 @@
             </share-button>
             <script src="{{ 'share.js' | asset_url }}" defer="defer"></script>
           {%- when 'variant_picker' -%}
-            {%- if use_sentix_configurator -%}
+            {%- if use_gatorz_configurator -%}
                 <sentix-variant-configurator
                   class="no-js-hidden sentix-configurator"
                   data-section="{{ section.id }}"
@@ -415,6 +420,22 @@
                   <script type="application/json" data-native-variants>
                     {{ product.variants | json }}
                   </script>
+                  <script type="application/json" data-swatch-entries>
+                    [
+                      {%- assign swatch_first = true -%}
+                      {%- for swatch_block in section.blocks -%}
+                        {%- if swatch_block.type == 'gatorz_swatch' and swatch_block.settings.swatch_image != blank and swatch_block.settings.option_value != blank -%}
+                          {%- unless swatch_first -%},{%- endunless -%}
+                          {%- assign swatch_first = false -%}
+                          {
+                            "group": {{ swatch_block.settings.group | json }},
+                            "value": {{ swatch_block.settings.option_value | json }},
+                            "image": {{ swatch_block.settings.swatch_image | image_url: width: 128 | json }}
+                          }
+                        {%- endif -%}
+                      {%- endfor -%}
+                    ]
+                  </script>
                   <script type="application/json" data-lens-color-content>
                     {
                       "Smoke": {
@@ -444,25 +465,6 @@
                       "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog": {
                         "title": "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog",
                         "body": "Ballistic-rated polarized lens designed to reduce glare while maintaining screen visibility."
-                      }
-                    }
-                  </script>
-                  <script type="application/json" data-swatch-map>
-                    {
-                      "Lens Color": {
-                        "Smoke": {{ 'smoke_small.png' | file_url | json }},
-                        "Smoke Optimized Polarized (OPz)": {{ 'smoke-optimized-polarized-opz_small.png' | file_url | json }},
-                        "Rose Optimized Polarized (OPz) w/ Sunburst Mirror": {{ 'rose-optimized-polarized-opz-w-sunburst-mirror_small.png' | file_url | json }},
-                        "MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog": {{ 'milspec-ballistic-rose-optimized-polarized-opz-w-gold-mirror-w-anti-fog_small.png' | file_url | json }},
-                        "MILSPEC Ballistic Smoke w/Anti-Fog": {{ 'milspec-ballistic-smoke-w-anti-fog_small.png' | file_url | json }},
-                        "MILSPEC Ballistic Inferno Photochromic w/Anti-Fog": {{ 'milspec-ballistic-inferno-photochromic-w-anti-fog_small.png' | file_url | json }},
-                        "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog": {{ 'milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small.png' | file_url | json }}
-                      },
-                      "Frame Color": {
-                        "Black w/Silver Logo": {{ 'black-w-silver-logo_small.png' | file_url | json }},
-                        "Black w/Black Logo": {{ 'black-w-black-logo_small.png' | file_url | json }},
-                        "Graphite w/Black Logo": {{ 'graphite-w-black-logo_small.png' | file_url | json }},
-                        "Tan w/Black Logo": {{ 'tan-w-black-logo_small.png' | file_url | json }}
                       }
                     }
                   </script>
@@ -780,6 +782,33 @@
   "blocks": [
     {
       "type": "@app"
+    },
+    {
+      "type": "gatorz_swatch",
+      "name": "Gatorz swatch",
+      "settings": [
+        {
+          "type": "select",
+          "id": "group",
+          "label": "Option group",
+          "default": "lens_color",
+          "options": [
+            { "value": "lens_color", "label": "Lens Color" },
+            { "value": "frame_color", "label": "Frame Color" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "option_value",
+          "label": "Option value (exact match)",
+          "info": "Must exactly match the Shopify variant option value."
+        },
+        {
+          "type": "image_picker",
+          "id": "swatch_image",
+          "label": "Swatch image"
+        }
+      ]
     },
     {
       "type": "text",
@@ -1153,6 +1182,13 @@
     }
   ],
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_gatorz_configurator",
+      "default": false,
+      "label": "Enable Gatorz configurator",
+      "info": "Enable on a specific Gatorz product template (suffix starts with 'gatorz-') for safe rollout. Requires option names: Lens Type, Lens Color, Frame Color."
+    },
     {
       "type": "checkbox",
       "id": "enable_sticky_info",
