@@ -487,22 +487,26 @@
                           {{ mapped_variant.id | json }}: [
                             {%- if gallery_files != blank -%}
                               {%- for gallery_file in gallery_files -%}
-                                {{ gallery_file | image_url: width: 4096 | json }}{%- unless forloop.last -%},{%- endunless -%}
+                                {%- assign gallery_file_url = gallery_file | image_url: width: 4096 | default: gallery_file | file_url -%}
+                                {{ gallery_file_url | json }}{%- unless forloop.last -%},{%- endunless -%}
                               {%- endfor -%}
                             {%- else -%}
                               {%- assign gallery_file_first = true -%}
                               {%- if gallery_file_1 != blank -%}
-                                {{ gallery_file_1 | image_url: width: 4096 | json }}
+                                {%- assign gallery_file_url_1 = gallery_file_1 | image_url: width: 4096 | default: gallery_file_1 | file_url -%}
+                                {{ gallery_file_url_1 | json }}
                                 {%- assign gallery_file_first = false -%}
                               {%- endif -%}
                               {%- if gallery_file_2 != blank -%}
                                 {%- unless gallery_file_first -%},{%- endunless -%}
-                                {{ gallery_file_2 | image_url: width: 4096 | json }}
+                                {%- assign gallery_file_url_2 = gallery_file_2 | image_url: width: 4096 | default: gallery_file_2 | file_url -%}
+                                {{ gallery_file_url_2 | json }}
                                 {%- assign gallery_file_first = false -%}
                               {%- endif -%}
                               {%- if gallery_file_3 != blank -%}
                                 {%- unless gallery_file_first -%},{%- endunless -%}
-                                {{ gallery_file_3 | image_url: width: 4096 | json }}
+                                {%- assign gallery_file_url_3 = gallery_file_3 | image_url: width: 4096 | default: gallery_file_3 | file_url -%}
+                                {{ gallery_file_url_3 | json }}
                               {%- endif -%}
                             {%- endif -%}
                           ]
