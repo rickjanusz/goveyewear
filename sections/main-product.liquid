@@ -460,6 +460,20 @@
                       {%- endfor -%}
                     ]
                   </script>
+                  <script type="application/json" data-variant-media-map>
+                    {
+                      {%- assign media_map_first = true -%}
+                      {%- for media_block in section.blocks -%}
+                        {%- if media_block.type == 'gatorz_variant_media_map' and media_block.settings.variant_id != blank and media_block.settings.media_ids != blank -%}
+                          {%- assign media_ids_string = media_block.settings.media_ids | strip | replace: ' ', '' -%}
+                          {%- assign media_ids_array = media_ids_string | split: ',' -%}
+                          {%- unless media_map_first -%},{%- endunless -%}
+                          {%- assign media_map_first = false -%}
+                          {{ media_block.settings.variant_id | strip | json }}: {{ media_ids_array | json }}
+                        {%- endif -%}
+                      {%- endfor -%}
+                    }
+                  </script>
                   <script type="application/json" data-lens-color-content>
                     {
                       "Smoke": {
@@ -831,6 +845,24 @@
           "type": "image_picker",
           "id": "swatch_image",
           "label": "Swatch image"
+        }
+      ]
+    },
+    {
+      "type": "gatorz_variant_media_map",
+      "name": "Gatorz variant media map",
+      "settings": [
+        {
+          "type": "text",
+          "id": "variant_id",
+          "label": "Variant ID (exact)",
+          "info": "Use the numeric Shopify variant ID."
+        },
+        {
+          "type": "text",
+          "id": "media_ids",
+          "label": "Gallery media IDs (comma separated)",
+          "info": "Enter product media IDs in display order, e.g. 1234567890,1234567891,1234567892"
         }
       ]
     },
