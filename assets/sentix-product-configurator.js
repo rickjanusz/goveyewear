@@ -197,6 +197,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       const classes = [
         'sentix-configurator__option',
         swatchUrl ? 'sentix-configurator__option--swatch' : 'sentix-configurator__option--text',
+        `sentix-configurator__option--${key.replace('_', '-')}`,
       ].join(' ');
       const swatchMarkup = swatchUrl
         ? `<span class="sentix-configurator__swatch-visual"><img src="${swatchUrl}" alt="" loading="lazy"></span><span class="visually-hidden">${value}</span>`
@@ -210,6 +211,7 @@ if (!customElements.get('sentix-variant-configurator')) {
           aria-checked="${selected ? 'true' : 'false'}"
           aria-disabled="false"
           tabindex="${selected ? '0' : '-1'}"
+          data-option-key="${key}"
           data-option-position="${position}"
           data-option-value="${this.escapeAttribute(value)}"
         >
