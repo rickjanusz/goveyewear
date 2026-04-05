@@ -28,8 +28,6 @@ if (!customElements.get('sentix-variant-configurator')) {
       };
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants'));
       this.variantImageFilenames = this.parseJson('variant-image-filenames');
-      this.variantData = this.normalizeVariants(this.parseJson('sellable-variants'));
-      this.sellableVariants = this.getSellableVariants(this.variantData);
       this.lensColorContent = this.parseJson('lens-color-content');
       this.swatchMap = this.buildSwatchMap(this.parseJson('swatch-entries'));
       this.groupNodes = {
@@ -44,6 +42,11 @@ if (!customElements.get('sentix-variant-configurator')) {
       };
       this.lensColorSupportTitle = this.querySelector('[data-lens-color-support-title]');
       this.lensColorSupportBody = this.querySelector('[data-lens-color-support-body]');
+
+      const rawSellableVariants = this.parseJson('sellable-variants');
+      this.inferOptionPositionsFromSwatches(rawSellableVariants);
+      this.variantData = this.normalizeVariants(rawSellableVariants);
+      this.sellableVariants = this.getSellableVariants(this.variantData);
 
       if (!this.sellableVariants.length) return;
 
@@ -72,6 +75,38 @@ if (!customElements.get('sentix-variant-configurator')) {
       return map;
     }
 
+    inferOptionPositionsFromSwatches(variants) {
+      const lensKeys = new Set(Object.keys(this.swatchMap?.lens_color || {}));
+      const frameKeys = new Set(Object.keys(this.swatchMap?.frame_color || {}));
+      if (!lensKeys.size && !frameKeys.size) return;
+
+      const scores = {
+        1: { lens: 0, frame: 0 },
+        2: { lens: 0, frame: 0 },
+        3: { lens: 0, frame: 0 },
+      };
+
+      (variants || []).forEach((variant) => {
+        for (let pos = 1; pos <= 3; pos += 1) {
+          const value = this.getVariantOptionValue(variant, pos);
+          if (!value) continue;
+          const key = this.normalizeSwatchKey(value);
+          if (lensKeys.has(key)) scores[pos].lens += 1;
+          if (frameKeys.has(key)) scores[pos].frame += 1;
+        }
+      });
+
+      const bestLensPos = [1, 2, 3].sort((a, b) => scores[b].lens - scores[a].lens)[0];
+      const bestFramePos = [1, 2, 3].sort((a, b) => scores[b].frame - scores[a].frame)[0];
+      if (scores[bestLensPos].lens > 0) this.optionPositions.lens_color = bestLensPos;
+      if (scores[bestFramePos].frame > 0) this.optionPositions.frame_color = bestFramePos;
+
+      // Lens type is whatever position isn't lens/frame (or fallback to 1).
+      const used = new Set([this.optionPositions.lens_color, this.optionPositions.frame_color]);
+      const remaining = [1, 2, 3].find((pos) => !used.has(pos));
+      if (remaining) this.optionPositions.lens_type = remaining;
+    }
+
     normalizeSwatchKey(value) {
       return String(value || '')
         .toLowerCase()
@@ -91,18 +126,19 @@ if (!customElements.get('sentix-variant-configurator')) {
 
         return {
           ...native,
-        id: variant.id,
-        title: variant.title,
-        available: Boolean(variant.available),
-        price: variant.price ?? native.price,
-        sku: variant.sku || native.sku || '',
-        option1: this.getVariantOptionValue(native, 1) || this.getVariantOptionValue(variant, 1) || '',
-        option2: this.getVariantOptionValue(native, 2) || this.getVariantOptionValue(variant, 2) || '',
-        option3: this.getVariantOptionValue(native, 3) || this.getVariantOptionValue(variant, 3) || '',
-        lens_type: lensType || '',
-        lens_color: lensColor || '',
-        frame_color: frameColor || '',
-        featured_media_id: variant.featured_media_id || variant.featured_media?.id || native.featured_media?.id || null,
+          id: variant.id,
+          title: variant.title,
+          available: Boolean(variant.available),
+          price: variant.price ?? native.price,
+          sku: variant.sku || native.sku || '',
+          option1: this.getVariantOptionValue(native, 1) || this.getVariantOptionValue(variant, 1) || '',
+          option2: this.getVariantOptionValue(native, 2) || this.getVariantOptionValue(variant, 2) || '',
+          option3: this.getVariantOptionValue(native, 3) || this.getVariantOptionValue(variant, 3) || '',
+          lens_type: lensType || '',
+          lens_color: lensColor || '',
+          frame_color: frameColor || '',
+          featured_media_id: variant.featured_media_id || variant.featured_media?.id || native.featured_media?.id || null,
+          featured_image_src: native.featured_image?.src || variant.featured_image?.src || '',
         };
       });
     }
@@ -350,9 +386,9 @@ if (!customElements.get('sentix-variant-configurator')) {
 
       const mediaIdFromVariant = this.currentVariant?.featured_media_id ? `${this.sectionId}-${this.currentVariant.featured_media_id}` : '';
       const mediaIdFromFilename = this.findMediaIdForVariantFilename(mediaGallery);
+      const mediaIdFromFeaturedSrc = this.findMediaIdForVariantFeaturedImage(mediaGallery);
       const mediaIdFromAlt = this.findMediaIdForVariantAlt(mediaGallery);
-      const mediaId = mediaIdFromVariant || mediaIdFromFilename;
-      const resolvedMediaId = mediaId || mediaIdFromAlt;
+      const resolvedMediaId = mediaIdFromVariant || mediaIdFromFilename || mediaIdFromFeaturedSrc || mediaIdFromAlt;
 
       if (resolvedMediaId && mediaGallery.setActiveMedia) {
         mediaGallery.setActiveMedia(resolvedMediaId, true);
@@ -370,6 +406,21 @@ if (!customElements.get('sentix-variant-configurator')) {
       const filename = this.variantImageFilenames[String(this.currentVariant.id)] || '';
       if (!filename) return '';
 
+      const selector = [
+        `img[src*="${CSS.escape(filename)}"]`,
+        `img[srcset*="${CSS.escape(filename)}"]`,
+        `source[srcset*="${CSS.escape(filename)}"]`,
+      ].join(',');
+      const node = mediaGallery.querySelector(selector);
+      const li = node?.closest?.('[data-media-id]');
+      return li?.getAttribute?.('data-media-id') || '';
+    }
+
+    findMediaIdForVariantFeaturedImage(mediaGallery) {
+      const src = String(this.currentVariant?.featured_image_src || '');
+      if (!src) return '';
+      const filename = src.split('/').pop()?.split('?')[0] || '';
+      if (!filename) return '';
       const selector = [
         `img[src*="${CSS.escape(filename)}"]`,
         `img[srcset*="${CSS.escape(filename)}"]`,
