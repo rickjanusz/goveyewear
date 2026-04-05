@@ -555,18 +555,29 @@
                       }
                     }
                   </script>
-                  <script type="application/json" data-lens-color-content-overrides>
+                  <script type="application/json" data-lens-color-content-variant-overrides>
                     {
                       {%- assign lens_copy_count = 0 -%}
-                      {%- for lens_copy_block in section.blocks -%}
-                        {%- if lens_copy_block.type == 'gatorz_lens_copy' and lens_copy_block.settings.option_value != blank -%}
-                          {%- if lens_copy_count > 0 -%},{%- endif -%}
-                          {{ lens_copy_block.settings.option_value | json }}: {
-                            "title": {{ lens_copy_block.settings.title | json }},
-                            "body": {{ lens_copy_block.settings.body | json }},
-                            "secondary_body": {{ lens_copy_block.settings.secondary_body | json }}
-                          }
-                          {%- assign lens_copy_count = lens_copy_count | plus: 1 -%}
+                      {%- assign seen_lens_colors = '|' -%}
+                      {%- for mapped_variant in product.variants -%}
+                        {%- assign lens_color_value = mapped_variant.options[lens_color_index] | default: '' | strip -%}
+                        {%- if lens_color_value != blank -%}
+                          {%- assign lens_color_token = '|' | append: lens_color_value | append: '|' -%}
+                          {%- unless seen_lens_colors contains lens_color_token -%}
+                            {%- assign variant_title = mapped_variant.metafields.custom.gatorz_lens_support_title.value | default: '' -%}
+                            {%- assign variant_body = mapped_variant.metafields.custom.gatorz_lens_support_body.value | default: '' -%}
+                            {%- assign variant_secondary = mapped_variant.metafields.custom.gatorz_lens_support_secondary_body.value | default: '' -%}
+                            {%- if variant_title != blank or variant_body != blank or variant_secondary != blank -%}
+                              {%- if lens_copy_count > 0 -%},{%- endif -%}
+                              {{ lens_color_value | json }}: {
+                                "title": {{ variant_title | json }},
+                                "body": {{ variant_body | json }},
+                                "secondary_body": {{ variant_secondary | json }}
+                              }
+                              {%- assign lens_copy_count = lens_copy_count | plus: 1 -%}
+                            {%- endif -%}
+                            {%- assign seen_lens_colors = seen_lens_colors | append: lens_color_value | append: '|' -%}
+                          {%- endunless -%}
                         {%- endif -%}
                       {%- endfor -%}
                     }
@@ -928,34 +939,6 @@
           "id": "media_ids",
           "label": "Gallery media IDs (comma separated)",
           "info": "Enter product media IDs in display order, e.g. 1234567890,1234567891,1234567892"
-        }
-      ]
-    },
-    {
-      "type": "gatorz_lens_copy",
-      "name": "Gatorz lens copy",
-      "settings": [
-        {
-          "type": "text",
-          "id": "option_value",
-          "label": "Lens Color option value (exact match)",
-          "info": "Must exactly match the Lens Color variant option value."
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Support title (optional)",
-          "info": "Leave blank to hide the support title."
-        },
-        {
-          "type": "textarea",
-          "id": "body",
-          "label": "Primary support text"
-        },
-        {
-          "type": "textarea",
-          "id": "secondary_body",
-          "label": "Secondary support text (optional)"
         }
       ]
     },

@@ -31,7 +31,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map', {}));
       this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
       const defaultLensColorContent = this.parseJson('lens-color-content', {});
-      const lensColorContentOverrides = this.parseJson('lens-color-content-overrides', {});
+      const lensColorContentOverrides = this.parseJson('lens-color-content-variant-overrides', {});
       this.lensColorContent = this.mergeLensColorContent(defaultLensColorContent, lensColorContentOverrides);
       this.swatchMap = this.buildSwatchMap(this.parseJson('swatch-entries', []));
       this.groupNodes = {
