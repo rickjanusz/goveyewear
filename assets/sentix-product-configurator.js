@@ -131,9 +131,7 @@ if (!customElements.get('sentix-variant-configurator')) {
     }
 
     getOrderedOptionKeys() {
-      return [...this.optionKeys].sort(
-        (a, b) => Number(this.optionPositions[a] || 0) - Number(this.optionPositions[b] || 0),
-      );
+      return [...this.optionKeys];
     }
 
     matchesSelection(variant, selected) {
