@@ -3,8 +3,8 @@
 Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
-- Branch: codex/pdf-download-section
-- HEAD commit: d1d7671bb7b866f6cd028af522a7fb42d2785502
+- Branch: codex/seo
+- HEAD commit: 1e1f426
 - Last pushed commit (GitHub): 724e199
 - Local dev server:
   - Running? no
@@ -44,6 +44,16 @@ Keep this file updated so any agent can resume without overwriting files.
   - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
   - Live preview: https://goveyewear.myshopify.com
   - Open TODOs/approvals needed: visually verify missing-image products across collection grids, search results, and product pages before promoting to live
+- 2026-03-27: target theme ID `160510771450` (live)
+  - Branch + commit: `codex/pdf-download-section` @ `c5d2e037bdd4ae6e2503d1fdb56cd698483d4a59`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160510771450 --path . --nodelete --only sections/pdf-links.liquid --allow-live`
+  - Files pushed: `sections/pdf-links.liquid`
+  - Change: promoted the new `PDF Links` product section to live so product templates can add PDF download buttons in admin
+  - Live preview: https://goveyewear.myshopify.com
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: sync live `templates/product*.json` into the branch before any future template push
 - 2026-03-27: target theme ID `160581189882` (staging)
   - Branch + commit: `codex/pdf-download-section` @ `2a21cdf5f2f89b8530129787c2d7646666c92daa`
   - Commands:
@@ -241,6 +251,18 @@ Keep this file updated so any agent can resume without overwriting files.
   - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
   - Live preview: https://goveyewear.myshopify.com
   - Open TODOs/approvals needed: validate the staged menu against the nested-navigation setup in Shopify admin; live push still requires explicit approval
+
+## Backup Notes
+- 2026-04-05: full live theme backup created
+  - Branch + commit: `codex/seo` @ `1e1f426`
+  - Target theme ID: `160510771450` (live)
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --path tmp/restore-points/20260405-090936-live-160510771450 --nodelete`
+  - Restore-point folder: `tmp/restore-points/20260405-090936-live-160510771450`
+  - Restore-point archive: `tmp/restore-points/20260405-090936-live-160510771450.zip`
+  - Live preview: https://goveyewear.myshopify.com/?preview_theme_id=160510771450
+  - Open TODOs/approvals needed: none for the backup itself; note that `WORKLOG.md` still contains older unresolved merge markers above this entry
 - 2026-03-23: target theme ID `160510771450` (live)
   - Branch + commit: `codex/mega-menu-3stage` @ `724e19965cadce44388134839b7d57881b059d79`
   - Commands:

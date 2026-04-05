@@ -1,0 +1,473 @@
+{%- liquid
+  assign primary_menu = section.settings.view_all_mega_menu
+  assign featured_category_links = primary_menu.links
+  assign primary_menu_links = featured_category_links
+  assign secondary_menu_links = blank
+  assign default_category_link = blank
+  assign default_category_title_normalized = ''
+  assign default_category_links = blank
+
+  if featured_category_links != blank
+    for category_link in featured_category_links
+      assign category_title_normalized = category_link.title | strip | downcase
+      if category_title_normalized != 'explore brand page' and default_category_link == blank
+        assign default_category_link = category_link
+        assign default_category_title_normalized = category_title_normalized
+      endif
+      if category_title_normalized == 'shop by frame'
+        assign default_category_link = category_link
+        assign default_category_title_normalized = category_title_normalized
+        break
+      endif
+    endfor
+  endif
+
+  if default_category_link != blank
+    assign default_category_links = default_category_link.links
+    if default_category_links == blank
+      assign default_category_object = default_category_link.object
+      assign default_category_handle = default_category_link.title | handleize
+      if default_category_object != blank and default_category_object.handle != blank
+        assign default_category_handle = default_category_object.handle
+      endif
+      assign default_category_menu_handle = default_category_handle | append: '-shop-by-frame'
+      assign default_category_menu = linklists[default_category_menu_handle]
+      assign default_category_links = default_category_menu.links
+      if default_category_links == blank and default_category_title_normalized == 'shop by frame' and primary_menu != blank and primary_menu.title != blank
+        assign parent_menu_handle = primary_menu.title | remove: ' Mega Menu' | remove: ' mega menu' | handleize
+        assign parent_shop_by_frame_handle = parent_menu_handle | append: '-shop-by-frame'
+        assign parent_shop_by_frame_menu = linklists[parent_shop_by_frame_handle]
+        assign default_category_links = parent_shop_by_frame_menu.links
+      endif
+    endif
+  endif
+
+  if primary_menu_links != blank and default_category_link != blank
+    assign secondary_menu_links = primary_menu_links
+  endif
+-%}
+
+{%- if section.settings.view_all_mega_menu != blank and primary_menu_links.size > 0 -%}
+  {%- assign mega_menu_button_label = settings.featured_collection_mega_menu_button_label | default: 'Full Specs' -%}
+  <button type="button" class="section-{{ section.id }}-view-all-detail-trigger button button--secondary" data-mega-menu-open>
+    {{ mega_menu_button_label | escape }}
+  </button>
+  <div class="section-{{ section.id }}-view-all-menu{% if secondary_menu_links != blank %} section-{{ section.id }}-view-all-menu--featured-two-column{% endif %}" role="dialog" aria-modal="true" aria-label="{{ section.settings.view_all_mega_menu.title | escape }}" data-featured-collection-mega-menu data-open-on-hover="true">
+    <div class="section-{{ section.id }}-view-all-menu-shell">
+      <div class="section-{{ section.id }}-view-all-menu-topbar">
+        <div class="section-{{ section.id }}-view-all-menu-topbar-start">
+          <img
+            class="section-{{ section.id }}-view-all-menu-logo"
+            src="https://www.goveyewear.com/cdn/shop/files/goveyewear_logo_final.svg?v=1772904915&width=160"
+            srcset="https://www.goveyewear.com/cdn/shop/files/goveyewear_logo_final.svg?v=1772904915&width=80 80w, https://www.goveyewear.com/cdn/shop/files/goveyewear_logo_final.svg?v=1772904915&width=120 120w, https://www.goveyewear.com/cdn/shop/files/goveyewear_logo_final.svg?v=1772904915&width=160 160w, https://www.goveyewear.com/cdn/shop/files/goveyewear_logo_final.svg?v=1772904915&width=200 200w, https://www.goveyewear.com/cdn/shop/files/goveyewear_logo_final.svg?v=1772904915&width=240 240w"
+            sizes="(max-width: 989px) 120px, 160px"
+            alt="{{ shop.name | escape }}"
+            loading="eager"
+            width="160"
+            height="36"
+          >
+        </div>
+        <div class="section-{{ section.id }}-view-all-menu-topbar-center">
+          <nav class="section-{{ section.id }}-view-all-menu-breadcrumbs section-{{ section.id }}-view-all-menu-breadcrumbs--center" aria-label="Menu breadcrumb">
+            <button type="button" class="section-{{ section.id }}-view-all-menu-crumb is-hidden" data-mega-menu-back="frames">Shop by Frame</button>
+            <span class="section-{{ section.id }}-view-all-menu-crumb-sep is-hidden" data-mega-menu-crumb-sep="brands">/</span>
+            <span class="section-{{ section.id }}-view-all-menu-crumb is-hidden" data-mega-menu-crumb-current="brand"></span>
+          </nav>
+        </div>
+        <div class="section-{{ section.id }}-view-all-menu-topbar-end">
+          <button type="button" class="section-{{ section.id }}-view-all-menu-close" data-mega-menu-close aria-label="Close menu">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <div class="section-{{ section.id }}-view-all-menu-grid{% if secondary_menu_links != blank %} section-{{ section.id }}-view-all-menu-grid--has-secondary{% endif %}">
+        <div class="section-{{ section.id }}-view-all-menu-frames" role="list">
+          {%- assign featured_root_links = primary_menu_links -%}
+          {%- if default_category_links != blank -%}
+            {%- assign featured_root_links = default_category_links -%}
+          {%- endif -%}
+          <div class="section-{{ section.id }}-view-all-menu-stage section-{{ section.id }}-view-all-menu-stage--frames is-active" data-mega-menu-stage="frames" data-mega-menu-root-stage="true">
+            {%- for childlink in featured_root_links -%}
+              {%- liquid
+                assign frame_collection = childlink.object
+                assign frame_image = blank
+                if frame_collection != blank and frame_collection.featured_image != blank
+                  assign frame_image = frame_collection.featured_image
+                endif
+              -%}
+              <a
+                href="{{ childlink.url }}"
+                class="section-{{ section.id }}-view-all-menu-frame section-{{ section.id }}-view-all-menu-card{% if forloop.first %} is-active{% endif %}"
+                data-mega-menu-trigger="{{ section.id }}-{{ forloop.index }}"
+                data-mega-menu-next="versions"
+              >
+                <figure class="section-{{ section.id }}-view-all-menu-frame-figure">
+                  <div class="section-{{ section.id }}-view-all-menu-frame-image-wrap">
+                    {%- if frame_image != blank -%}
+                      <img
+                        class="section-{{ section.id }}-view-all-menu-frame-image"
+                        src="{{ frame_image | image_url: width: 480 }}"
+                        alt="{{ childlink.title | escape }}"
+                        loading="lazy"
+                        width="{{ frame_image.width }}"
+                        height="{{ frame_image.height }}"
+                      >
+                    {%- else -%}
+                      <span class="section-{{ section.id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+                        {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </span>
+                    {%- endif -%}
+                  </div>
+                  <figcaption class="section-{{ section.id }}-view-all-menu-frame-title">
+                    {{ childlink.title | escape }}
+                  </figcaption>
+                </figure>
+              </a>
+            {%- endfor -%}
+          </div>
+
+          {%- for childlink in featured_root_links -%}
+            <div class="section-{{ section.id }}-view-all-menu-stage section-{{ section.id }}-view-all-menu-stage--versions" data-mega-menu-stage="versions" data-mega-menu-versions="{{ section.id }}-{{ forloop.index }}">
+              <h3 class="section-{{ section.id }}-view-all-menu-version-heading">{{ childlink.title | escape }}</h3>
+              <div class="section-{{ section.id }}-view-all-menu-version-grid" role="list">
+                {%- liquid
+                  assign version_collection = childlink.object
+                -%}
+                {%- if version_collection != blank and version_collection.all_products_count > 0 -%}
+                  {%- for version_product in version_collection.products limit: 12 -%}
+                    {%- liquid
+                      assign version_image = blank
+                      if version_product.featured_media != blank and version_product.featured_media.preview_image != blank
+                        assign version_image = version_product.featured_media.preview_image
+                      elsif version_product.featured_image != blank
+                        assign version_image = version_product.featured_image
+                      endif
+                    -%}
+                    <a href="{{ version_product.url }}" class="section-{{ section.id }}-view-all-menu-version-card section-{{ section.id }}-view-all-menu-card">
+                      <figure class="section-{{ section.id }}-view-all-menu-frame-figure">
+                        <div class="section-{{ section.id }}-view-all-menu-frame-image-wrap">
+                          {%- if version_image != blank -%}
+                            <img
+                              class="section-{{ section.id }}-view-all-menu-frame-image"
+                              src="{{ version_image | image_url: width: 480 }}"
+                              alt="{{ version_product.title | escape }}"
+                              loading="lazy"
+                              width="{{ version_image.width }}"
+                              height="{{ version_image.height }}"
+                            >
+                          {%- else -%}
+                            <span class="section-{{ section.id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+                              {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </span>
+                          {%- endif -%}
+                        </div>
+                        <figcaption class="section-{{ section.id }}-view-all-menu-frame-title">
+                          {{ version_product.title | escape }}
+                        </figcaption>
+                      </figure>
+                    </a>
+                  {%- endfor -%}
+                {%- elsif childlink.links != blank -%}
+                  {%- for grandchildlink in childlink.links -%}
+                    {%- liquid
+                      assign version_object = grandchildlink.object
+                      assign version_image = blank
+                      if version_object != blank
+                        if version_object.featured_image != blank
+                          assign version_image = version_object.featured_image
+                        elsif version_object.featured_media != blank and version_object.featured_media.preview_image != blank
+                          assign version_image = version_object.featured_media.preview_image
+                        endif
+                      endif
+                    -%}
+                    <a href="{{ grandchildlink.url }}" class="section-{{ section.id }}-view-all-menu-version-card section-{{ section.id }}-view-all-menu-card">
+                      <figure class="section-{{ section.id }}-view-all-menu-frame-figure">
+                        <div class="section-{{ section.id }}-view-all-menu-frame-image-wrap">
+                          {%- if version_image != blank -%}
+                            <img
+                              class="section-{{ section.id }}-view-all-menu-frame-image"
+                              src="{{ version_image | image_url: width: 480 }}"
+                              alt="{{ grandchildlink.title | escape }}"
+                              loading="lazy"
+                              width="{{ version_image.width }}"
+                              height="{{ version_image.height }}"
+                            >
+                          {%- else -%}
+                            <span class="section-{{ section.id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+                              {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </span>
+                          {%- endif -%}
+                        </div>
+                        <figcaption class="section-{{ section.id }}-view-all-menu-frame-title">
+                          {{ grandchildlink.title | escape }}
+                        </figcaption>
+                      </figure>
+                    </a>
+                  {%- endfor -%}
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+
+          {%- if secondary_menu_links != blank -%}
+            {%- for secondary_link in secondary_menu_links -%}
+              {%- liquid
+                assign secondary_key = section.id | append: '-secondary-' | append: forloop.index
+                assign secondary_object = secondary_link.object
+                assign secondary_handle = secondary_link.title | handleize
+                if secondary_object != blank and secondary_object.handle != blank
+                  assign secondary_handle = secondary_object.handle
+                endif
+                assign secondary_link_title_normalized = secondary_link.title | strip | downcase
+                assign secondary_is_explore_brand_page = false
+                if secondary_link_title_normalized == 'explore brand page'
+                  assign secondary_is_explore_brand_page = true
+                endif
+                assign secondary_frame_links = secondary_link.links
+                if secondary_frame_links == blank
+                  assign secondary_menu_handle = secondary_handle | append: '-shop-by-frame'
+                  assign secondary_menu = linklists[secondary_menu_handle]
+                  assign secondary_frame_links = secondary_menu.links
+                endif
+                assign secondary_has_collection_products = false
+                if secondary_object != blank and secondary_object.all_products_count > 0
+                  assign secondary_has_collection_products = true
+                endif
+              -%}
+              {%- unless secondary_is_explore_brand_page -%}
+
+              <div class="section-{{ section.id }}-view-all-menu-stage section-{{ section.id }}-view-all-menu-stage--frames" data-mega-menu-stage="frames" data-mega-menu-frames="{{ secondary_key }}">
+                {%- if secondary_frame_links != blank -%}
+                  {%- for secondary_childlink in secondary_frame_links -%}
+                    {%- liquid
+                      assign secondary_collection = secondary_childlink.object
+                      assign secondary_image = blank
+                      if secondary_collection != blank and secondary_collection.featured_image != blank
+                        assign secondary_image = secondary_collection.featured_image
+                      endif
+                      assign secondary_frame_key = section.id | append: '-secondary-frame-' | append: forloop.parentloop.index | append: '-' | append: forloop.index
+                    -%}
+                    <a
+                      href="{{ secondary_childlink.url }}"
+                      class="section-{{ section.id }}-view-all-menu-frame section-{{ section.id }}-view-all-menu-card"
+                      data-mega-menu-trigger="{{ secondary_frame_key }}"
+                      data-mega-menu-next="versions"
+                    >
+                      <figure class="section-{{ section.id }}-view-all-menu-frame-figure">
+                        <div class="section-{{ section.id }}-view-all-menu-frame-image-wrap">
+                          {%- if secondary_image != blank -%}
+                            <img
+                              class="section-{{ section.id }}-view-all-menu-frame-image"
+                              src="{{ secondary_image | image_url: width: 480 }}"
+                              alt="{{ secondary_childlink.title | escape }}"
+                              loading="lazy"
+                              width="{{ secondary_image.width }}"
+                              height="{{ secondary_image.height }}"
+                            >
+                          {%- else -%}
+                            <span class="section-{{ section.id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+                              {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </span>
+                          {%- endif -%}
+                        </div>
+                        <figcaption class="section-{{ section.id }}-view-all-menu-frame-title">
+                          {{ secondary_childlink.title | escape }}
+                        </figcaption>
+                      </figure>
+                    </a>
+                  {%- endfor -%}
+                {%- elsif secondary_has_collection_products -%}
+                  {%- for secondary_product in secondary_object.products limit: 12 -%}
+                    {%- liquid
+                      assign secondary_product_image = blank
+                      if secondary_product.featured_media != blank and secondary_product.featured_media.preview_image != blank
+                        assign secondary_product_image = secondary_product.featured_media.preview_image
+                      elsif secondary_product.featured_image != blank
+                        assign secondary_product_image = secondary_product.featured_image
+                      endif
+                    -%}
+                    <a href="{{ secondary_product.url }}" class="section-{{ section.id }}-view-all-menu-frame section-{{ section.id }}-view-all-menu-card">
+                      <figure class="section-{{ section.id }}-view-all-menu-frame-figure">
+                        <div class="section-{{ section.id }}-view-all-menu-frame-image-wrap">
+                          {%- if secondary_product_image != blank -%}
+                            <img
+                              class="section-{{ section.id }}-view-all-menu-frame-image"
+                              src="{{ secondary_product_image | image_url: width: 480 }}"
+                              alt="{{ secondary_product.title | escape }}"
+                              loading="lazy"
+                              width="{{ secondary_product_image.width }}"
+                              height="{{ secondary_product_image.height }}"
+                            >
+                          {%- else -%}
+                            <span class="section-{{ section.id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+                              {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </span>
+                          {%- endif -%}
+                        </div>
+                        <figcaption class="section-{{ section.id }}-view-all-menu-frame-title">
+                          {{ secondary_product.title | escape }}
+                        </figcaption>
+                      </figure>
+                    </a>
+                  {%- endfor -%}
+                {%- endif -%}
+              </div>
+
+              {%- if secondary_frame_links != blank -%}
+                {%- for secondary_childlink in secondary_frame_links -%}
+                  {%- assign secondary_frame_key = section.id | append: '-secondary-frame-' | append: forloop.parentloop.index | append: '-' | append: forloop.index -%}
+                  <div class="section-{{ section.id }}-view-all-menu-stage section-{{ section.id }}-view-all-menu-stage--versions" data-mega-menu-stage="versions" data-mega-menu-versions="{{ secondary_frame_key }}">
+                    <h3 class="section-{{ section.id }}-view-all-menu-version-heading">{{ secondary_childlink.title | escape }}</h3>
+                    <div class="section-{{ section.id }}-view-all-menu-version-grid" role="list">
+                      {%- liquid
+                        assign secondary_version_collection = secondary_childlink.object
+                      -%}
+                      {%- if secondary_version_collection != blank and secondary_version_collection.all_products_count > 0 -%}
+                        {%- for secondary_product in secondary_version_collection.products limit: 12 -%}
+                          {%- liquid
+                            assign secondary_product_image = blank
+                            if secondary_product.featured_media != blank and secondary_product.featured_media.preview_image != blank
+                              assign secondary_product_image = secondary_product.featured_media.preview_image
+                            elsif secondary_product.featured_image != blank
+                              assign secondary_product_image = secondary_product.featured_image
+                            endif
+                          -%}
+                          <a href="{{ secondary_product.url }}" class="section-{{ section.id }}-view-all-menu-version-card section-{{ section.id }}-view-all-menu-card">
+                            <figure class="section-{{ section.id }}-view-all-menu-frame-figure">
+                              <div class="section-{{ section.id }}-view-all-menu-frame-image-wrap">
+                                {%- if secondary_product_image != blank -%}
+                                  <img
+                                    class="section-{{ section.id }}-view-all-menu-frame-image"
+                                    src="{{ secondary_product_image | image_url: width: 480 }}"
+                                    alt="{{ secondary_product.title | escape }}"
+                                    loading="lazy"
+                                    width="{{ secondary_product_image.width }}"
+                                    height="{{ secondary_product_image.height }}"
+                                  >
+                                {%- else -%}
+                                  <span class="section-{{ section.id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+                                    {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                  </span>
+                                {%- endif -%}
+                              </div>
+                              <figcaption class="section-{{ section.id }}-view-all-menu-frame-title">
+                                {{ secondary_product.title | escape }}
+                              </figcaption>
+                            </figure>
+                          </a>
+                        {%- endfor -%}
+                      {%- elsif secondary_childlink.links != blank -%}
+                        {%- for secondary_version_link in secondary_childlink.links -%}
+                          {%- liquid
+                            assign secondary_version_object = secondary_version_link.object
+                            assign secondary_version_image = blank
+                            if secondary_version_object != blank
+                              if secondary_version_object.featured_image != blank
+                                assign secondary_version_image = secondary_version_object.featured_image
+                              elsif secondary_version_object.featured_media != blank and secondary_version_object.featured_media.preview_image != blank
+                                assign secondary_version_image = secondary_version_object.featured_media.preview_image
+                              endif
+                            endif
+                          -%}
+                          <a href="{{ secondary_version_link.url }}" class="section-{{ section.id }}-view-all-menu-version-card section-{{ section.id }}-view-all-menu-card">
+                            <figure class="section-{{ section.id }}-view-all-menu-frame-figure">
+                              <div class="section-{{ section.id }}-view-all-menu-frame-image-wrap">
+                                {%- if secondary_version_image != blank -%}
+                                  <img
+                                    class="section-{{ section.id }}-view-all-menu-frame-image"
+                                    src="{{ secondary_version_image | image_url: width: 480 }}"
+                                    alt="{{ secondary_version_link.title | escape }}"
+                                    loading="lazy"
+                                    width="{{ secondary_version_image.width }}"
+                                    height="{{ secondary_version_image.height }}"
+                                  >
+                                {%- else -%}
+                                  <span class="section-{{ section.id }}-view-all-menu-frame-image placeholder-svg-wrapper">
+                                    {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                  </span>
+                                {%- endif -%}
+                              </div>
+                              <figcaption class="section-{{ section.id }}-view-all-menu-frame-title">
+                                {{ secondary_version_link.title | escape }}
+                              </figcaption>
+                            </figure>
+                          </a>
+                        {%- endfor -%}
+                      {%- endif -%}
+                    </div>
+                  </div>
+                {%- endfor -%}
+              {%- endif -%}
+              {%- endunless -%}
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+
+        {%- if secondary_menu_links != blank -%}
+          <aside class="section-{{ section.id }}-view-all-menu-secondary" data-mega-menu-secondary>
+            <nav aria-label="{{ secondary_menu.title | default: 'Featured section secondary menu' | escape }}">
+              <ul class="section-{{ section.id }}-view-all-menu-secondary-list" role="list">
+                <li>
+                  <a
+                    href="#"
+                    class="section-{{ section.id }}-view-all-menu-secondary-link"
+                    data-mega-menu-back="frames"
+                  >
+                    Shop by Frame
+                  </a>
+                </li>
+                {%- for secondary_link in secondary_menu_links -%}
+                {%- liquid
+                  assign secondary_key = section.id | append: '-secondary-' | append: forloop.index
+                  assign secondary_object = secondary_link.object
+                  assign secondary_handle = secondary_link.title | handleize
+                  assign secondary_link_title_normalized = secondary_link.title | strip | downcase
+                  assign secondary_is_explore_brand_page = false
+                  if secondary_link_title_normalized == 'explore brand page'
+                    assign secondary_is_explore_brand_page = true
+                  endif
+                    if secondary_object != blank and secondary_object.handle != blank
+                      assign secondary_handle = secondary_object.handle
+                    endif
+                    assign secondary_frame_links = secondary_link.links
+                    if secondary_frame_links == blank
+                      assign secondary_menu_handle = secondary_handle | append: '-shop-by-frame'
+                      assign secondary_menu = linklists[secondary_menu_handle]
+                      assign secondary_frame_links = secondary_menu.links
+                    endif
+                    assign secondary_has_collection_products = false
+                  if secondary_object != blank and secondary_object.all_products_count > 0
+                    assign secondary_has_collection_products = true
+                  endif
+                  assign secondary_is_triggerable = true
+                  assign secondary_is_default_root = false
+                  if secondary_link_title_normalized == default_category_title_normalized or secondary_link_title_normalized == 'shop by frame'
+                    assign secondary_is_default_root = true
+                  endif
+                  if secondary_is_explore_brand_page or secondary_is_default_root
+                    assign secondary_is_triggerable = false
+                  elsif secondary_frame_links == blank and secondary_has_collection_products == false
+                    assign secondary_is_triggerable = false
+                  endif
+                -%}
+                {%- if secondary_is_default_root -%}
+                  {%- continue -%}
+                {%- endif -%}
+                <li>
+                  <a
+                    href="{{ secondary_link.url }}"
+                    class="section-{{ section.id }}-view-all-menu-secondary-link"
+                    {% if secondary_is_triggerable %}data-mega-menu-trigger="{{ secondary_key }}" data-mega-menu-next="frames"{% endif %}
+                  >
+                    {{ secondary_link.title | escape }}
+                  </a>
+                </li>
+                {%- endfor -%}
+              </ul>
+            </nav>
+          </aside>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}

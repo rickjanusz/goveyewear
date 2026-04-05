@@ -1,0 +1,40 @@
+{%- liquid
+  assign brand_object = childlink.object
+  assign brand_title_downcase = childlink.title | downcase | strip
+  assign brand_handle = childlink.title | handleize
+  if brand_object != blank and brand_object.handle != blank
+    assign brand_handle = brand_object.handle
+  endif
+
+  assign brand_display_title = childlink.title | replace: 'Featured ', '' | replace: 'featured ', ''
+  if brand_display_title == blank
+    assign brand_display_title = childlink.title
+  endif
+
+  assign brand_menu_handle = brand_handle | append: '-shop-by-frame'
+  case brand_title_downcase
+    when 'featured gatorz'
+      assign brand_menu_handle = 'gatorz-shop-by-frame'
+    when 'featured revision'
+      assign brand_menu_handle = 'revision-shop-by-frame'
+  endcase
+
+  assign is_direct_brand = false
+  if direct_brand_titles contains brand_title_downcase
+    assign is_direct_brand = true
+  endif
+
+  assign brand_key = menu_id | append: '-brand-' | append: loop_index
+
+  echo brand_key
+  echo '|||'
+  echo brand_title_downcase
+  echo '|||'
+  echo brand_handle
+  echo '|||'
+  echo brand_display_title
+  echo '|||'
+  echo brand_menu_handle
+  echo '|||'
+  echo is_direct_brand
+-%}

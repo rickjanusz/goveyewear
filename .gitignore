@@ -4,3 +4,10 @@
 node_modules/
 shopify.theme.toml
 .config/shopify/
+content/
+lighthouse/
+output/
+scripts/__pycache__/
+tmp/*
+!tmp/restore-points/
+!tmp/restore-points/**

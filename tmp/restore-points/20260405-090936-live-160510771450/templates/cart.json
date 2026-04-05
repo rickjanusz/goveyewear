@@ -1,0 +1,113 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "cart-items": {
+      "type": "main-cart-items",
+      "settings": {
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_size": 24,
+        "corner_accent_offset_x": 0,
+        "corner_accent_offset_y": 0,
+        "corner_accent_random_rotation": false,
+        "corner_accent_rotation_min": -12,
+        "corner_accent_rotation_max": 12
+      }
+    },
+    "cart-footer": {
+      "type": "main-cart-footer",
+      "blocks": {
+        "subtotal": {
+          "type": "subtotal",
+          "settings": {}
+        },
+        "buttons": {
+          "type": "buttons",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "subtotal",
+        "buttons"
+      ],
+      "settings": {
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_size": 24,
+        "corner_accent_offset_x": 0,
+        "corner_accent_offset_y": 0,
+        "corner_accent_random_rotation": false,
+        "corner_accent_rotation_min": -12,
+        "corner_accent_rotation_max": 12
+      }
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "GOT YOUR SIX",
+        "enable_custom_typography": true,
+        "title_font": "archivo_black_n4",
+        "title_color": "#e8d7b8",
+        "title_size": 64,
+        "title_size_mobile": 36,
+        "title_line_height": 70,
+        "heading_size": "h2",
+        "heading_alignment": "center",
+        "description": "<p>TOP DEPLOYMENTS YOU MIGHT ALSO LIKE</p>",
+        "show_description": false,
+        "description_style": "body",
+        "description_font": "archivo_n4",
+        "description_color": "#a98d60",
+        "description_size": 18,
+        "description_size_mobile": 16,
+        "description_line_height": 150,
+        "collection": "all",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "full_width": true,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "view_all_mega_menu": "",
+        "view_all_mega_menu_secondary": "",
+        "detail_button_label": "Shop Brand Page",
+        "detail_button_link": "",
+        "enable_desktop_slider": true,
+        "color_scheme": "background-2",
+        "card_skin": "tactical",
+        "image_ratio": "square",
+        "card_image_fit": "contain",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "enable_quick_add": true,
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "border_accent_height": 60,
+        "corner_accent_image_mode": "all",
+        "corner_accent_size": 24,
+        "corner_accent_offset_x": 10,
+        "corner_accent_offset_y": 10,
+        "corner_accent_random_rotation": true,
+        "corner_accent_rotation_min": 0,
+        "corner_accent_rotation_max": 0
+      }
+    }
+  },
+  "order": [
+    "cart-items",
+    "cart-footer",
+    "featured-collection"
+  ]
+}

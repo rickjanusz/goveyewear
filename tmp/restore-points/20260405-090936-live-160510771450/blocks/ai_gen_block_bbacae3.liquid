@@ -1,0 +1,589 @@
+{% doc %}
+  @prompt
+    pdf download section, allow up load and linking and the ability to add additional pdfs, instead of linking allow me to select/upload to library
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-pdf-downloads-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: {{ block.settings.padding }}px;
+    background-color: {{ block.settings.background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-pdf-downloads-header-{{ ai_gen_id }} {
+    margin-bottom: 24px;
+  }
+
+  .ai-pdf-downloads-title-{{ ai_gen_id }} {
+    margin: 0 0 8px 0;
+    font-size: {{ block.settings.section_title_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-pdf-downloads-subtitle-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: {{ block.settings.section_subtitle_size }}px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.8;
+  }
+
+  .ai-pdf-downloads-list-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ai-pdf-download-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: {{ block.settings.item_padding }}px;
+    background-color: {{ block.settings.item_background_color }};
+    border-radius: {{ block.settings.item_border_radius }}px;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-pdf-download-item-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.item_hover_background_color }};
+  }
+
+  .ai-pdf-download-icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ block.settings.icon_background_color }};
+    border-radius: {{ block.settings.icon_border_radius }}px;
+  }
+
+  .ai-pdf-download-icon-{{ ai_gen_id }} svg {
+    width: calc({{ block.settings.icon_size }}px * 0.6);
+    height: calc({{ block.settings.icon_size }}px * 0.6);
+    fill: {{ block.settings.icon_color }};
+  }
+
+  .ai-pdf-download-content-{{ ai_gen_id }} {
+    flex-grow: 1;
+  }
+
+  .ai-pdf-download-item-title-{{ ai_gen_id }} {
+    margin: 0 0 4px 0;
+    font-size: {{ block.settings.item_title_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-pdf-download-item-description-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: {{ block.settings.item_description_size }}px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.7;
+  }
+
+  .ai-pdf-download-button-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    padding: 10px 20px;
+    background-color: {{ block.settings.button_color }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .ai-pdf-download-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_color }};
+  }
+
+  .ai-pdf-download-button-{{ ai_gen_id }} svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+
+  .ai-pdf-downloads-empty-{{ ai_gen_id }} {
+    padding: 40px 20px;
+    text-align: center;
+    background-color: #f4f4f4;
+    border-radius: {{ block.settings.border_radius }}px;
+    color: #666;
+  }
+
+  .ai-pdf-downloads-empty-title-{{ ai_gen_id }} {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .ai-pdf-downloads-empty-text-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-pdf-download-item-{{ ai_gen_id }} {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .ai-pdf-download-button-{{ ai_gen_id }} {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-pdf-downloads-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% assign has_pdfs = false %}
+  {% if block.settings.pdf_1_file != blank %}
+    {% assign has_pdfs = true %}
+  {% elsif block.settings.pdf_2_file != blank %}
+    {% assign has_pdfs = true %}
+  {% elsif block.settings.pdf_3_file != blank %}
+    {% assign has_pdfs = true %}
+  {% elsif block.settings.pdf_4_file != blank %}
+    {% assign has_pdfs = true %}
+  {% elsif block.settings.pdf_5_file != blank %}
+    {% assign has_pdfs = true %}
+  {% endif %}
+
+  {% if has_pdfs %}
+    {% if block.settings.section_title != blank or block.settings.section_subtitle != blank %}
+      <div class="ai-pdf-downloads-header-{{ ai_gen_id }}">
+        {% if block.settings.section_title != blank %}
+          <h3 class="ai-pdf-downloads-title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h3>
+        {% endif %}
+        {% if block.settings.section_subtitle != blank %}
+          <p class="ai-pdf-downloads-subtitle-{{ ai_gen_id }}">{{ block.settings.section_subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-pdf-downloads-list-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign pdf_file_key = 'pdf_' | append: i | append: '_file'
+          assign pdf_title_key = 'pdf_' | append: i | append: '_title'
+          assign pdf_description_key = 'pdf_' | append: i | append: '_description'
+          assign pdf_button_text_key = 'pdf_' | append: i | append: '_button_text'
+
+          assign pdf_file = block.settings[pdf_file_key]
+          assign pdf_title = block.settings[pdf_title_key]
+          assign pdf_description = block.settings[pdf_description_key]
+          assign pdf_button_text = block.settings[pdf_button_text_key]
+        %}
+
+        {% if pdf_file != blank %}
+          <div class="ai-pdf-download-item-{{ ai_gen_id }}">
+            <div class="ai-pdf-download-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18.5,9L13,3.5V9H18.5M6,20V4H11V10H18V20H6Z"/>
+              </svg>
+            </div>
+
+            <div class="ai-pdf-download-content-{{ ai_gen_id }}">
+              {% if pdf_title != blank %}
+                <h4 class="ai-pdf-download-item-title-{{ ai_gen_id }}">{{ pdf_title }}</h4>
+              {% endif %}
+              {% if pdf_description != blank %}
+                <p class="ai-pdf-download-item-description-{{ ai_gen_id }}">{{ pdf_description }}</p>
+              {% endif %}
+            </div>
+
+            <a
+              href="{{ pdf_file | file_url }}"
+              class="ai-pdf-download-button-{{ ai_gen_id }}"
+              download
+              target="_blank"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+              </svg>
+              {% if pdf_button_text != blank %}
+                {{ pdf_button_text }}
+              {% else %}
+                Download
+              {% endif %}
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="ai-pdf-downloads-empty-{{ ai_gen_id }}">
+      <h3 class="ai-pdf-downloads-empty-title-{{ ai_gen_id }}">PDF Downloads</h3>
+      <p class="ai-pdf-downloads-empty-text-{{ ai_gen_id }}">Next, upload PDF files from your library</p>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "PDF downloads",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Product Documentation"
+    },
+    {
+      "type": "textarea",
+      "id": "section_subtitle",
+      "label": "Subtitle",
+      "default": "Download technical specifications and guides"
+    },
+    {
+      "type": "header",
+      "content": "PDF 1"
+    },
+    {
+      "type": "url",
+      "id": "pdf_1_file",
+      "label": "PDF file"
+    },
+    {
+      "type": "text",
+      "id": "pdf_1_title",
+      "label": "Title",
+      "default": "Product Specifications"
+    },
+    {
+      "type": "textarea",
+      "id": "pdf_1_description",
+      "label": "Description",
+      "default": "Complete technical specifications and dimensions"
+    },
+    {
+      "type": "text",
+      "id": "pdf_1_button_text",
+      "label": "Button text",
+      "default": "Download"
+    },
+    {
+      "type": "header",
+      "content": "PDF 2"
+    },
+    {
+      "type": "url",
+      "id": "pdf_2_file",
+      "label": "PDF file"
+    },
+    {
+      "type": "text",
+      "id": "pdf_2_title",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "pdf_2_description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "pdf_2_button_text",
+      "label": "Button text",
+      "default": "Download"
+    },
+    {
+      "type": "header",
+      "content": "PDF 3"
+    },
+    {
+      "type": "url",
+      "id": "pdf_3_file",
+      "label": "PDF file"
+    },
+    {
+      "type": "text",
+      "id": "pdf_3_title",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "pdf_3_description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "pdf_3_button_text",
+      "label": "Button text",
+      "default": "Download"
+    },
+    {
+      "type": "header",
+      "content": "PDF 4"
+    },
+    {
+      "type": "url",
+      "id": "pdf_4_file",
+      "label": "PDF file"
+    },
+    {
+      "type": "text",
+      "id": "pdf_4_title",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "pdf_4_description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "pdf_4_button_text",
+      "label": "Button text",
+      "default": "Download"
+    },
+    {
+      "type": "header",
+      "content": "PDF 5"
+    },
+    {
+      "type": "url",
+      "id": "pdf_5_file",
+      "label": "PDF file"
+    },
+    {
+      "type": "text",
+      "id": "pdf_5_title",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "pdf_5_description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "pdf_5_button_text",
+      "label": "Button text",
+      "default": "Download"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "item_padding",
+      "label": "Item padding",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Section border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "item_border_radius",
+      "label": "Item border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#171F29"
+    },
+    {
+      "type": "color",
+      "id": "item_background_color",
+      "label": "Item background",
+      "default": "#1C2430"
+    },
+    {
+      "type": "color",
+      "id": "item_hover_background_color",
+      "label": "Item hover background",
+      "default": "#242E3C"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#e8d7b8"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button",
+      "default": "#A98D60"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Button hover",
+      "default": "#BEA377"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#10141B"
+    },
+    {
+      "type": "header",
+      "content": "Icon"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Size",
+      "min": 32,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "icon_background_color",
+      "label": "Background",
+      "default": "#111821"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#A98D60"
+    },
+    {
+      "type": "range",
+      "id": "icon_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "section_title_size",
+      "label": "Section title size",
+      "min": 16,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "section_subtitle_size",
+      "label": "Section subtitle size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "item_title_size",
+      "label": "Item title size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "item_description_size",
+      "label": "Item description size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "label": "Button text size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDF downloads"
+    }
+  ]
+}
+{% endschema %}

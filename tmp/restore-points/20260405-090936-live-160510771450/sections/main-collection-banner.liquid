@@ -1,0 +1,222 @@
+{% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+
+{% render 'section-border-accent' %}
+{{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  @media screen and (max-width: 749px) {
+    .collection-hero--with-image .collection-hero__inner {
+      padding-bottom: calc({{ settings.media_shadow_vertical_offset | at_least: 0 }}px + 2rem);
+    }
+  }
+{%- endstyle -%}
+
+<div class="collection-hero{% if section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient">
+  <div class="collection-hero__inner page-width">
+    <div class="collection-hero__text-wrapper">
+      <h1 class="collection-hero__title">
+        <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
+        {{- collection.title | escape -}}
+      </h1>
+
+      {%- if section.settings.show_collection_description -%}
+        <div class="collection-hero__description rte">{{ collection.description }}</div>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_collection_image and collection.image -%}
+      <div class="collection-hero__image-container media gradient">
+        <img
+          srcset="{%- if collection.image.width >= 165 -%}{{ collection.image | image_url: width: 165 }} 165w,{%- endif -%}
+            {%- if collection.image.width >= 360 -%}{{ collection.image | image_url: width: 360 }} 360w,{%- endif -%}
+            {%- if collection.image.width >= 535 -%}{{ collection.image | image_url: width: 535 }} 535w,{%- endif -%}
+            {%- if collection.image.width >= 750 -%}{{ collection.image | image_url: width: 750 }} 750w,{%- endif -%}
+            {%- if collection.image.width >= 1070 -%}{{ collection.image | image_url: width: 1070 }} 1070w,{%- endif -%}
+            {%- if collection.image.width >= 1500 -%}{{ collection.image | image_url: width: 1500 }} 1500w,{%- endif -%}
+            {{ collection.image | image_url }} {{ collection.image.width }}w"
+          src="{{ collection.image | image_url: width: 750 }}"
+          sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc(50vw - 130px), calc(50vw - 55px)"
+          alt=""
+          width="{{ collection.image.width }}"
+          height="{{ collection.image.height }}"
+        >
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-collection-banner.name",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.main-collection-banner.settings.paragraph.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "default": true,
+      "label": "t:sections.main-collection-banner.settings.show_collection_description.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "default": false,
+      "label": "t:sections.main-collection-banner.settings.show_collection_image.label",
+      "info": "t:sections.main-collection-banner.settings.show_collection_image.info"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    }
+,
+    {
+      "type": "image_picker",
+      "id": "border_accent_top",
+      "label": "Border Accent Top"
+    },
+    {
+      "type": "image_picker",
+      "id": "border_accent_bottom",
+      "label": "Border Accent Bottom"
+    },
+    {
+      "type": "range",
+      "id": "border_accent_height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60,
+      "label": "Border Accent Height"
+    }
+,
+    {
+      "type": "header",
+      "content": "Corner Accents"
+    },
+    {
+      "type": "select",
+      "id": "corner_accent_image_mode",
+      "label": "Corner image source",
+      "default": "all",
+      "options": [
+        { "value": "all", "label": "One image for all corners" },
+        { "value": "individual", "label": "Different image per corner" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_all",
+      "label": "Corner image (all)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'all' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_top_left",
+      "label": "Corner image (top left)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_top_right",
+      "label": "Corner image (top right)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_bottom_left",
+      "label": "Corner image (bottom left)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_accent_image_bottom_right",
+      "label": "Corner image (bottom right)",
+      "visible_if": "{{ section.settings.corner_accent_image_mode == 'individual' }}"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_size",
+      "min": 8,
+      "max": 108,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "label": "Corner size"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_offset_x",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Corner horizontal offset"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_offset_y",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "label": "Corner vertical offset"
+    },
+    {
+      "type": "checkbox",
+      "id": "corner_accent_random_rotation",
+      "default": false,
+      "label": "Randomize corner rotation"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_rotation_min",
+      "min": -45,
+      "max": 0,
+      "step": 1,
+      "unit": "deg",
+      "default": -12,
+      "label": "Rotation min"
+    },
+    {
+      "type": "range",
+      "id": "corner_accent_rotation_max",
+      "min": 0,
+      "max": 45,
+      "step": 1,
+      "unit": "deg",
+      "default": 12,
+      "label": "Rotation max"
+    }
+    ]
+}
+{% endschema %}
