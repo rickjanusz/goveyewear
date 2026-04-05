@@ -30,6 +30,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants', []));
       this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map', {}));
       this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
+      this.variantAssignedGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-assigned-gallery-files', {}));
       this.productMediaIndex = this.normalizeProductMediaIndex(this.parseJson('product-media-index', []));
       const defaultLensColorContent = this.parseJson('lens-color-content', {});
       const lensColorContentOverrides = this.parseJson('lens-color-content-variant-overrides', {});
@@ -528,7 +529,16 @@ if (!customElements.get('sentix-variant-configurator')) {
       const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
       if (idsFromIndex.length) return idsFromIndex;
 
-      return this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
+      const idsFromGalleryFiles = this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
+      if (idsFromGalleryFiles.length) return idsFromGalleryFiles;
+
+      const assignedFiles = this.variantAssignedGalleryFiles?.[key] || [];
+      if (!assignedFiles.length) return [];
+
+      const idsFromAssignedIndex = this.resolveMediaIdsByProductIndex(assignedFiles);
+      if (idsFromAssignedIndex.length) return idsFromAssignedIndex;
+
+      return this.resolveMediaIdsByFilenames(mediaGallery, assignedFiles);
     }
 
     resolveMediaIdsByProductIndex(filenames) {

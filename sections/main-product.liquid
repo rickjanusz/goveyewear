@@ -549,6 +549,28 @@
                       {%- endfor -%}
                     ]
                   </script>
+                  <script type="application/json" data-variant-assigned-gallery-files>
+                    {
+                      {%- assign assigned_map_count = 0 -%}
+                      {%- for mapped_variant in product.variants -%}
+                        {%- assign assigned_first = true -%}
+                        {%- capture assigned_urls -%}
+                          {%- for product_image in product.images -%}
+                            {%- if product_image.variant_ids contains mapped_variant.id -%}
+                              {%- unless assigned_first -%},{%- endunless -%}
+                              {{ product_image | image_url: width: 4096 | json }}
+                              {%- assign assigned_first = false -%}
+                            {%- endif -%}
+                          {%- endfor -%}
+                        {%- endcapture -%}
+                        {%- unless assigned_urls == blank -%}
+                          {%- if assigned_map_count > 0 -%},{%- endif -%}
+                          {{ mapped_variant.id | json }}: [{{ assigned_urls | strip }}]
+                          {%- assign assigned_map_count = assigned_map_count | plus: 1 -%}
+                        {%- endunless -%}
+                      {%- endfor -%}
+                    }
+                  </script>
                   <script type="application/json" data-lens-color-content>
                     {
                       "Smoke": {
