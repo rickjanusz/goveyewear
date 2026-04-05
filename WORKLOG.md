@@ -3,8 +3,8 @@
 Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
-- Branch: codex/seo
-- HEAD commit: 1e1f426
+- Branch: codex/gatorz-variants
+- HEAD commit: 90e7ce1
 - Last pushed commit (GitHub): 724e199
 - Local dev server:
   - Running? no
@@ -181,6 +181,16 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `90e7ce1`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/main-product.liquid --only assets/section-main-product.css --only assets/sentix-product-configurator.js`
+  - Files pushed: `sections/main-product.liquid`, `assets/section-main-product.css`, `assets/sentix-product-configurator.js`
+  - Change: added the Sentix constrained sellable-variants configurator to staging, including dynamic Lens Type, Lens Color, Frame Color, and lens support-copy updates tied to the resolved Shopify variant
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com
+  - Open TODOs/approvals needed: validate the Sentix PDP behavior in staging, confirm the constrained selector and dynamic copy match the intended Gatorz flow, and get approval before any live push
 - 2026-03-24: target theme ID `160581189882` (staging)
   - Branch + commit: `codex/mega-menu-nested-categories` @ `bc77d4c8d5f60dbb9d6f77f75f3ba2d61e6106d0`
   - Commands:

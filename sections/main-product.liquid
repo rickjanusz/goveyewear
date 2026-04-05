@@ -38,7 +38,9 @@
 
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
   {%- assign use_sentix_configurator = false -%}
-  {%- if product.handle == 'sentix' and product.options.size == 3 -%}
+  {%- assign normalized_product_handle = product.handle | downcase -%}
+  {%- assign normalized_product_title = product.title | downcase -%}
+  {%- if normalized_product_handle == 'sentix' or normalized_product_title == 'sentix' -%}
     {%- assign use_sentix_configurator = true -%}
   {%- endif -%}
   {%- if use_sentix_configurator -%}
@@ -372,8 +374,7 @@
             </share-button>
             <script src="{{ 'share.js' | asset_url }}" defer="defer"></script>
           {%- when 'variant_picker' -%}
-            {%- unless product.has_only_default_variant -%}
-              {%- if use_sentix_configurator -%}
+            {%- if use_sentix_configurator -%}
                 <sentix-variant-configurator
                   class="no-js-hidden sentix-configurator"
                   data-section="{{ section.id }}"
@@ -410,7 +411,72 @@
                   </div>
 
                   <script type="application/json" data-sellable-variants>
-                    {{ product.variants | where: 'available', true | json }}
+                    [
+                      {
+                        "id": 45336576000177,
+                        "lens_type": "Non-Polarized",
+                        "lens_color": "Smoke",
+                        "frame_color": "Black w/Silver Logo",
+                        "price": 16500,
+                        "available": true
+                      },
+                      {
+                        "id": 45336576032945,
+                        "lens_type": "OPZ POLARIZED",
+                        "lens_color": "Smoke Optimized Polarized (OPz)",
+                        "frame_color": "Black w/Black Logo",
+                        "price": 23500,
+                        "available": true
+                      },
+                      {
+                        "id": 45336576098481,
+                        "lens_type": "OPZ POLARIZED",
+                        "lens_color": "Rose Optimized Polarized (OPz) w/ Sunburst Mirror",
+                        "frame_color": "Graphite w/Black Logo",
+                        "price": 24500,
+                        "available": true
+                      },
+                      {
+                        "id": 45336576131249,
+                        "lens_type": "Ballistics",
+                        "lens_color": "MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog",
+                        "frame_color": "Black w/Black Logo",
+                        "price": 30500,
+                        "available": true
+                      },
+                      {
+                        "id": 45336576196785,
+                        "lens_type": "Ballistics",
+                        "lens_color": "MILSPEC Ballistic Smoke w/Anti-Fog",
+                        "frame_color": "Black w/Black Logo",
+                        "price": 27000,
+                        "available": true
+                      },
+                      {
+                        "id": 45336576229553,
+                        "lens_type": "Ballistics",
+                        "lens_color": "MILSPEC Ballistic Smoke w/Anti-Fog",
+                        "frame_color": "Tan w/Black Logo",
+                        "price": 27000,
+                        "available": true
+                      },
+                      {
+                        "id": 45336576262321,
+                        "lens_type": "Ballistics",
+                        "lens_color": "MILSPEC Ballistic Inferno Photochromic w/Anti-Fog",
+                        "frame_color": "Black w/Black Logo",
+                        "price": 31500,
+                        "available": true
+                      },
+                      {
+                        "id": 45339009941681,
+                        "lens_type": "Ballistics",
+                        "lens_color": "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog",
+                        "frame_color": "Black w/Black Logo",
+                        "price": 29500,
+                        "available": true
+                      }
+                    ]
                   </script>
                   <script type="application/json" data-lens-color-content>
                     {
@@ -464,7 +530,8 @@
                     }
                   </script>
                 </sentix-variant-configurator>
-              {%- elsif block.settings.picker_type == 'button' -%}
+            {%- unless product.has_only_default_variant -%}
+              {%- if block.settings.picker_type == 'button' -%}
                 <variant-radios class="no-js-hidden" data-section="{{ section.id }}" data-url="{{ product.url }}" {{ block.shopify_attributes }}>
                   {%- for option in product.options_with_values -%}
                       <fieldset class="js product-form__input">
