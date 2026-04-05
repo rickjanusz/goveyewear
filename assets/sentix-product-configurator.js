@@ -43,6 +43,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       };
       this.lensColorSupportTitle = this.querySelector('[data-lens-color-support-title]');
       this.lensColorSupportBody = this.querySelector('[data-lens-color-support-body]');
+      this.enableAllGalleryMedia();
 
       const rawSellableVariants = this.parseJson('sellable-variants');
       const curatedSellableVariants = this.getCuratedSellableVariants(rawSellableVariants);
@@ -402,13 +403,7 @@ if (!customElements.get('sentix-variant-configurator')) {
     updateMedia() {
       const mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`);
       if (!mediaGallery) return;
-
-      const relatedMediaIds = this.getRelatedMediaIds(mediaGallery);
-      const primaryMediaId = relatedMediaIds[0] || '';
-
-      if (relatedMediaIds.length > 1) {
-        this.promoteRelatedMedia(mediaGallery, relatedMediaIds);
-      }
+      const primaryMediaId = this.getPrimaryMediaId(mediaGallery);
 
       if (primaryMediaId && mediaGallery.setActiveMedia) {
         mediaGallery.setActiveMedia(primaryMediaId, false);
@@ -421,42 +416,23 @@ if (!customElements.get('sentix-variant-configurator')) {
       if (newMediaModal) modalContent.prepend(newMediaModal);
     }
 
-    getRelatedMediaIds(mediaGallery) {
-      const ids = [];
+    getPrimaryMediaId(mediaGallery) {
       const mediaIdFromVariant = this.currentVariant?.featured_media_id ? `${this.sectionId}-${this.currentVariant.featured_media_id}` : '';
       const mediaIdFromFilename = this.findMediaIdForVariantFilename(mediaGallery);
       const mediaIdFromFeaturedSrc = this.findMediaIdForVariantFeaturedImage(mediaGallery);
-      const mediaIdsFromAlt = this.findMediaIdsForVariantAlt(mediaGallery);
-
-      [mediaIdFromVariant, mediaIdFromFilename, mediaIdFromFeaturedSrc, ...mediaIdsFromAlt].forEach((id) => {
-        if (!id || ids.includes(id)) return;
-        ids.push(id);
-      });
-
-      return ids;
+      return mediaIdFromVariant || mediaIdFromFilename || mediaIdFromFeaturedSrc || '';
     }
 
-    promoteRelatedMedia(mediaGallery, mediaIds) {
-      const viewerList = mediaGallery.querySelector('[id^="Slider-Gallery-"]');
-      const thumbnailList = mediaGallery.querySelector('[id^="Slider-Thumbnails-"]');
-      if (!viewerList) return;
+    enableAllGalleryMedia() {
+      const mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`);
+      if (!mediaGallery) return;
 
-      const idsInOrder = mediaIds.filter(Boolean);
-      [...idsInOrder].reverse().forEach((id) => {
-        const viewerItem = viewerList.querySelector(`[data-media-id="${id}"]`);
-        if (viewerItem) viewerList.prepend(viewerItem);
-
-        if (!thumbnailList) return;
-        const thumbnailItem = thumbnailList.querySelector(`[data-target="${id}"]`);
-        if (thumbnailItem) thumbnailList.prepend(thumbnailItem);
+      mediaGallery.querySelectorAll('.product__media-item--variant').forEach((node) => {
+        node.classList.remove('product__media-item--variant');
       });
-
-      if (mediaGallery.elements?.viewer?.slider?.resetPages) {
-        mediaGallery.elements.viewer.slider.resetPages();
-      }
-      if (mediaGallery.elements?.thumbnails?.slider?.resetPages) {
-        mediaGallery.elements.thumbnails.slider.resetPages();
-      }
+      mediaGallery.querySelectorAll('.thumbnail-list_item--variant').forEach((node) => {
+        node.classList.remove('thumbnail-list_item--variant');
+      });
     }
 
     findMediaIdForVariantFilename(mediaGallery) {
@@ -487,35 +463,6 @@ if (!customElements.get('sentix-variant-configurator')) {
       const node = mediaGallery.querySelector(selector);
       const li = node?.closest?.('[data-media-id]');
       return li?.getAttribute?.('data-media-id') || '';
-    }
-
-    findMediaIdsForVariantAlt(mediaGallery) {
-      const lensColor = String(this.currentVariant?.lens_color || '').toLowerCase();
-      const frameColor = String(this.currentVariant?.frame_color || '').toLowerCase();
-      if (!lensColor && !frameColor) return [];
-
-      const candidates = Array.from(mediaGallery.querySelectorAll('img[alt], img[data-media-alt]'));
-      const scored = new Map();
-      candidates.forEach((img) => {
-        const alt = String(img.getAttribute('alt') || img.getAttribute('data-media-alt') || '').toLowerCase();
-        if (!alt) return;
-
-        let score = 0;
-        if (lensColor && (alt.includes(lensColor) || lensColor.includes(alt))) score += 2;
-        if (frameColor && (alt.includes(frameColor) || frameColor.includes(alt))) score += 1;
-        if (score === 0) return;
-
-        const li = img.closest?.('[data-media-id]');
-        const mediaId = li?.getAttribute?.('data-media-id') || '';
-        if (!mediaId) return;
-
-        const previousScore = scored.get(mediaId) || 0;
-        if (score > previousScore) scored.set(mediaId, score);
-      });
-
-      return [...scored.entries()]
-        .sort((a, b) => b[1] - a[1])
-        .map(([mediaId]) => mediaId);
     }
 
     updateURL() {
