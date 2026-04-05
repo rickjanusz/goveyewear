@@ -462,33 +462,28 @@
                   </script>
                   <script type="application/json" data-variant-media-map>
                     {
-                      {%- assign media_map_first = true -%}
+                      {%- assign media_map_count = 0 -%}
                       {%- for media_block in section.blocks -%}
                         {%- if media_block.type == 'gatorz_variant_media_map' and media_block.settings.variant_id != blank and media_block.settings.media_ids != blank -%}
                           {%- assign media_ids_string = media_block.settings.media_ids | strip | replace: ' ', '' -%}
                           {%- assign media_ids_array = media_ids_string | split: ',' -%}
-                          {%- unless media_map_first -%},{%- endunless -%}
-                          {%- assign media_map_first = false -%}
+                          {%- if media_map_count > 0 -%},{%- endif -%}
                           {{ media_block.settings.variant_id | strip | json }}: {{ media_ids_array | json }}
+                          {%- assign media_map_count = media_map_count | plus: 1 -%}
                         {%- endif -%}
                       {%- endfor -%}
                     }
                   </script>
                   <script type="application/json" data-variant-gallery-files>
                     {
-                      {%- assign gallery_map_first = true -%}
+                      {%- assign gallery_map_count = 0 -%}
                       {%- for mapped_variant in product.variants -%}
                         {%- assign gallery_files = mapped_variant.metafields.custom.gatorz_gallery_images.value -%}
                         {%- assign gallery_file_1 = mapped_variant.metafields.custom.gatorz_gallery_image_1.value -%}
                         {%- assign gallery_file_2 = mapped_variant.metafields.custom.gatorz_gallery_image_2.value -%}
                         {%- assign gallery_file_3 = mapped_variant.metafields.custom.gatorz_gallery_image_3.value -%}
-                        {%- assign has_single_gallery_files = false -%}
-                        {%- if gallery_file_1 != blank or gallery_file_2 != blank or gallery_file_3 != blank -%}
-                          {%- assign has_single_gallery_files = true -%}
-                        {%- endif -%}
-                        {%- if gallery_files != blank or has_single_gallery_files -%}
-                          {%- unless gallery_map_first -%},{%- endunless -%}
-                          {%- assign gallery_map_first = false -%}
+                        {%- if gallery_files != blank or gallery_file_1 != blank or gallery_file_2 != blank or gallery_file_3 != blank -%}
+                          {%- if gallery_map_count > 0 -%},{%- endif -%}
                           {{ mapped_variant.id | json }}: [
                             {%- if gallery_files != blank -%}
                               {%- for gallery_file in gallery_files -%}
@@ -511,6 +506,7 @@
                               {%- endif -%}
                             {%- endif -%}
                           ]
+                          {%- assign gallery_map_count = gallery_map_count | plus: 1 -%}
                         {%- endif -%}
                       {%- endfor -%}
                     }
