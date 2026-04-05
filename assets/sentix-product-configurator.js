@@ -403,21 +403,60 @@ if (!customElements.get('sentix-variant-configurator')) {
       const mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`);
       if (!mediaGallery) return;
 
-      const mediaIdFromVariant = this.currentVariant?.featured_media_id ? `${this.sectionId}-${this.currentVariant.featured_media_id}` : '';
-      const mediaIdFromFilename = this.findMediaIdForVariantFilename(mediaGallery);
-      const mediaIdFromFeaturedSrc = this.findMediaIdForVariantFeaturedImage(mediaGallery);
-      const mediaIdFromAlt = this.findMediaIdForVariantAlt(mediaGallery);
-      const resolvedMediaId = mediaIdFromVariant || mediaIdFromFilename || mediaIdFromFeaturedSrc || mediaIdFromAlt;
+      const relatedMediaIds = this.getRelatedMediaIds(mediaGallery);
+      const primaryMediaId = relatedMediaIds[0] || '';
 
-      if (resolvedMediaId && mediaGallery.setActiveMedia) {
-        mediaGallery.setActiveMedia(resolvedMediaId, true);
+      if (relatedMediaIds.length > 1) {
+        this.promoteRelatedMedia(mediaGallery, relatedMediaIds);
+      }
+
+      if (primaryMediaId && mediaGallery.setActiveMedia) {
+        mediaGallery.setActiveMedia(primaryMediaId, false);
       }
 
       const modalContent = document.querySelector(`#ProductModal-${this.sectionId} .product-media-modal__content`);
       if (!modalContent) return;
-      const numericMediaId = String(resolvedMediaId || '').split('-')[1] || '';
+      const numericMediaId = String(primaryMediaId || '').split('-')[1] || '';
       const newMediaModal = numericMediaId ? modalContent.querySelector(`[data-media-id="${numericMediaId}"]`) : null;
       if (newMediaModal) modalContent.prepend(newMediaModal);
+    }
+
+    getRelatedMediaIds(mediaGallery) {
+      const ids = [];
+      const mediaIdFromVariant = this.currentVariant?.featured_media_id ? `${this.sectionId}-${this.currentVariant.featured_media_id}` : '';
+      const mediaIdFromFilename = this.findMediaIdForVariantFilename(mediaGallery);
+      const mediaIdFromFeaturedSrc = this.findMediaIdForVariantFeaturedImage(mediaGallery);
+      const mediaIdsFromAlt = this.findMediaIdsForVariantAlt(mediaGallery);
+
+      [mediaIdFromVariant, mediaIdFromFilename, mediaIdFromFeaturedSrc, ...mediaIdsFromAlt].forEach((id) => {
+        if (!id || ids.includes(id)) return;
+        ids.push(id);
+      });
+
+      return ids;
+    }
+
+    promoteRelatedMedia(mediaGallery, mediaIds) {
+      const viewerList = mediaGallery.querySelector('[id^="Slider-Gallery-"]');
+      const thumbnailList = mediaGallery.querySelector('[id^="Slider-Thumbnails-"]');
+      if (!viewerList) return;
+
+      const idsInOrder = mediaIds.filter(Boolean);
+      [...idsInOrder].reverse().forEach((id) => {
+        const viewerItem = viewerList.querySelector(`[data-media-id="${id}"]`);
+        if (viewerItem) viewerList.prepend(viewerItem);
+
+        if (!thumbnailList) return;
+        const thumbnailItem = thumbnailList.querySelector(`[data-target="${id}"]`);
+        if (thumbnailItem) thumbnailList.prepend(thumbnailItem);
+      });
+
+      if (mediaGallery.elements?.viewer?.slider?.resetPages) {
+        mediaGallery.elements.viewer.slider.resetPages();
+      }
+      if (mediaGallery.elements?.thumbnails?.slider?.resetPages) {
+        mediaGallery.elements.thumbnails.slider.resetPages();
+      }
     }
 
     findMediaIdForVariantFilename(mediaGallery) {
@@ -450,22 +489,33 @@ if (!customElements.get('sentix-variant-configurator')) {
       return li?.getAttribute?.('data-media-id') || '';
     }
 
-    findMediaIdForVariantAlt(mediaGallery) {
+    findMediaIdsForVariantAlt(mediaGallery) {
       const lensColor = String(this.currentVariant?.lens_color || '').toLowerCase();
       const frameColor = String(this.currentVariant?.frame_color || '').toLowerCase();
-      if (!lensColor && !frameColor) return '';
+      if (!lensColor && !frameColor) return [];
 
       const candidates = Array.from(mediaGallery.querySelectorAll('img[alt], img[data-media-alt]'));
-      const match = candidates.find((img) => {
+      const scored = new Map();
+      candidates.forEach((img) => {
         const alt = String(img.getAttribute('alt') || img.getAttribute('data-media-alt') || '').toLowerCase();
-        if (!alt) return false;
-        if (lensColor && alt.includes(lensColor)) return true;
-        if (frameColor && alt.includes(frameColor)) return true;
-        return false;
+        if (!alt) return;
+
+        let score = 0;
+        if (lensColor && (alt.includes(lensColor) || lensColor.includes(alt))) score += 2;
+        if (frameColor && (alt.includes(frameColor) || frameColor.includes(alt))) score += 1;
+        if (score === 0) return;
+
+        const li = img.closest?.('[data-media-id]');
+        const mediaId = li?.getAttribute?.('data-media-id') || '';
+        if (!mediaId) return;
+
+        const previousScore = scored.get(mediaId) || 0;
+        if (score > previousScore) scored.set(mediaId, score);
       });
 
-      const li = match?.closest?.('[data-media-id]');
-      return li?.getAttribute?.('data-media-id') || '';
+      return [...scored.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .map(([mediaId]) => mediaId);
     }
 
     updateURL() {
