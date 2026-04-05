@@ -67,9 +67,19 @@ if (!customElements.get('sentix-variant-configurator')) {
         const image = entry?.image;
         if (!group || !value || !image) return;
         map[group] ||= {};
-        map[group][value] = image;
+        map[group][this.normalizeSwatchKey(value)] = image;
       });
       return map;
+    }
+
+    normalizeSwatchKey(value) {
+      return String(value || '')
+        .toLowerCase()
+        .trim()
+        // Drop punctuation so "w/Black" and "w/ Black" converge.
+        .replace(/[^a-z0-9]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
     }
 
     normalizeVariants(variants) {
@@ -238,7 +248,7 @@ if (!customElements.get('sentix-variant-configurator')) {
 
     renderOptionButton(key, position, value) {
       const selected = this.selected[key] === value;
-      const swatchUrl = this.swatchMap?.[key]?.[value] || '';
+      const swatchUrl = this.swatchMap?.[key]?.[this.normalizeSwatchKey(value)] || '';
       const classes = [
         'sentix-configurator__option',
         swatchUrl ? 'sentix-configurator__option--swatch' : 'sentix-configurator__option--text',
