@@ -682,6 +682,9 @@ if (!customElements.get('sentix-variant-configurator')) {
         /_(pico|icon|thumb|small|compact|medium|large|grande|original|master|\d+x\d+|\d+x|x\d+)(@[\dx]+)?$/i,
         '',
       );
+      // Shopify may append a UUID suffix during file upload:
+      // e.g. sentix_smoke_black-2_49245f25-cd6c-4831-abf4-b917e2df36c8.png
+      stem = stem.replace(/_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, '');
 
       return `${stem}${extension}`;
     }
