@@ -141,6 +141,7 @@ if (!customElements.get('sentix-variant-configurator')) {
         'OPZ Polarized||Rose Optimized Polarized (OPz) w/ Sunburst Mirror||Graphite w/Black Logo',
         'Ballistics||MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog||Black w/Black Logo',
         'Ballistics||MILSPEC Ballistic Smoke w/Anti-Fog||Black w/Black Logo',
+        'Ballistics||MILSPEC Ballistic Smoke w/Anti-Fog||Tan w/Black Logo',
         'Ballistics||MILSPEC Ballistic Inferno Photochromic w/Anti-Fog||Black w/Black Logo',
         'Ballistics||MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog||Black w/Black Logo',
       ]);
