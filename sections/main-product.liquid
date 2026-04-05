@@ -43,11 +43,11 @@
   {%- assign has_frame_color_option = false -%}
   {%- for opt in product.options_with_values -%}
     {%- assign opt_name = opt.name | downcase | strip -%}
-    {%- if opt_name == 'lens type' -%}
+    {%- if opt_name contains 'lens' and opt_name contains 'type' -%}
       {%- assign has_lens_type_option = true -%}
-    {%- elsif opt_name == 'lens color' -%}
+    {%- elsif opt_name contains 'lens' and opt_name contains 'color' -%}
       {%- assign has_lens_color_option = true -%}
-    {%- elsif opt_name == 'frame color' -%}
+    {%- elsif opt_name contains 'frame' and opt_name contains 'color' -%}
       {%- assign has_frame_color_option = true -%}
     {%- endif -%}
   {%- endfor -%}
@@ -390,12 +390,12 @@
               {%- assign lens_color_pos = 2 -%}
               {%- assign frame_color_pos = 3 -%}
               {%- for opt in product.options_with_values -%}
-                {%- assign opt_name = opt.name | downcase -%}
-                {%- if opt_name == 'lens type' -%}
+                {%- assign opt_name = opt.name | downcase | strip -%}
+                {%- if opt_name contains 'lens' and opt_name contains 'type' -%}
                   {%- assign lens_type_pos = opt.position -%}
-                {%- elsif opt_name == 'lens color' -%}
+                {%- elsif opt_name contains 'lens' and opt_name contains 'color' -%}
                   {%- assign lens_color_pos = opt.position -%}
-                {%- elsif opt_name == 'frame color' -%}
+                {%- elsif opt_name contains 'frame' and opt_name contains 'color' -%}
                   {%- assign frame_color_pos = opt.position -%}
                 {%- endif -%}
               {%- endfor -%}
