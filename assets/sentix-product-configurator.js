@@ -22,6 +22,10 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.sectionId = this.dataset.section;
       this.productUrl = this.dataset.url;
       this.initialVariantId = Number(this.dataset.initialVariantId || 0);
+      this.optionPositions = {
+        ...this.optionPositions,
+        ...this.parseJson('option-position-map'),
+      };
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants'));
       this.variantImageFilenames = this.parseJson('variant-image-filenames');
       this.variantData = this.normalizeVariants(this.parseJson('sellable-variants'));
@@ -69,21 +73,36 @@ if (!customElements.get('sentix-variant-configurator')) {
     }
 
     normalizeVariants(variants) {
-      return variants.map((variant) => ({
-        ...(this.nativeVariantsById.get(Number(variant.id)) || {}),
+      return variants.map((variant) => {
+        const native = this.nativeVariantsById.get(Number(variant.id)) || {};
+        const lensType = variant.lens_type || this.getVariantOptionValue(variant, this.optionPositions.lens_type) || this.getVariantOptionValue(native, this.optionPositions.lens_type);
+        const lensColor = variant.lens_color || this.getVariantOptionValue(variant, this.optionPositions.lens_color) || this.getVariantOptionValue(native, this.optionPositions.lens_color);
+        const frameColor = variant.frame_color || this.getVariantOptionValue(variant, this.optionPositions.frame_color) || this.getVariantOptionValue(native, this.optionPositions.frame_color);
+
+        return {
+          ...native,
         id: variant.id,
         title: variant.title,
         available: Boolean(variant.available),
-        price: variant.price ?? this.nativeVariantsById.get(Number(variant.id))?.price,
-        sku: variant.sku || this.nativeVariantsById.get(Number(variant.id))?.sku || '',
-        option1: variant.option1 || variant.lens_type || variant.options?.[0] || '',
-        option2: variant.option2 || variant.lens_color || variant.options?.[1] || '',
-        option3: variant.option3 || variant.frame_color || variant.options?.[2] || '',
-        lens_type: variant.lens_type || variant.option1 || variant.options?.[0] || '',
-        lens_color: variant.lens_color || variant.option2 || variant.options?.[1] || '',
-        frame_color: variant.frame_color || variant.option3 || variant.options?.[2] || '',
-        featured_media_id: variant.featured_media_id || variant.featured_media?.id || this.nativeVariantsById.get(Number(variant.id))?.featured_media?.id || null,
-      }));
+        price: variant.price ?? native.price,
+        sku: variant.sku || native.sku || '',
+        option1: this.getVariantOptionValue(native, 1) || this.getVariantOptionValue(variant, 1) || '',
+        option2: this.getVariantOptionValue(native, 2) || this.getVariantOptionValue(variant, 2) || '',
+        option3: this.getVariantOptionValue(native, 3) || this.getVariantOptionValue(variant, 3) || '',
+        lens_type: lensType || '',
+        lens_color: lensColor || '',
+        frame_color: frameColor || '',
+        featured_media_id: variant.featured_media_id || variant.featured_media?.id || native.featured_media?.id || null,
+        };
+      });
+    }
+
+    getVariantOptionValue(variant, position) {
+      if (!variant || !position) return '';
+      const byOption = variant[`option${position}`];
+      if (byOption) return byOption;
+      const idx = Number(position) - 1;
+      return variant.options?.[idx] || '';
     }
 
     indexVariantsById(variants) {

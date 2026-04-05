@@ -379,6 +379,20 @@
             <script src="{{ 'share.js' | asset_url }}" defer="defer"></script>
           {%- when 'variant_picker' -%}
             {%- if use_gatorz_configurator -%}
+              {%- assign lens_type_pos = 1 -%}
+              {%- assign lens_color_pos = 2 -%}
+              {%- assign frame_color_pos = 3 -%}
+              {%- for opt in product.options_with_values -%}
+                {%- assign opt_name = opt.name | downcase -%}
+                {%- if opt_name == 'lens type' -%}
+                  {%- assign lens_type_pos = opt.position -%}
+                {%- elsif opt_name == 'lens color' -%}
+                  {%- assign lens_color_pos = opt.position -%}
+                {%- elsif opt_name == 'frame color' -%}
+                  {%- assign frame_color_pos = opt.position -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- assign selected_option_values = product.selected_or_first_available_variant.options -%}
                 <sentix-variant-configurator
                   class="no-js-hidden sentix-configurator"
                   data-section="{{ section.id }}"
@@ -389,7 +403,7 @@
                   <div class="sentix-configurator__group">
                     <div class="sentix-configurator__heading">
                       <span class="form__label">Lens Type:</span>
-                      <span class="sentix-configurator__selected-value" data-selected-label="lens_type">{{ product.selected_or_first_available_variant.option1 }}</span>
+                      <span class="sentix-configurator__selected-value" data-selected-label="lens_type">{{ selected_option_values[lens_type_pos | minus: 1] | default: product.selected_or_first_available_variant.option1 }}</span>
                     </div>
                     <div class="sentix-configurator__options" role="radiogroup" aria-label="Lens Type" data-option-group="lens_type"></div>
                   </div>
@@ -397,7 +411,7 @@
                   <div class="sentix-configurator__group">
                     <div class="sentix-configurator__heading">
                       <span class="form__label">Lens Color:</span>
-                      <span class="sentix-configurator__selected-value" data-selected-label="lens_color">{{ product.selected_or_first_available_variant.option2 }}</span>
+                      <span class="sentix-configurator__selected-value" data-selected-label="lens_color">{{ selected_option_values[lens_color_pos | minus: 1] | default: product.selected_or_first_available_variant.option2 }}</span>
                     </div>
                     <div class="sentix-configurator__options sentix-configurator__options--swatches" role="radiogroup" aria-label="Lens Color" data-option-group="lens_color"></div>
                     <div class="sentix-configurator__support">
@@ -409,11 +423,18 @@
                   <div class="sentix-configurator__group">
                     <div class="sentix-configurator__heading">
                       <span class="form__label">Frame Color:</span>
-                      <span class="sentix-configurator__selected-value" data-selected-label="frame_color">{{ product.selected_or_first_available_variant.option3 }}</span>
+                      <span class="sentix-configurator__selected-value" data-selected-label="frame_color">{{ selected_option_values[frame_color_pos | minus: 1] | default: product.selected_or_first_available_variant.option3 }}</span>
                     </div>
                     <div class="sentix-configurator__options sentix-configurator__options--swatches" role="radiogroup" aria-label="Frame Color" data-option-group="frame_color"></div>
                   </div>
 
+                  <script type="application/json" data-option-position-map>
+                    {
+                      "lens_type": {{ lens_type_pos | json }},
+                      "lens_color": {{ lens_color_pos | json }},
+                      "frame_color": {{ frame_color_pos | json }}
+                    }
+                  </script>
                   <script type="application/json" data-sellable-variants>
                     {{ product.variants | where: 'available', true | json }}
                   </script>
