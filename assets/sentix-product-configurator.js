@@ -235,17 +235,18 @@ if (!customElements.get('sentix-variant-configurator')) {
     }
 
     renderOptionGroups() {
+      const upstreamSelectionsByKey = {
+        lens_type: {},
+        lens_color: { lens_type: this.selected.lens_type },
+        frame_color: {
+          lens_type: this.selected.lens_type,
+          lens_color: this.selected.lens_color,
+        },
+      };
+
       this.optionKeys.forEach((key) => {
         const position = this.optionPositions[key];
-        const upstreamSelections = {};
-        this.optionKeys.forEach((candidateKey) => {
-          if (candidateKey === key) return;
-          const candidatePosition = Number(this.optionPositions[candidateKey]);
-          if (candidatePosition < position && this.selected[candidateKey]) {
-            upstreamSelections[candidateKey] = this.selected[candidateKey];
-          }
-        });
-
+        const upstreamSelections = upstreamSelectionsByKey[key] || {};
         const values = this.getValidValuesForOption(this.sellableVariants, upstreamSelections, key);
         const node = this.groupNodes[key];
         if (!node) return;
