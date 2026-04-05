@@ -466,6 +466,14 @@ if (!customElements.get('sentix-variant-configurator')) {
     updateMedia() {
       const mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`);
       if (!mediaGallery) return;
+
+      const coverSeriesMediaIds = this.getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, 4);
+      if (coverSeriesMediaIds.length) {
+        this.applyVariantMediaSelection(mediaGallery, coverSeriesMediaIds);
+        this.moveActiveModalMedia(String(coverSeriesMediaIds[0]), coverSeriesMediaIds);
+        return;
+      }
+
       const mappedMediaIds = this.getMappedMediaIdsForCurrentVariant(mediaGallery);
 
       if (mappedMediaIds.length) {
@@ -482,6 +490,26 @@ if (!customElements.get('sentix-variant-configurator')) {
       }
 
       this.clearVariantMediaSelection(mediaGallery);
+    }
+
+    getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, maxImages = 4) {
+      const available = new Set(
+        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+          .filter((value) => Number.isInteger(value) && value > 0),
+      );
+
+      const featuredFilename = this.extractFilename(this.currentVariant?.featured_image_src);
+      const seriesIds = this.getSeriesMediaIdsFromFeaturedFilename(featuredFilename, available);
+      if (!seriesIds.length) return [];
+
+      const capped = seriesIds.slice(0, Math.max(1, Number(maxImages) || 4));
+      if (capped.length) return capped;
+
+      const featuredMediaId = Number(this.currentVariant?.featured_media_id || 0);
+      if (featuredMediaId && available.has(featuredMediaId)) return [featuredMediaId];
+
+      return [];
     }
 
     getPrimaryMediaId() {
