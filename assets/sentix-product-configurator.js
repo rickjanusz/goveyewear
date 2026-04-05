@@ -505,9 +505,39 @@ if (!customElements.get('sentix-variant-configurator')) {
         ordered.push(numeric);
       };
 
+      // Expand a deterministic image series from featured filename:
+      // e.g. sentix_smoke_black-1.png -> sentix_smoke_black-(1..n).png
+      const featuredFilename = this.extractFilename(this.currentVariant?.featured_image_src);
+      const seriesIds = this.getSeriesMediaIdsFromFeaturedFilename(featuredFilename, available);
+      seriesIds.forEach((id) => addId(id));
+
       addId(this.currentVariant?.featured_media_id);
 
       return ordered;
+    }
+
+    getSeriesMediaIdsFromFeaturedFilename(featuredFilename, availableIds) {
+      if (!featuredFilename) return [];
+
+      const match = featuredFilename.match(/^(.*?)-(\d+)(\.[a-z0-9]+)$/i);
+      if (!match) return [];
+
+      const [, baseName, , extension] = match;
+      const candidates = [];
+
+      this.productMediaIndex.forEach((id, filename) => {
+        if (!availableIds.has(id)) return;
+        const filenameMatch = filename.match(/^(.*?)-(\d+)(\.[a-z0-9]+)$/i);
+        if (!filenameMatch) return;
+
+        const [, candidateBase, candidateIndex, candidateExtension] = filenameMatch;
+        if (candidateBase !== baseName || candidateExtension.toLowerCase() !== extension.toLowerCase()) return;
+
+        candidates.push({ id, index: Number(candidateIndex) });
+      });
+
+      candidates.sort((a, b) => a.index - b.index);
+      return candidates.map((entry) => entry.id);
     }
 
     getMappedMediaIdsForCurrentVariant(mediaGallery) {
