@@ -21,6 +21,7 @@ if (!customElements.get('sentix-variant-configurator')) {
     connectedCallback() {
       this.sectionId = this.dataset.section;
       this.productUrl = this.dataset.url;
+      this.productHandle = String(this.productUrl || '').split('/').filter(Boolean).pop() || '';
       this.initialVariantId = Number(this.dataset.initialVariantId || 0);
       this.optionPositions = {
         ...this.optionPositions,
@@ -44,7 +45,8 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.lensColorSupportBody = this.querySelector('[data-lens-color-support-body]');
 
       const rawSellableVariants = this.parseJson('sellable-variants');
-      this.variantData = this.normalizeVariants(rawSellableVariants);
+      const curatedSellableVariants = this.getCuratedSellableVariants(rawSellableVariants);
+      this.variantData = this.normalizeVariants(curatedSellableVariants);
       this.sellableVariants = this.getSellableVariants(this.variantData);
 
       if (!this.sellableVariants.length) return;
@@ -128,6 +130,28 @@ if (!customElements.get('sentix-variant-configurator')) {
 
     getSellableVariants(variants) {
       return variants.filter((variant) => variant.available);
+    }
+
+    getCuratedSellableVariants(variants) {
+      if (this.productHandle !== 'sentix') return variants || [];
+
+      const allowedCombos = new Set([
+        'Non-polarized||Smoke||Black w/Silver Logo',
+        'OPZ Polarized||Smoke Optimized Polarized (OPz)||Black w/Black Logo',
+        'OPZ Polarized||Rose Optimized Polarized (OPz) w/ Sunburst Mirror||Graphite w/Black Logo',
+        'Ballistics||MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog||Black w/Black Logo',
+        'Ballistics||MILSPEC Ballistic Smoke w/Anti-Fog||Black w/Black Logo',
+        'Ballistics||MILSPEC Ballistic Inferno Photochromic w/Anti-Fog||Black w/Black Logo',
+        'Ballistics||MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog||Black w/Black Logo',
+      ]);
+
+      return (variants || []).filter((variant) => {
+        const lensType = this.getVariantOptionValue(variant, this.optionPositions.lens_type);
+        const frameColor = this.getVariantOptionValue(variant, this.optionPositions.frame_color);
+        const lensColor = this.getVariantOptionValue(variant, this.optionPositions.lens_color);
+        const comboKey = `${lensType}||${lensColor}||${frameColor}`;
+        return allowedCombos.has(comboKey);
+      });
     }
 
     getOrderedOptionKeys() {
