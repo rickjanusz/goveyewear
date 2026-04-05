@@ -554,13 +554,13 @@ if (!customElements.get('sentix-variant-configurator')) {
       }
 
       const configuredFiles = this.variantGalleryFiles?.[key] || [];
-      if (!configuredFiles.length) return [];
+      if (configuredFiles.length) {
+        const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
+        if (idsFromIndex.length) return idsFromIndex;
 
-      const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
-      if (idsFromIndex.length) return idsFromIndex;
-
-      const idsFromGalleryFiles = this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
-      if (idsFromGalleryFiles.length) return idsFromGalleryFiles;
+        const idsFromGalleryFiles = this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
+        if (idsFromGalleryFiles.length) return idsFromGalleryFiles;
+      }
 
       const assignedFiles = this.variantAssignedGalleryFiles?.[key] || [];
       if (!assignedFiles.length) return [];
