@@ -30,6 +30,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants', []));
       this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map', {}));
       this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
+      this.productMediaIndex = this.normalizeProductMediaIndex(this.parseJson('product-media-index', []));
       const defaultLensColorContent = this.parseJson('lens-color-content', {});
       const lensColorContentOverrides = this.parseJson('lens-color-content-variant-overrides', {});
       this.lensColorContent = this.mergeLensColorContent(defaultLensColorContent, lensColorContentOverrides);
@@ -202,6 +203,20 @@ if (!customElements.get('sentix-variant-configurator')) {
       });
 
       return normalized;
+    }
+
+    normalizeProductMediaIndex(rawIndex) {
+      const rows = Array.isArray(rawIndex) ? rawIndex : [];
+      const filenameToId = new Map();
+
+      rows.forEach((row) => {
+        const id = Number(row?.id);
+        const filename = this.extractFilename(row?.src);
+        if (!Number.isInteger(id) || id <= 0 || !filename) return;
+        if (!filenameToId.has(filename)) filenameToId.set(filename, id);
+      });
+
+      return filenameToId;
     }
 
     getOrderedOptionKeys() {
@@ -490,7 +505,24 @@ if (!customElements.get('sentix-variant-configurator')) {
       const configuredFiles = this.variantGalleryFiles?.[key] || [];
       if (!configuredFiles.length) return [];
 
+      const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
+      if (idsFromIndex.length) return idsFromIndex;
+
       return this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
+    }
+
+    resolveMediaIdsByProductIndex(filenames) {
+      const ordered = [];
+      const seen = new Set();
+
+      filenames.forEach((filename) => {
+        const id = this.productMediaIndex?.get(filename);
+        if (!id || seen.has(id)) return;
+        seen.add(id);
+        ordered.push(id);
+      });
+
+      return ordered;
     }
 
     resolveMediaIdsByFilenames(mediaGallery, filenames) {

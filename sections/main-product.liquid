@@ -490,7 +490,8 @@
                         {%- assign gallery_file_1 = mapped_variant.metafields.custom.gatorz_gallery_image_1.value -%}
                         {%- assign gallery_file_2 = mapped_variant.metafields.custom.gatorz_gallery_image_2.value -%}
                         {%- assign gallery_file_3 = mapped_variant.metafields.custom.gatorz_gallery_image_3.value -%}
-                        {%- if gallery_files != blank or gallery_file_1 != blank or gallery_file_2 != blank or gallery_file_3 != blank -%}
+                        {%- assign gallery_file_4 = mapped_variant.metafields.custom.gatorz_gallery_image_4.value -%}
+                        {%- if gallery_files != blank or gallery_file_1 != blank or gallery_file_2 != blank or gallery_file_3 != blank or gallery_file_4 != blank -%}
                           {%- if gallery_map_count > 0 -%},{%- endif -%}
                           {{ mapped_variant.id | json }}: [
                             {%- if gallery_files != blank -%}
@@ -515,6 +516,12 @@
                                 {%- unless gallery_file_first -%},{%- endunless -%}
                                 {%- assign gallery_file_url_3 = gallery_file_3 | image_url: width: 4096 | default: gallery_file_3 | file_url -%}
                                 {{ gallery_file_url_3 | json }}
+                                {%- assign gallery_file_first = false -%}
+                              {%- endif -%}
+                              {%- if gallery_file_4 != blank -%}
+                                {%- unless gallery_file_first -%},{%- endunless -%}
+                                {%- assign gallery_file_url_4 = gallery_file_4 | image_url: width: 4096 | default: gallery_file_4 | file_url -%}
+                                {{ gallery_file_url_4 | json }}
                               {%- endif -%}
                             {%- endif -%}
                           ]
@@ -522,6 +529,16 @@
                         {%- endif -%}
                       {%- endfor -%}
                     }
+                  </script>
+                  <script type="application/json" data-product-media-index>
+                    [
+                      {%- for media in product.media -%}
+                        {
+                          "id": {{ media.id | json }},
+                          "src": {{ media.preview_image | image_url: width: 4096 | json }}
+                        }{%- unless forloop.last -%},{%- endunless -%}
+                      {%- endfor -%}
+                    ]
                   </script>
                   <script type="application/json" data-lens-color-content>
                     {
