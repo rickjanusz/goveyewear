@@ -130,6 +130,12 @@ if (!customElements.get('sentix-variant-configurator')) {
       return variants.filter((variant) => variant.available);
     }
 
+    getOrderedOptionKeys() {
+      return [...this.optionKeys].sort(
+        (a, b) => Number(this.optionPositions[a] || 0) - Number(this.optionPositions[b] || 0),
+      );
+    }
+
     matchesSelection(variant, selected) {
       return Object.entries(selected).every(([key, value]) => !value || variant[key] === value);
     }
@@ -138,8 +144,8 @@ if (!customElements.get('sentix-variant-configurator')) {
       return variants.filter((variant) => this.matchesSelection(variant, selected));
     }
 
-    getValidValuesForOption(variants, selected, targetPosition) {
-      const key = this.optionKeys[targetPosition - 1];
+    getValidValuesForOption(variants, selected, targetKey) {
+      const key = targetKey;
       const values = [];
       const seen = new Set();
       this.getMatchingVariants(variants, selected).forEach((variant) => {
@@ -156,22 +162,23 @@ if (!customElements.get('sentix-variant-configurator')) {
       return variants.find((variant) => this.optionKeys.every((key) => variant[key] === selected[key])) || null;
     }
 
-    getFallbackVariant(variants, selected, lastChangedPosition) {
-      const changedKey = this.optionKeys[lastChangedPosition - 1];
+    getFallbackVariant(variants, selected, lastChangedKey) {
+      const orderedKeys = this.getOrderedOptionKeys();
+      const changedIndex = orderedKeys.indexOf(lastChangedKey);
       let bestVariant = null;
       let bestScore = -1;
 
       variants.forEach((variant) => {
-        if (selected[changedKey] && variant[changedKey] !== selected[changedKey]) return;
+        if (selected[lastChangedKey] && variant[lastChangedKey] !== selected[lastChangedKey]) return;
 
         let score = 0;
-        this.optionKeys.forEach((key, index) => {
+        orderedKeys.forEach((key, index) => {
           if (!selected[key]) return;
           if (variant[key] !== selected[key]) return;
 
-          if (index + 1 === lastChangedPosition) {
+          if (key === lastChangedKey) {
             score += 100;
-          } else if (index + 1 < lastChangedPosition) {
+          } else if (changedIndex !== -1 && index < changedIndex) {
             score += 25 - index;
           } else {
             score += 10 - index;
@@ -191,11 +198,11 @@ if (!customElements.get('sentix-variant-configurator')) {
       const button = event.target.closest('[data-option-position][data-option-value]');
       if (!button || button.getAttribute('aria-disabled') === 'true') return;
 
-      const position = Number(button.dataset.optionPosition);
-      const key = this.optionKeys[position - 1];
+      const key = button.dataset.optionKey;
+      if (!key) return;
       const nextSelection = { ...this.selected, [key]: button.dataset.optionValue };
       const resolvedVariant = this.findExactVariant(this.sellableVariants, nextSelection)
-        || this.getFallbackVariant(this.sellableVariants, nextSelection, position);
+        || this.getFallbackVariant(this.sellableVariants, nextSelection, key);
 
       if (resolvedVariant) this.syncUIFromVariant(resolvedVariant);
     }
@@ -228,18 +235,18 @@ if (!customElements.get('sentix-variant-configurator')) {
     }
 
     renderOptionGroups() {
-      const upstreamSelections = {
-        1: {},
-        2: { lens_type: this.selected.lens_type },
-        3: {
-          lens_type: this.selected.lens_type,
-          lens_color: this.selected.lens_color,
-        },
-      };
-
       this.optionKeys.forEach((key) => {
         const position = this.optionPositions[key];
-        const values = this.getValidValuesForOption(this.sellableVariants, upstreamSelections[position], position);
+        const upstreamSelections = {};
+        this.optionKeys.forEach((candidateKey) => {
+          if (candidateKey === key) return;
+          const candidatePosition = Number(this.optionPositions[candidateKey]);
+          if (candidatePosition < position && this.selected[candidateKey]) {
+            upstreamSelections[candidateKey] = this.selected[candidateKey];
+          }
+        });
+
+        const values = this.getValidValuesForOption(this.sellableVariants, upstreamSelections, key);
         const node = this.groupNodes[key];
         if (!node) return;
 
