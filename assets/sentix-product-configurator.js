@@ -25,13 +25,13 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.initialVariantId = Number(this.dataset.initialVariantId || 0);
       this.optionPositions = {
         ...this.optionPositions,
-        ...this.parseJson('option-position-map'),
+        ...this.parseJson('option-position-map', {}),
       };
-      this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants'));
-      this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map'));
-      this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files'));
-      this.lensColorContent = this.parseJson('lens-color-content');
-      this.swatchMap = this.buildSwatchMap(this.parseJson('swatch-entries'));
+      this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants', []));
+      this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map', {}));
+      this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
+      this.lensColorContent = this.parseJson('lens-color-content', {});
+      this.swatchMap = this.buildSwatchMap(this.parseJson('swatch-entries', []));
       this.groupNodes = {
         lens_type: this.querySelector('[data-option-group="lens_type"]'),
         lens_color: this.querySelector('[data-option-group="lens_color"]'),
@@ -46,7 +46,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.lensColorSupportBody = this.querySelector('[data-lens-color-support-body]');
       this.clearVariantMediaSelection();
 
-      this.variantData = this.normalizeVariants(this.parseJson('sellable-variants'));
+      this.variantData = this.normalizeVariants(this.parseJson('sellable-variants', []));
       this.sellableVariants = this.getSellableVariants(this.variantData);
 
       if (!this.sellableVariants.length) return;
@@ -58,9 +58,14 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.syncUIFromVariant(initialVariant);
     }
 
-    parseJson(key) {
+    parseJson(key, fallback = {}) {
       const node = this.querySelector(`[data-${key}]`);
-      return node ? JSON.parse(node.textContent) : {};
+      if (!node) return fallback;
+      try {
+        return JSON.parse(node.textContent);
+      } catch (_error) {
+        return fallback;
+      }
     }
 
     buildSwatchMap(entries) {
@@ -87,7 +92,8 @@ if (!customElements.get('sentix-variant-configurator')) {
     }
 
     normalizeVariants(variants) {
-      return variants.map((variant) => {
+      const rows = Array.isArray(variants) ? variants : [];
+      return rows.map((variant) => {
         const native = this.nativeVariantsById.get(Number(variant.id)) || {};
         const lensType = variant.lens_type || this.getVariantOptionValue(variant, this.optionPositions.lens_type) || this.getVariantOptionValue(native, this.optionPositions.lens_type);
         const lensColor = variant.lens_color || this.getVariantOptionValue(variant, this.optionPositions.lens_color) || this.getVariantOptionValue(native, this.optionPositions.lens_color);
