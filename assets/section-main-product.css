@@ -358,6 +358,11 @@ fieldset.product-form__input .form__label {
   color: rgb(var(--color-background));
 }
 
+.sentix-configurator__option--text.is-active {
+  background-color: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+
 .sentix-configurator__option--swatch {
   border-radius: 50%;
   height: 4.5rem;
@@ -397,6 +402,10 @@ fieldset.product-form__input .form__label {
 }
 
 .sentix-configurator__option--swatch[aria-checked='true'] .sentix-configurator__swatch-visual {
+  box-shadow: 0 0 0 0.2rem rgb(var(--color-background)), 0 0 0 0.35rem rgb(var(--color-foreground));
+}
+
+.sentix-configurator__option--swatch.is-active .sentix-configurator__swatch-visual {
   box-shadow: 0 0 0 0.2rem rgb(var(--color-background)), 0 0 0 0.35rem rgb(var(--color-foreground));
 }
 

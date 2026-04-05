@@ -44,7 +44,9 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.lensColorSupportBody = this.querySelector('[data-lens-color-support-body]');
 
       const rawSellableVariants = this.parseJson('sellable-variants');
-      this.inferOptionPositionsFromSwatches(rawSellableVariants);
+      if (this.shouldInferOptionPositions()) {
+        this.inferOptionPositionsFromSwatches(rawSellableVariants);
+      }
       this.variantData = this.normalizeVariants(rawSellableVariants);
       this.sellableVariants = this.getSellableVariants(this.variantData);
 
@@ -105,6 +107,15 @@ if (!customElements.get('sentix-variant-configurator')) {
       const used = new Set([this.optionPositions.lens_color, this.optionPositions.frame_color]);
       const remaining = [1, 2, 3].find((pos) => !used.has(pos));
       if (remaining) this.optionPositions.lens_type = remaining;
+    }
+
+    shouldInferOptionPositions() {
+      const positions = Object.values(this.optionPositions)
+        .map((value) => Number(value))
+        .filter((value) => Number.isFinite(value) && value >= 1 && value <= 3);
+
+      if (positions.length !== 3) return true;
+      return new Set(positions).size !== 3;
     }
 
     normalizeSwatchKey(value) {
@@ -285,14 +296,19 @@ if (!customElements.get('sentix-variant-configurator')) {
     renderOptionButton(key, position, value) {
       const selected = this.selected[key] === value;
       const swatchUrl = this.swatchMap?.[key]?.[this.normalizeSwatchKey(value)] || '';
+      const isSwatchOption = key === 'lens_color' || key === 'frame_color';
       const classes = [
         'sentix-configurator__option',
-        swatchUrl ? 'sentix-configurator__option--swatch' : 'sentix-configurator__option--text',
+        isSwatchOption ? 'sentix-configurator__option--swatch' : 'sentix-configurator__option--text',
         `sentix-configurator__option--${key.replace('_', '-')}`,
+        selected ? 'is-active' : '',
       ].join(' ');
       const swatchFallback = this.getSwatchFallbackColor(key, value);
-      const swatchMarkup = swatchUrl
-        ? `<span class="sentix-configurator__swatch-visual" data-swatch-visual style="--sentix-swatch-fallback:${swatchFallback}"><img src="${swatchUrl}" alt="" loading="lazy" decoding="async"></span><span class="visually-hidden">${value}</span>`
+      const swatchImageMarkup = swatchUrl
+        ? `<img src="${swatchUrl}" alt="" loading="lazy" decoding="async">`
+        : '';
+      const swatchMarkup = isSwatchOption
+        ? `<span class="sentix-configurator__swatch-visual" data-swatch-visual style="--sentix-swatch-fallback:${swatchFallback}">${swatchImageMarkup}</span><span class="visually-hidden">${value}</span>`
         : `<span class="sentix-configurator__option-text">${value}</span>`;
 
       return `
