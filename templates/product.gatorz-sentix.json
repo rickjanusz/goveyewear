@@ -47,7 +47,7 @@
           "settings": {
             "group": "lens_color",
             "option_value": "Smoke",
-            "swatch_image": ""
+            "swatch_image": "shopify://shop_images/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small_d0ca040b-1779-4199-a301-927d70fefc96.png"
           }
         },
         "gatorz_swatch_lens_smoke_opz": {
@@ -55,7 +55,7 @@
           "settings": {
             "group": "lens_color",
             "option_value": "Smoke Optimized Polarized (OPz)",
-            "swatch_image": ""
+            "swatch_image": "shopify://shop_images/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small_d0ca040b-1779-4199-a301-927d70fefc96.png"
           }
         },
         "gatorz_swatch_lens_rose_sunburst": {
@@ -63,7 +63,7 @@
           "settings": {
             "group": "lens_color",
             "option_value": "Rose Optimized Polarized (OPz) w/ Sunburst Mirror",
-            "swatch_image": ""
+            "swatch_image": "shopify://shop_images/rose-optimized-polarized-opz-w-sunburst-mirror_small_2519adb8-e3a5-47ad-864f-239ccc42a8d6.png"
           }
         },
         "gatorz_swatch_lens_milspec_rose_gold_antifog": {
@@ -71,7 +71,7 @@
           "settings": {
             "group": "lens_color",
             "option_value": "MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog",
-            "swatch_image": ""
+            "swatch_image": "shopify://shop_images/rose-optimized-polarized-opz-w-sunburst-mirror_small_2519adb8-e3a5-47ad-864f-239ccc42a8d6.png"
           }
         },
         "gatorz_swatch_lens_milspec_smoke_antifog": {
@@ -79,7 +79,7 @@
           "settings": {
             "group": "lens_color",
             "option_value": "MILSPEC Ballistic Smoke w/Anti-Fog",
-            "swatch_image": ""
+            "swatch_image": "shopify://shop_images/milspec-ballistic-inferno-photochromic-w-anti-fog_small_8ab7a53f-0a95-45f6-ae5d-d70bded14a04.png"
           }
         },
         "gatorz_swatch_lens_milspec_inferno_photo_antifog": {
@@ -87,7 +87,7 @@
           "settings": {
             "group": "lens_color",
             "option_value": "MILSPEC Ballistic Inferno Photochromic w/Anti-Fog",
-            "swatch_image": ""
+            "swatch_image": "shopify://shop_images/milspec-ballistic-inferno-photochromic-w-anti-fog_small_8ab7a53f-0a95-45f6-ae5d-d70bded14a04.png"
           }
         },
         "gatorz_swatch_lens_milspec_smoke_opz_antifog": {
@@ -95,7 +95,7 @@
           "settings": {
             "group": "lens_color",
             "option_value": "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog",
-            "swatch_image": ""
+            "swatch_image": "shopify://shop_images/milspec-ballistic-inferno-photochromic-w-anti-fog_small_8ab7a53f-0a95-45f6-ae5d-d70bded14a04.png"
           }
         },
         "gatorz_swatch_frame_black_silver": {
@@ -103,7 +103,7 @@
           "settings": {
             "group": "frame_color",
             "option_value": "Black w/Silver Logo",
-            "swatch_image": ""
+            "swatch_image": "shopify://shop_images/black-w-silver-logo_small_a95bca6f-df1b-47c5-8bfc-4d1873f1ad34.png"
           }
         },
         "gatorz_swatch_frame_black_black": {
@@ -111,7 +111,7 @@
           "settings": {
             "group": "frame_color",
             "option_value": "Black w/Black Logo",
-            "swatch_image": ""
+            "swatch_image": "shopify://shop_images/black-w-black-logo_small_6e8d0d7b-9af1-46f8-a671-ddb945000648.png"
           }
         },
         "gatorz_swatch_frame_graphite_black": {
@@ -119,7 +119,7 @@
           "settings": {
             "group": "frame_color",
             "option_value": "Graphite w/Black Logo",
-            "swatch_image": ""
+            "swatch_image": "shopify://shop_images/graphite-w-black-logo_small_6df74d34-8042-47dd-9d52-adf405589ae5.png"
           }
         },
         "gatorz_swatch_frame_tan_black": {
@@ -127,7 +127,7 @@
           "settings": {
             "group": "frame_color",
             "option_value": "Tan w/Black Logo",
-            "swatch_image": ""
+            "swatch_image": "shopify://shop_images/tan-w-black-logo_small_18c0248b-b0cd-434b-9f55-d010680df416.png"
           }
         },
         "quantity_selector": {
