@@ -22,6 +22,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.sectionId = this.dataset.section;
       this.productUrl = this.dataset.url;
       this.initialVariantId = Number(this.dataset.initialVariantId || 0);
+      this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants'));
       this.variantData = this.normalizeVariants(this.parseJson('sellable-variants'));
       this.sellableVariants = this.getSellableVariants(this.variantData);
       this.lensColorContent = this.parseJson('lens-color-content');
@@ -55,19 +56,28 @@ if (!customElements.get('sentix-variant-configurator')) {
 
     normalizeVariants(variants) {
       return variants.map((variant) => ({
+        ...(this.nativeVariantsById.get(Number(variant.id)) || {}),
         id: variant.id,
         title: variant.title,
         available: Boolean(variant.available),
-        price: variant.price,
-        sku: variant.sku || '',
+        price: variant.price ?? this.nativeVariantsById.get(Number(variant.id))?.price,
+        sku: variant.sku || this.nativeVariantsById.get(Number(variant.id))?.sku || '',
         option1: variant.option1 || variant.lens_type || variant.options?.[0] || '',
         option2: variant.option2 || variant.lens_color || variant.options?.[1] || '',
         option3: variant.option3 || variant.frame_color || variant.options?.[2] || '',
         lens_type: variant.lens_type || variant.option1 || variant.options?.[0] || '',
         lens_color: variant.lens_color || variant.option2 || variant.options?.[1] || '',
         frame_color: variant.frame_color || variant.option3 || variant.options?.[2] || '',
-        featured_media_id: variant.featured_media?.id || null,
+        featured_media_id: variant.featured_media_id || variant.featured_media?.id || this.nativeVariantsById.get(Number(variant.id))?.featured_media?.id || null,
       }));
+    }
+
+    indexVariantsById(variants) {
+      const index = new Map();
+      variants.forEach((variant) => {
+        if (variant?.id) index.set(Number(variant.id), variant);
+      });
+      return index;
     }
 
     getSellableVariants(variants) {
