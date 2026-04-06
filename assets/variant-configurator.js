@@ -934,9 +934,9 @@ if (!customElements.get('variant-configurator')) {
 
   // Backward-compatible aliases for any older templates not yet migrated.
   if (!customElements.get('sentix-variant-configurator')) {
-    customElements.define('sentix-variant-configurator', VariantConfigurator);
+    customElements.define('sentix-variant-configurator', class SentixVariantConfigurator extends VariantConfigurator {});
   }
   if (!customElements.get('gatorz-variant-configurator')) {
-    customElements.define('gatorz-variant-configurator', VariantConfigurator);
+    customElements.define('gatorz-variant-configurator', class GatorzVariantConfigurator extends VariantConfigurator {});
   }
 }
