@@ -493,24 +493,38 @@
                   <script type="application/json" data-swatch-value-image-map>
                     {
                       "lens_color": {
-                        "Smoke": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small_d0ca040b-1779-4199-a301-927d70fefc96.png?v=1775399464",
-                        "Smoke Optimized Polarized (OPz)": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small_d0ca040b-1779-4199-a301-927d70fefc96.png?v=1775399464",
-                        "Smoke Optimized Polarized (OPz) w/ Blue Mirror": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/Blue_Mirror_Polarized.jpg?v=1680552490",
-                        "Rose Optimized Polarized (OPz) w/ Sunburst Mirror": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/rose-optimized-polarized-opz-w-sunburst-mirror_small_2519adb8-e3a5-47ad-864f-239ccc42a8d6.png?v=1775399464",
-                        "Rose Optimized Polarized (OPz) w/ Gold Mirror": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-rose-optimized-polarized-opz-w-gold-mirror-w-anti-fog_small_425c97b7-5f9f-4f76-a83d-70b8fa53e5fe.png?v=1775399465",
-                        "Brown Optimized Polarized (OPz) w/ Green Mirror": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/Brown_OptimizedPolarized_OPz.jpg?v=1680552490",
-                        "ANSI Z87.1+ MILSPEC Ballistic Smoke w/Anti-Fog": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/Ballistic_Smoke.jpg?v=1680552491",
-                        "ANSI Z87.1+ MILSPEC Ballistic Smoke Polarized w/Gold Mirror": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-rose-optimized-polarized-opz-w-gold-mirror-w-anti-fog_small_425c97b7-5f9f-4f76-a83d-70b8fa53e5fe.png?v=1775399465",
-                        "ANSI Z87.1+ MILSPEC Ballistic Clear w/Anti-Fog": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/Ballistic_Clear.jpg?v=1680552490",
-                        "ANSI Z87.1+ MILSPEC Ballistic Inferno Photochromic w/Anti-Fog": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-inferno-photochromic-w-anti-fog_small_8ab7a53f-0a95-45f6-ae5d-d70bded14a04.png?v=1775399464"
+                        {%- assign lens_swatch_count = 0 -%}
+                        {%- assign seen_lens_swatch_values = '|' -%}
+                        {%- for mapped_variant in product.variants -%}
+                          {%- assign lens_value = mapped_variant.options[lens_color_index] | default: '' | strip -%}
+                          {%- assign lens_swatch_url = mapped_variant.metafields.custom.gatorz_swatch_lens_url.value | default: mapped_variant.metafields.custom.swatch_lens_url.value | default: '' -%}
+                          {%- if lens_value != blank and lens_swatch_url != blank -%}
+                            {%- assign lens_token = '|' | append: lens_value | append: '|' -%}
+                            {%- unless seen_lens_swatch_values contains lens_token -%}
+                              {%- if lens_swatch_count > 0 -%},{%- endif -%}
+                              {{ lens_value | json }}: {{ lens_swatch_url | json }}
+                              {%- assign lens_swatch_count = lens_swatch_count | plus: 1 -%}
+                              {%- assign seen_lens_swatch_values = seen_lens_swatch_values | append: lens_value | append: '|' -%}
+                            {%- endunless -%}
+                          {%- endif -%}
+                        {%- endfor -%}
                       },
                       "frame_color": {
-                        "Black w/Silver Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/black-w-silver-logo_small_a95bca6f-df1b-47c5-8bfc-4d1873f1ad34.png?v=1775399466",
-                        "Black w/Black Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/black-w-black-logo_small_6e8d0d7b-9af1-46f8-a671-ddb945000648.png?v=1775399466",
-                        "Frost w/Black Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/black-w-black-logo_small_6e8d0d7b-9af1-46f8-a671-ddb945000648.png?v=1775399466",
-                        "Graphite w/Black Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/graphite-w-black-logo_small_6df74d34-8042-47dd-9d52-adf405589ae5.png?v=1775399464",
-                        "Gunmetal w/Black Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/graphite-w-black-logo_small_6df74d34-8042-47dd-9d52-adf405589ae5.png?v=1775399464",
-                        "Slate w/Black Logo": "https://cdn.shopify.com/s/files/1/0662/8438/8602/files/graphite-w-black-logo_small_6df74d34-8042-47dd-9d52-adf405589ae5.png?v=1775399464"
+                        {%- assign frame_swatch_count = 0 -%}
+                        {%- assign seen_frame_swatch_values = '|' -%}
+                        {%- for mapped_variant in product.variants -%}
+                          {%- assign frame_value = mapped_variant.options[frame_color_index] | default: '' | strip -%}
+                          {%- assign frame_swatch_url = mapped_variant.metafields.custom.gatorz_swatch_frame_url.value | default: mapped_variant.metafields.custom.swatch_frame_url.value | default: '' -%}
+                          {%- if frame_value != blank and frame_swatch_url != blank -%}
+                            {%- assign frame_token = '|' | append: frame_value | append: '|' -%}
+                            {%- unless seen_frame_swatch_values contains frame_token -%}
+                              {%- if frame_swatch_count > 0 -%},{%- endif -%}
+                              {{ frame_value | json }}: {{ frame_swatch_url | json }}
+                              {%- assign frame_swatch_count = frame_swatch_count | plus: 1 -%}
+                              {%- assign seen_frame_swatch_values = seen_frame_swatch_values | append: frame_value | append: '|' -%}
+                            {%- endunless -%}
+                          {%- endif -%}
+                        {%- endfor -%}
                       }
                     }
                   </script>
@@ -538,11 +552,15 @@
                         {%- assign gallery_file_2_metafield = mapped_variant.metafields.custom.gatorz_gallery_image_2 | default: mapped_variant.metafields.custom.gallery_image_2 -%}
                         {%- assign gallery_file_3_metafield = mapped_variant.metafields.custom.gatorz_gallery_image_3 | default: mapped_variant.metafields.custom.gallery_image_3 -%}
                         {%- assign gallery_file_4_metafield = mapped_variant.metafields.custom.gatorz_gallery_image_4 | default: mapped_variant.metafields.custom.gallery_image_4 -%}
+                        {%- assign gallery_url_1 = mapped_variant.metafields.custom.gatorz_gallery_url_1.value | default: mapped_variant.metafields.custom.gallery_url_1.value | default: '' -%}
+                        {%- assign gallery_url_2 = mapped_variant.metafields.custom.gatorz_gallery_url_2.value | default: mapped_variant.metafields.custom.gallery_url_2.value | default: '' -%}
+                        {%- assign gallery_url_3 = mapped_variant.metafields.custom.gatorz_gallery_url_3.value | default: mapped_variant.metafields.custom.gallery_url_3.value | default: '' -%}
+                        {%- assign gallery_url_4 = mapped_variant.metafields.custom.gatorz_gallery_url_4.value | default: mapped_variant.metafields.custom.gallery_url_4.value | default: '' -%}
                         {%- assign gallery_file_1 = gallery_file_1_metafield.value -%}
                         {%- assign gallery_file_2 = gallery_file_2_metafield.value -%}
                         {%- assign gallery_file_3 = gallery_file_3_metafield.value -%}
                         {%- assign gallery_file_4 = gallery_file_4_metafield.value -%}
-                        {%- if gallery_files != blank or gallery_file_1 != blank or gallery_file_2 != blank or gallery_file_3 != blank or gallery_file_4 != blank -%}
+                        {%- if gallery_files != blank or gallery_file_1 != blank or gallery_file_2 != blank or gallery_file_3 != blank or gallery_file_4 != blank or gallery_url_1 != blank or gallery_url_2 != blank or gallery_url_3 != blank or gallery_url_4 != blank -%}
                           {%- if gallery_map_count > 0 -%},{%- endif -%}
                           {{ mapped_variant.id | append: '' | json }}: [
                             {%- if gallery_files != blank -%}
@@ -552,7 +570,10 @@
                               {%- endfor -%}
                             {%- else -%}
                               {%- assign gallery_file_first = true -%}
-                              {%- if gallery_file_1_metafield != blank -%}
+                              {%- if gallery_url_1 != blank -%}
+                                {{ gallery_url_1 | json }}
+                                {%- assign gallery_file_first = false -%}
+                              {%- elsif gallery_file_1_metafield != blank -%}
                                 {%- assign gallery_file_url_1 = gallery_file_1_metafield | file_url -%}
                                 {%- if gallery_file_url_1 == blank and gallery_file_1 != blank -%}
                                   {%- assign gallery_file_url_1 = gallery_file_1 | image_url: width: 4096 | default: gallery_file_1 | file_url -%}
@@ -560,7 +581,11 @@
                                 {{ gallery_file_url_1 | json }}
                                 {%- assign gallery_file_first = false -%}
                               {%- endif -%}
-                              {%- if gallery_file_2_metafield != blank -%}
+                              {%- if gallery_url_2 != blank -%}
+                                {%- unless gallery_file_first -%},{%- endunless -%}
+                                {{ gallery_url_2 | json }}
+                                {%- assign gallery_file_first = false -%}
+                              {%- elsif gallery_file_2_metafield != blank -%}
                                 {%- unless gallery_file_first -%},{%- endunless -%}
                                 {%- assign gallery_file_url_2 = gallery_file_2_metafield | file_url -%}
                                 {%- if gallery_file_url_2 == blank and gallery_file_2 != blank -%}
@@ -569,7 +594,11 @@
                                 {{ gallery_file_url_2 | json }}
                                 {%- assign gallery_file_first = false -%}
                               {%- endif -%}
-                              {%- if gallery_file_3_metafield != blank -%}
+                              {%- if gallery_url_3 != blank -%}
+                                {%- unless gallery_file_first -%},{%- endunless -%}
+                                {{ gallery_url_3 | json }}
+                                {%- assign gallery_file_first = false -%}
+                              {%- elsif gallery_file_3_metafield != blank -%}
                                 {%- unless gallery_file_first -%},{%- endunless -%}
                                 {%- assign gallery_file_url_3 = gallery_file_3_metafield | file_url -%}
                                 {%- if gallery_file_url_3 == blank and gallery_file_3 != blank -%}
@@ -578,7 +607,10 @@
                                 {{ gallery_file_url_3 | json }}
                                 {%- assign gallery_file_first = false -%}
                               {%- endif -%}
-                              {%- if gallery_file_4_metafield != blank -%}
+                              {%- if gallery_url_4 != blank -%}
+                                {%- unless gallery_file_first -%},{%- endunless -%}
+                                {{ gallery_url_4 | json }}
+                              {%- elsif gallery_file_4_metafield != blank -%}
                                 {%- unless gallery_file_first -%},{%- endunless -%}
                                 {%- assign gallery_file_url_4 = gallery_file_4_metafield | file_url -%}
                                 {%- if gallery_file_url_4 == blank and gallery_file_4 != blank -%}
