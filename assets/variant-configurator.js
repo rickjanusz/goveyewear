@@ -563,7 +563,7 @@ if (!customElements.get('variant-configurator')) {
           .filter((value) => Number.isInteger(value) && value > 0),
       );
 
-      const featuredFilename = this.extractFilename(this.currentVariant?.featured_image_src);
+      const featuredFilename = this.getFeaturedFilenameForCurrentVariant(mediaGallery);
       const seriesIds = this.getSeriesMediaIdsFromFeaturedFilename(featuredFilename, available);
       if (!seriesIds.length) return [];
 
@@ -594,13 +594,36 @@ if (!customElements.get('variant-configurator')) {
 
       // Expand a deterministic image series from featured filename:
       // e.g. sentix_smoke_black-1.png -> sentix_smoke_black-(1..n).png
-      const featuredFilename = this.extractFilename(this.currentVariant?.featured_image_src);
+      const featuredFilename = this.getFeaturedFilenameForCurrentVariant(mediaGallery);
       const seriesIds = this.getSeriesMediaIdsFromFeaturedFilename(featuredFilename, available);
       seriesIds.forEach((id) => addId(id));
 
       addId(this.currentVariant?.featured_media_id);
 
       return ordered;
+    }
+
+    getFeaturedFilenameForCurrentVariant(mediaGallery) {
+      const fromVariant = this.extractFilename(this.currentVariant?.featured_image_src);
+      if (fromVariant) return fromVariant;
+
+      const featuredId = Number(this.currentVariant?.featured_media_id || 0);
+      if (!Number.isInteger(featuredId) || featuredId <= 0) return '';
+
+      const featuredNode = this.getGalleryMediaItems(mediaGallery).find((node) => {
+        const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
+        return numeric === featuredId;
+      });
+      if (!featuredNode) return '';
+
+      const img = featuredNode.querySelector('img');
+      if (!img) return '';
+
+      const fromCurrent = this.extractFilename(img.currentSrc || img.getAttribute('src'));
+      if (fromCurrent) return fromCurrent;
+
+      const srcset = String(img.getAttribute('srcset') || '').split(',')[0]?.trim()?.split(/\s+/)?.[0] || '';
+      return this.extractFilename(srcset);
     }
 
     getSeriesMediaIdsFromFeaturedFilename(featuredFilename, availableIds) {
