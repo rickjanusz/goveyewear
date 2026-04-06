@@ -409,12 +409,6 @@ fieldset.product-form__input .form__label {
   box-shadow: 0 0 0 0.2rem rgb(var(--color-background)), 0 0 0 0.35rem rgb(var(--color-foreground));
 }
 
-.sentix-configurator__media-hidden,
-.sentix-configurator__thumb-hidden,
-.sentix-configurator__modal-media-hidden {
-  display: none !important;
-}
-
 .sentix-configurator__support {
   margin-top: 1.2rem;
   padding: 0;
@@ -431,14 +425,6 @@ fieldset.product-form__input .form__label {
   font-size: 1.2rem;
   line-height: 1.5;
   margin: 0;
-  white-space: pre-line;
-}
-
-.sentix-configurator__support-body-secondary {
-  font-size: 1.2rem;
-  line-height: 1.5;
-  margin: 0.6rem 0 0;
-  white-space: pre-line;
 }
 
 @media screen and (max-width: 749px) {
