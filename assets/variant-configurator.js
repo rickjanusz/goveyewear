@@ -317,7 +317,7 @@ if (!customElements.get('variant-configurator')) {
 
     handleClick(event) {
       const button = event.target.closest('[data-option-position][data-option-value]');
-      if (!button || button.getAttribute('aria-disabled') === 'true') return;
+      if (!button) return;
 
       const key = button.dataset.optionKey;
       if (!key) return;
@@ -372,17 +372,13 @@ if (!customElements.get('variant-configurator')) {
         const node = this.groupNodes[key];
         if (!node) return;
 
-        node.innerHTML = values.map((value) => {
-          const selectionForValue = { ...this.selected, ...upstreamSelections, [key]: value };
-          const hasAvailableMatch = this.getMatchingVariants(this.variantData, selectionForValue).some((variant) => variant.available);
-          return this.renderOptionButton(key, position, value, !hasAvailableMatch);
-        }).join('');
+        node.innerHTML = values.map((value) => this.renderOptionButton(key, position, value)).join('');
       });
 
       this.bindSwatchFallbackHandlers();
     }
 
-    renderOptionButton(key, position, value, disabled = false) {
+    renderOptionButton(key, position, value) {
       const selected = this.selected[key] === value;
       const swatchUrl = this.swatchMap?.[key]?.[this.normalizeSwatchKey(value)] || '';
       const isSwatchOption = key === 'lens_color' || key === 'frame_color';
@@ -406,7 +402,7 @@ if (!customElements.get('variant-configurator')) {
           class="${classes}"
           role="radio"
           aria-checked="${selected ? 'true' : 'false'}"
-          aria-disabled="${disabled ? 'true' : 'false'}"
+          aria-disabled="false"
           tabindex="${selected ? '0' : '-1'}"
           data-option-key="${key}"
           data-option-position="${position}"
