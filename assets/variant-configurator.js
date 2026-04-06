@@ -664,6 +664,24 @@ if (!customElements.get('variant-configurator')) {
         if (filteredConfigured.length) return filteredConfigured;
       }
 
+      const configuredFiles = this.variantGalleryFiles?.[key] || [];
+      if (configuredFiles.length) {
+        const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
+        if (idsFromIndex.length) return idsFromIndex;
+
+        const idsFromGalleryFiles = this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
+        if (idsFromGalleryFiles.length) return idsFromGalleryFiles;
+      }
+
+      const assignedFiles = this.variantAssignedGalleryFiles?.[key] || [];
+      if (assignedFiles.length) {
+        const idsFromAssignedIndex = this.resolveMediaIdsByProductIndex(assignedFiles);
+        if (idsFromAssignedIndex.length) return idsFromAssignedIndex;
+
+        const idsFromAssignedFiles = this.resolveMediaIdsByFilenames(mediaGallery, assignedFiles);
+        if (idsFromAssignedFiles.length) return idsFromAssignedFiles;
+      }
+
       const assignedIds = this.variantAssignedMediaIds?.[key] || [];
       if (assignedIds.length) {
         const available = new Set(
@@ -675,22 +693,7 @@ if (!customElements.get('variant-configurator')) {
         if (filteredAssigned.length) return filteredAssigned;
       }
 
-      const configuredFiles = this.variantGalleryFiles?.[key] || [];
-      if (configuredFiles.length) {
-        const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
-        if (idsFromIndex.length) return idsFromIndex;
-
-        const idsFromGalleryFiles = this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
-        if (idsFromGalleryFiles.length) return idsFromGalleryFiles;
-      }
-
-      const assignedFiles = this.variantAssignedGalleryFiles?.[key] || [];
-      if (!assignedFiles.length) return [];
-
-      const idsFromAssignedIndex = this.resolveMediaIdsByProductIndex(assignedFiles);
-      if (idsFromAssignedIndex.length) return idsFromAssignedIndex;
-
-      return this.resolveMediaIdsByFilenames(mediaGallery, assignedFiles);
+      return [];
     }
 
     resolveMediaIdsByProductIndex(filenames) {
