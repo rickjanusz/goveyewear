@@ -32,6 +32,7 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
       this.variantAssignedGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-assigned-gallery-files', {}));
       this.productMediaIndex = this.normalizeProductMediaIndex(this.parseJson('product-media-index', []));
+      this.swatchValueImageMap = this.parseJson('swatch-value-image-map', {});
       const defaultLensColorContent = this.parseJson('lens-color-content', {});
       const lensColorContentOverrides = this.parseJson('lens-color-content-variant-overrides', {});
       this.lensColorContent = this.mergeLensColorContent(defaultLensColorContent, lensColorContentOverrides);
@@ -83,6 +84,17 @@ if (!customElements.get('sentix-variant-configurator')) {
         map[group] ||= {};
         map[group][this.normalizeSwatchKey(value)] = image;
       });
+
+      Object.entries(this.swatchValueImageMap || {}).forEach(([group, values]) => {
+        if (!group || !values || typeof values !== 'object') return;
+        map[group] ||= {};
+        Object.entries(values).forEach(([value, image]) => {
+          if (!value || !image) return;
+          const key = this.normalizeSwatchKey(value);
+          if (!map[group][key]) map[group][key] = image;
+        });
+      });
+
       return map;
     }
 
