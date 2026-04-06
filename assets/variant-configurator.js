@@ -56,14 +56,14 @@ if (!customElements.get('variant-configurator')) {
       this.clearVariantMediaSelection();
 
       this.variantData = this.normalizeVariants(this.parseJson('sellable-variants', []));
-      this.sellableVariants = this.getSellableVariants(this.variantData);
-
-      if (!this.sellableVariants.length) return;
+      if (!this.variantData.length) return;
 
       this.addEventListener('click', this.handleClick.bind(this));
       this.addEventListener('keydown', this.handleKeydown.bind(this));
 
-      const initialVariant = this.sellableVariants.find((variant) => variant.id === this.initialVariantId) || this.sellableVariants[0];
+      const initialVariant = this.variantData.find((variant) => variant.id === this.initialVariantId)
+        || this.variantData.find((variant) => variant.available)
+        || this.variantData[0];
       this.syncUIFromVariant(initialVariant);
     }
 
@@ -185,10 +185,6 @@ if (!customElements.get('variant-configurator')) {
         if (variant?.id) index.set(Number(variant.id), variant);
       });
       return index;
-    }
-
-    getSellableVariants(variants) {
-      return variants.filter((variant) => variant.available);
     }
 
     normalizeVariantMediaMap(rawMap) {
@@ -326,8 +322,8 @@ if (!customElements.get('variant-configurator')) {
       const key = button.dataset.optionKey;
       if (!key) return;
       const nextSelection = { ...this.selected, [key]: button.dataset.optionValue };
-      const resolvedVariant = this.findExactVariant(this.sellableVariants, nextSelection)
-        || this.getFallbackVariant(this.sellableVariants, nextSelection, key);
+      const resolvedVariant = this.findExactVariant(this.variantData, nextSelection)
+        || this.getFallbackVariant(this.variantData, nextSelection, key);
 
       if (resolvedVariant) this.syncUIFromVariant(resolvedVariant);
     }
@@ -372,17 +368,21 @@ if (!customElements.get('variant-configurator')) {
       this.optionKeys.forEach((key) => {
         const position = this.optionPositions[key];
         const upstreamSelections = upstreamSelectionsByKey[key] || {};
-        const values = this.getValidValuesForOption(this.sellableVariants, upstreamSelections, key);
+        const values = this.getValidValuesForOption(this.variantData, upstreamSelections, key);
         const node = this.groupNodes[key];
         if (!node) return;
 
-        node.innerHTML = values.map((value) => this.renderOptionButton(key, position, value)).join('');
+        node.innerHTML = values.map((value) => {
+          const selectionForValue = { ...this.selected, ...upstreamSelections, [key]: value };
+          const hasAvailableMatch = this.getMatchingVariants(this.variantData, selectionForValue).some((variant) => variant.available);
+          return this.renderOptionButton(key, position, value, !hasAvailableMatch);
+        }).join('');
       });
 
       this.bindSwatchFallbackHandlers();
     }
 
-    renderOptionButton(key, position, value) {
+    renderOptionButton(key, position, value, disabled = false) {
       const selected = this.selected[key] === value;
       const swatchUrl = this.swatchMap?.[key]?.[this.normalizeSwatchKey(value)] || '';
       const isSwatchOption = key === 'lens_color' || key === 'frame_color';
@@ -406,7 +406,7 @@ if (!customElements.get('variant-configurator')) {
           class="${classes}"
           role="radio"
           aria-checked="${selected ? 'true' : 'false'}"
-          aria-disabled="false"
+          aria-disabled="${disabled ? 'true' : 'false'}"
           tabindex="${selected ? '0' : '-1'}"
           data-option-key="${key}"
           data-option-position="${position}"

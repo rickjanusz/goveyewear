@@ -460,7 +460,7 @@
                     }
                   </script>
                   <script type="application/json" data-sellable-variants>
-                    {{ product.variants | where: 'available', true | json }}
+                    {{ product.variants | json }}
                   </script>
                   <script type="application/json" data-native-variants>
                     {{ product.variants | json }}
