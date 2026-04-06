@@ -42,6 +42,126 @@
             "picker_type": "button"
           }
         },
+        "gatorz_swatch_lens_smoke": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "Smoke",
+            "swatch_image": "shopify://shop_images/smoke_small.png"
+          }
+        },
+        "gatorz_swatch_lens_smoke_opz": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "Smoke Optimized Polarized (OPz)",
+            "swatch_image": "shopify://shop_images/smoke-optimized-polarized-opz_small.png"
+          }
+        },
+        "gatorz_swatch_lens_smoke_opz_blue_mirror": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "Smoke Optimized Polarized (OPz) w/ Blue Mirror",
+            "swatch_image": "shopify://shop_images/smoke-optimized-polarized-opz-w-blue-mirror_small.png"
+          }
+        },
+        "gatorz_swatch_lens_rose_sunburst": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "Rose Optimized Polarized (OPz) w/ Sunburst Mirror",
+            "swatch_image": "shopify://shop_images/rose-optimized-polarized-opz-w-sunburst-mirror_small.png"
+          }
+        },
+        "gatorz_swatch_lens_rose_gold": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "Rose Optimized Polarized (OPz) w/ Gold Mirror",
+            "swatch_image": "shopify://shop_images/rose-optimized-polarized-opz-w-gold-mirror_small.png"
+          }
+        },
+        "gatorz_swatch_lens_brown_green": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "Brown Optimized Polarized (OPz) w/ Green Mirror",
+            "swatch_image": "shopify://shop_images/brown-optimized-polarized-opz-w-green-mirror_small.png"
+          }
+        },
+        "gatorz_swatch_lens_ballistic_smoke_antifog": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "ANSI Z87.1+ MILSPEC Ballistic Smoke w/Anti-Fog",
+            "swatch_image": "shopify://shop_images/ansi-z87-1-milspec-ballistic-smoke-w-anti-fog_small.png"
+          }
+        },
+        "gatorz_swatch_lens_ballistic_clear_antifog": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "ANSI Z87.1+ MILSPEC Ballistic Clear w/Anti-Fog",
+            "swatch_image": "shopify://shop_images/ansi-z87-1-milspec-ballistic-clear-w-anti-fog_small.png"
+          }
+        },
+        "gatorz_swatch_lens_ballistic_inferno_antifog": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "ANSI Z87.1+ MILSPEC Ballistic Inferno Photochromic w/Anti-Fog",
+            "swatch_image": "shopify://shop_images/ansi-z87-1-milspec-ballistic-inferno-photochromic-w-anti-fog_small.png"
+          }
+        },
+        "gatorz_swatch_frame_black_silver": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "frame_color",
+            "option_value": "Black w/Silver Logo",
+            "swatch_image": "shopify://shop_images/black-w-silver-logo_small.png"
+          }
+        },
+        "gatorz_swatch_frame_black_black": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "frame_color",
+            "option_value": "Black w/Black Logo",
+            "swatch_image": "shopify://shop_images/black-w-black-logo_small.png"
+          }
+        },
+        "gatorz_swatch_frame_frost_black": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "frame_color",
+            "option_value": "Frost w/Black Logo",
+            "swatch_image": "shopify://shop_images/frost-w-black-logo_small.png"
+          }
+        },
+        "gatorz_swatch_frame_graphite_black": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "frame_color",
+            "option_value": "Graphite w/Black Logo",
+            "swatch_image": "shopify://shop_images/graphite-w-black-logo_small.png"
+          }
+        },
+        "gatorz_swatch_frame_gunmetal_black": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "frame_color",
+            "option_value": "Gunmetal w/Black Logo",
+            "swatch_image": "shopify://shop_images/gunmetal-w-black-logo_small.png"
+          }
+        },
+        "gatorz_swatch_frame_slate_black": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "frame_color",
+            "option_value": "Slate w/Black Logo",
+            "swatch_image": "shopify://shop_images/slate-w-black-logo_small.png"
+          }
+        },
         "quantity_selector": {
           "type": "quantity_selector",
           "settings": {}
@@ -69,12 +189,28 @@
         "caption",
         "price",
         "variant_picker",
+        "gatorz_swatch_lens_smoke",
+        "gatorz_swatch_lens_smoke_opz",
+        "gatorz_swatch_lens_smoke_opz_blue_mirror",
+        "gatorz_swatch_lens_rose_sunburst",
+        "gatorz_swatch_lens_rose_gold",
+        "gatorz_swatch_lens_brown_green",
+        "gatorz_swatch_lens_ballistic_smoke_antifog",
+        "gatorz_swatch_lens_ballistic_clear_antifog",
+        "gatorz_swatch_lens_ballistic_inferno_antifog",
+        "gatorz_swatch_frame_black_silver",
+        "gatorz_swatch_frame_black_black",
+        "gatorz_swatch_frame_frost_black",
+        "gatorz_swatch_frame_graphite_black",
+        "gatorz_swatch_frame_gunmetal_black",
+        "gatorz_swatch_frame_slate_black",
         "quantity_selector",
         "buy_buttons",
         "description",
         "share"
       ],
       "settings": {
+        "enable_gatorz_configurator": true,
         "enable_sticky_info": true,
         "gallery_layout": "stacked",
         "media_size": "medium",

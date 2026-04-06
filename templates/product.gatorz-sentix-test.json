@@ -42,6 +42,94 @@
             "picker_type": "button"
           }
         },
+        "gatorz_swatch_lens_smoke": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "Smoke",
+            "swatch_image": "shopify://shop_images/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small_d0ca040b-1779-4199-a301-927d70fefc96.png"
+          }
+        },
+        "gatorz_swatch_lens_smoke_opz": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "Smoke Optimized Polarized (OPz)",
+            "swatch_image": "shopify://shop_images/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small_d0ca040b-1779-4199-a301-927d70fefc96.png"
+          }
+        },
+        "gatorz_swatch_lens_rose_sunburst": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "Rose Optimized Polarized (OPz) w/ Sunburst Mirror",
+            "swatch_image": "shopify://shop_images/rose-optimized-polarized-opz-w-sunburst-mirror_small_2519adb8-e3a5-47ad-864f-239ccc42a8d6.png"
+          }
+        },
+        "gatorz_swatch_lens_milspec_rose_gold_antifog": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog",
+            "swatch_image": "shopify://shop_images/milspec-ballistic-rose-optimized-polarized-opz-w-gold-mirror-w-anti-fog_small_425c97b7-5f9f-4f76-a83d-70b8fa53e5fe.png"
+          }
+        },
+        "gatorz_swatch_lens_milspec_smoke_antifog": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "MILSPEC Ballistic Smoke w/Anti-Fog",
+            "swatch_image": "shopify://shop_images/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small_d0ca040b-1779-4199-a301-927d70fefc96.png"
+          }
+        },
+        "gatorz_swatch_lens_milspec_inferno_photo_antifog": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "MILSPEC Ballistic Inferno Photochromic w/Anti-Fog",
+            "swatch_image": "shopify://shop_images/milspec-ballistic-inferno-photochromic-w-anti-fog_small_8ab7a53f-0a95-45f6-ae5d-d70bded14a04.png"
+          }
+        },
+        "gatorz_swatch_lens_milspec_smoke_opz_antifog": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog",
+            "swatch_image": "shopify://shop_images/milspec-ballistic-smoke-optimized-polarized-opz-w-anti-fog_small_d0ca040b-1779-4199-a301-927d70fefc96.png"
+          }
+        },
+        "gatorz_swatch_frame_black_silver": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "frame_color",
+            "option_value": "Black w/Silver Logo",
+            "swatch_image": "shopify://shop_images/black-w-silver-logo_small_a95bca6f-df1b-47c5-8bfc-4d1873f1ad34.png"
+          }
+        },
+        "gatorz_swatch_frame_black_black": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "frame_color",
+            "option_value": "Black w/Black Logo",
+            "swatch_image": "shopify://shop_images/black-w-black-logo_small_6e8d0d7b-9af1-46f8-a671-ddb945000648.png"
+          }
+        },
+        "gatorz_swatch_frame_graphite_black": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "frame_color",
+            "option_value": "Graphite w/Black Logo",
+            "swatch_image": "shopify://shop_images/graphite-w-black-logo_small_6df74d34-8042-47dd-9d52-adf405589ae5.png"
+          }
+        },
+        "gatorz_swatch_frame_tan_black": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "frame_color",
+            "option_value": "Tan w/Black Logo",
+            "swatch_image": "shopify://shop_images/tan-w-black-logo_small_18c0248b-b0cd-434b-9f55-d010680df416.png"
+          }
+        },
         "quantity_selector": {
           "type": "quantity_selector",
           "settings": {}
@@ -69,12 +157,24 @@
         "caption",
         "price",
         "variant_picker",
+        "gatorz_swatch_lens_smoke",
+        "gatorz_swatch_lens_smoke_opz",
+        "gatorz_swatch_lens_rose_sunburst",
+        "gatorz_swatch_lens_milspec_rose_gold_antifog",
+        "gatorz_swatch_lens_milspec_smoke_antifog",
+        "gatorz_swatch_lens_milspec_inferno_photo_antifog",
+        "gatorz_swatch_lens_milspec_smoke_opz_antifog",
+        "gatorz_swatch_frame_black_silver",
+        "gatorz_swatch_frame_black_black",
+        "gatorz_swatch_frame_graphite_black",
+        "gatorz_swatch_frame_tan_black",
         "quantity_selector",
         "buy_buttons",
         "description",
         "share"
       ],
       "settings": {
+        "enable_gatorz_configurator": true,
         "enable_sticky_info": true,
         "gallery_layout": "stacked",
         "media_size": "medium",
