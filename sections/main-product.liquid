@@ -58,7 +58,7 @@
       {%- assign has_frame_color_option = true -%}
     {%- endif -%}
   {%- endfor -%}
-  {%- if section.settings.enable_gatorz_configurator and has_gatorz_swatch_blocks -%}
+  {%- if section.settings.enable_gatorz_configurator -%}
     {%- assign use_gatorz_configurator = true -%}
   {%- elsif has_lens_type_option and has_lens_color_option and has_frame_color_option -%}
     {%- assign use_gatorz_configurator = true -%}
