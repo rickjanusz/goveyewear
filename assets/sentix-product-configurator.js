@@ -409,9 +409,13 @@ if (!customElements.get('sentix-variant-configurator')) {
     resolveSwatchUrl(key, position, value) {
       const normalizedValue = this.normalizeSwatchKey(value);
       const positionKey = String(Number(position) || '');
-      const goldMirrorSmokeKey = 'ansi-z87-1-milspec-ballistic-smoke-polarized-w-gold-mirror';
-
-      if (key === 'lens_color' && normalizedValue === goldMirrorSmokeKey) return '';
+      const explicitSwatchOverrides = {
+        lens_color: {
+          'ansi-z87-1-milspec-ballistic-smoke-polarized-w-gold-mirror': 'https://cdn.shopify.com/s/files/1/0662/8438/8602/files/milspec-ballistic-rose-optimized-polarized-opz-w-gold-mirror-w-anti-fog_small_425c97b7-5f9f-4f76-a83d-70b8fa53e5fe.png?v=1775399465',
+        },
+      };
+      const explicitMatch = explicitSwatchOverrides?.[key]?.[normalizedValue];
+      if (explicitMatch) return explicitMatch;
 
       const byPosition = this.swatchMap?.byPosition?.[positionKey]?.[normalizedValue];
       if (byPosition) return byPosition;
