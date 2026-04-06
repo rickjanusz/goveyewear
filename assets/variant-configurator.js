@@ -1,5 +1,5 @@
 if (!customElements.get('variant-configurator')) {
-  class SentixVariantConfigurator extends HTMLElement {
+  class VariantConfigurator extends HTMLElement {
     constructor() {
       super();
 
@@ -512,11 +512,6 @@ if (!customElements.get('variant-configurator')) {
       return [];
     }
 
-    getPrimaryMediaId() {
-      const featuredMediaId = Number(this.currentVariant?.featured_media_id || 0);
-      return featuredMediaId ? `${this.sectionId}-${featuredMediaId}` : '';
-    }
-
     getFallbackMediaIdsForCurrentVariant(mediaGallery) {
       const available = new Set(
         Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
@@ -578,8 +573,8 @@ if (!customElements.get('variant-configurator')) {
             .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
             .filter((value) => Number.isInteger(value) && value > 0),
         );
-
-        return configuredIds.filter((id) => available.has(id));
+        const filteredConfigured = configuredIds.filter((id) => available.has(id));
+        if (filteredConfigured.length) return filteredConfigured;
       }
 
       const configuredFiles = this.variantGalleryFiles?.[key] || [];
@@ -854,11 +849,5 @@ if (!customElements.get('variant-configurator')) {
     }
   }
 
-  customElements.define('variant-configurator', SentixVariantConfigurator);
-  if (!customElements.get('sentix-variant-configurator')) {
-    customElements.define('sentix-variant-configurator', class SentixVariantConfiguratorAlias extends SentixVariantConfigurator {});
-  }
-  if (!customElements.get('gatorz-variant-configurator')) {
-    customElements.define('gatorz-variant-configurator', class GatorzVariantConfiguratorAlias extends SentixVariantConfigurator {});
-  }
+  customElements.define('variant-configurator', VariantConfigurator);
 }
