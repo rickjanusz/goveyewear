@@ -839,42 +839,9 @@ if (!customElements.get('variant-configurator')) {
     }
 
     applyVariantMediaSelection(mediaGallery, mediaIds) {
-      const selectedIds = new Set(mediaIds.map((id) => Number(id)));
-      let matchedCount = 0;
-      const totalMediaCount = mediaGallery.querySelectorAll('[data-media-id]').length;
-
-      mediaGallery.querySelectorAll('[data-media-id]').forEach((node) => {
-        const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
-        const shouldShow = selectedIds.has(numeric);
-        if (shouldShow) matchedCount += 1;
-        node.classList.toggle('variant-configurator__media-hidden', !shouldShow);
-        if (shouldShow) node.classList.remove('sentix-configurator__media-hidden');
-        if (!shouldShow) node.classList.remove('is-active');
-      });
-
-      mediaGallery.querySelectorAll('[data-target]').forEach((node) => {
-        const numeric = this.extractTrailingNumericId(node.dataset.target);
-        const shouldShow = selectedIds.has(numeric);
-        node.classList.toggle('variant-configurator__thumb-hidden', !shouldShow);
-        if (shouldShow) node.classList.remove('sentix-configurator__thumb-hidden');
-      });
-
-      // Safety net: never leave the gallery blank due to stale/mismatched IDs.
-      if (selectedIds.size > 0 && matchedCount === 0) {
-        console.warn('[variant-configurator] matchedCount=0; clearing selection fallback', {
-          variantId: this.currentVariant?.id,
-          selectedIds: Array.from(selectedIds),
-        });
-        this.clearVariantMediaSelection(mediaGallery);
-        return;
-      }
-
-      // Safety net: for multi-image galleries, don't collapse to a single matched image.
-      // If mapping only resolves to one slide, keep full gallery visible instead of over-hiding.
-      if (totalMediaCount > 1 && matchedCount < 2) {
-        this.clearVariantMediaSelection(mediaGallery);
-        return;
-      }
+      // Deterministic safe mode: never hide gallery items.
+      // Only sync active media and keep all gallery media visible.
+      this.clearVariantMediaSelection(mediaGallery);
 
       const primaryId = mediaIds[0];
       if (primaryId && mediaGallery.setActiveMedia) {
@@ -917,20 +884,10 @@ if (!customElements.get('variant-configurator')) {
       const activeMedia = modalContent.querySelector(`[data-media-id="${selected}"]`);
       if (activeMedia) modalContent.prepend(activeMedia);
 
-      const selectedIds = new Set(mappedMediaIds || []);
-      if (!selectedIds.size) {
-        modalContent.querySelectorAll('.variant-configurator__modal-media-hidden, .sentix-configurator__modal-media-hidden').forEach((node) => {
-          node.classList.remove('variant-configurator__modal-media-hidden');
-          node.classList.remove('sentix-configurator__modal-media-hidden');
-        });
-        return;
-      }
-
-      modalContent.querySelectorAll('[data-media-id]').forEach((node) => {
-        const mediaId = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
-        const shouldHide = !selectedIds.has(mediaId);
-        node.classList.toggle('variant-configurator__modal-media-hidden', shouldHide);
-        if (!shouldHide) node.classList.remove('sentix-configurator__modal-media-hidden');
+      // Deterministic safe mode: keep all modal media visible.
+      modalContent.querySelectorAll('.variant-configurator__modal-media-hidden, .sentix-configurator__modal-media-hidden').forEach((node) => {
+        node.classList.remove('variant-configurator__modal-media-hidden');
+        node.classList.remove('sentix-configurator__modal-media-hidden');
       });
     }
 
