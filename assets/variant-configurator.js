@@ -841,6 +841,7 @@ if (!customElements.get('variant-configurator')) {
     applyVariantMediaSelection(mediaGallery, mediaIds) {
       const selectedIds = new Set(mediaIds.map((id) => Number(id)));
       let matchedCount = 0;
+      const totalMediaCount = mediaGallery.querySelectorAll('[data-media-id]').length;
 
       mediaGallery.querySelectorAll('[data-media-id]').forEach((node) => {
         const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
@@ -864,6 +865,13 @@ if (!customElements.get('variant-configurator')) {
           variantId: this.currentVariant?.id,
           selectedIds: Array.from(selectedIds),
         });
+        this.clearVariantMediaSelection(mediaGallery);
+        return;
+      }
+
+      // Safety net: for multi-image galleries, don't collapse to a single matched image.
+      // If mapping only resolves to one slide, keep full gallery visible instead of over-hiding.
+      if (totalMediaCount > 1 && matchedCount < 2) {
         this.clearVariantMediaSelection(mediaGallery);
         return;
       }
