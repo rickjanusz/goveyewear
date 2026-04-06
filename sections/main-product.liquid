@@ -39,12 +39,7 @@
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
   {%- assign use_gatorz_configurator = false -%}
   {%- assign normalized_options = product.options | join: '||' | downcase -%}
-  {%- assign template_suffix = template.suffix | default: '' -%}
-  {%- assign is_gatorz_product_template = false -%}
-  {%- if template.name == 'product' and template_suffix contains 'gatorz-' -%}
-    {%- assign is_gatorz_product_template = true -%}
-  {%- endif -%}
-  {%- if section.settings.enable_gatorz_configurator and is_gatorz_product_template and normalized_options contains 'lens type' and normalized_options contains 'lens color' and normalized_options contains 'frame color' -%}
+  {%- if normalized_options contains 'lens type' and normalized_options contains 'lens color' and normalized_options contains 'frame color' -%}
     {%- assign use_gatorz_configurator = true -%}
   {%- endif -%}
   {%- if use_gatorz_configurator -%}
