@@ -29,6 +29,7 @@ if (!customElements.get('variant-configurator')) {
       };
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants', []));
       this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map', {}));
+      this.variantAssignedMediaIds = this.normalizeVariantMediaMap(this.parseJson('variant-assigned-media-ids', {}));
       this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
       this.variantAssignedGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-assigned-gallery-files', {}));
       this.productMediaIndex = this.normalizeProductMediaIndex(this.parseJson('product-media-index', []));
@@ -611,6 +612,17 @@ if (!customElements.get('variant-configurator')) {
         );
         const filteredConfigured = configuredIds.filter((id) => available.has(id));
         if (filteredConfigured.length) return filteredConfigured;
+      }
+
+      const assignedIds = this.variantAssignedMediaIds?.[key] || [];
+      if (assignedIds.length) {
+        const available = new Set(
+          Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+            .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+            .filter((value) => Number.isInteger(value) && value > 0),
+        );
+        const filteredAssigned = assignedIds.filter((id) => available.has(id));
+        if (filteredAssigned.length) return filteredAssigned;
       }
 
       const configuredFiles = this.variantGalleryFiles?.[key] || [];
