@@ -1,5 +1,5 @@
 if (!customElements.get('variant-configurator')) {
-  class VariantConfigurator extends HTMLElement {
+  class SentixVariantConfigurator extends HTMLElement {
     constructor() {
       super();
 
@@ -21,7 +21,6 @@ if (!customElements.get('variant-configurator')) {
     connectedCallback() {
       this.sectionId = this.dataset.section;
       this.productUrl = this.dataset.url;
-      this.productPath = this.normalizeProductPath(this.productUrl);
       this.productHandle = String(this.productUrl || '').split('/').filter(Boolean).pop() || '';
       this.initialVariantId = Number(this.dataset.initialVariantId || 0);
       this.optionPositions = {
@@ -30,11 +29,9 @@ if (!customElements.get('variant-configurator')) {
       };
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants', []));
       this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map', {}));
-      this.variantAssignedMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-assigned-media-ids', {}));
       this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
       this.variantAssignedGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-assigned-gallery-files', {}));
       this.productMediaIndex = this.normalizeProductMediaIndex(this.parseJson('product-media-index', []));
-      this.swatchValueImageMap = this.parseJson('swatch-value-image-map', {});
       const defaultLensColorContent = this.parseJson('lens-color-content', {});
       const lensColorContentOverrides = this.parseJson('lens-color-content-variant-overrides', {});
       this.lensColorContent = this.mergeLensColorContent(defaultLensColorContent, lensColorContentOverrides);
@@ -66,15 +63,6 @@ if (!customElements.get('variant-configurator')) {
       this.syncUIFromVariant(initialVariant);
     }
 
-    normalizeProductPath(url) {
-      const fallbackPath = window.location.pathname || '/';
-      try {
-        return new URL(url || fallbackPath, window.location.origin).pathname || fallbackPath;
-      } catch (_error) {
-        return fallbackPath;
-      }
-    }
-
     parseJson(key, fallback = {}) {
       const node = this.querySelector(`[data-${key}]`);
       if (!node) return fallback;
@@ -86,39 +74,15 @@ if (!customElements.get('variant-configurator')) {
     }
 
     buildSwatchMap(entries) {
-      const map = {
-        byGroup: {},
-        byPosition: {},
-      };
+      const map = {};
       (entries || []).forEach((entry) => {
         const group = entry?.group;
         const value = entry?.value;
         const image = entry?.image;
-        const optionPosition = Number(entry?.option_position || 0);
-        if (!value || !image) return;
-        const normalizedKey = this.normalizeSwatchKey(value);
-
-        if (group) {
-          map.byGroup[group] ||= {};
-          map.byGroup[group][normalizedKey] = image;
-        }
-        if (optionPosition > 0) {
-          const positionKey = String(optionPosition);
-          map.byPosition[positionKey] ||= {};
-          map.byPosition[positionKey][normalizedKey] = image;
-        }
+        if (!group || !value || !image) return;
+        map[group] ||= {};
+        map[group][this.normalizeSwatchKey(value)] = image;
       });
-
-      Object.entries(this.swatchValueImageMap || {}).forEach(([group, values]) => {
-        if (!group || !values || typeof values !== 'object') return;
-        map.byGroup[group] ||= {};
-        Object.entries(values).forEach(([value, image]) => {
-          if (!value || !image) return;
-          const key = this.normalizeSwatchKey(value);
-          if (!map.byGroup[group][key]) map.byGroup[group][key] = image;
-        });
-      });
-
       return map;
     }
 
@@ -230,17 +194,10 @@ if (!customElements.get('variant-configurator')) {
         const seen = new Set();
 
         source.forEach((url) => {
-          const pathKey = this.normalizeMediaPath(url);
-          const filenameKey = this.normalizeFilename(this.extractFilename(url));
-
-          if (pathKey && !seen.has(pathKey)) {
-            seen.add(pathKey);
-            unique.push(pathKey);
-          }
-          if (filenameKey && !seen.has(filenameKey)) {
-            seen.add(filenameKey);
-            unique.push(filenameKey);
-          }
+          const filename = this.normalizeFilename(this.extractFilename(url));
+          if (!filename || seen.has(filename)) return;
+          seen.add(filename);
+          unique.push(filename);
         });
 
         if (unique.length) normalized[key] = unique;
@@ -251,32 +208,16 @@ if (!customElements.get('variant-configurator')) {
 
     normalizeProductMediaIndex(rawIndex) {
       const rows = Array.isArray(rawIndex) ? rawIndex : [];
-      const lookupToId = new Map();
+      const filenameToId = new Map();
 
       rows.forEach((row) => {
         const id = Number(row?.id);
-        if (!Number.isInteger(id) || id <= 0) return;
-
-        const pathKey = this.normalizeMediaPath(row?.src);
-        if (pathKey && !lookupToId.has(pathKey)) lookupToId.set(pathKey, id);
-
-        const filenameKey = this.normalizeFilename(this.extractFilename(row?.src));
-        if (filenameKey && !lookupToId.has(filenameKey)) lookupToId.set(filenameKey, id);
+        const filename = this.normalizeFilename(this.extractFilename(row?.src));
+        if (!Number.isInteger(id) || id <= 0 || !filename) return;
+        if (!filenameToId.has(filename)) filenameToId.set(filename, id);
       });
 
-      return lookupToId;
-    }
-
-    normalizeMediaPath(value) {
-      const raw = String(value || '').trim();
-      if (!raw) return '';
-
-      try {
-        const parsed = new URL(raw, window.location.origin);
-        return decodeURIComponent(parsed.pathname || '').toLowerCase();
-      } catch (_error) {
-        return '';
-      }
+      return filenameToId;
     }
 
     getOrderedOptionKeys() {
@@ -406,7 +347,7 @@ if (!customElements.get('variant-configurator')) {
 
     renderOptionButton(key, position, value) {
       const selected = this.selected[key] === value;
-      const swatchUrl = this.resolveSwatchUrl(key, position, value);
+      const swatchUrl = this.swatchMap?.[key]?.[this.normalizeSwatchKey(value)] || '';
       const isSwatchOption = key === 'lens_color' || key === 'frame_color';
       const classes = [
         'sentix-configurator__option',
@@ -439,19 +380,6 @@ if (!customElements.get('variant-configurator')) {
       `;
     }
 
-    resolveSwatchUrl(key, position, value) {
-      const normalizedValue = this.normalizeSwatchKey(value);
-      const positionKey = String(Number(position) || '');
-
-      const byPosition = this.swatchMap?.byPosition?.[positionKey]?.[normalizedValue];
-      if (byPosition) return byPosition;
-
-      const byGroup = this.swatchMap?.byGroup?.[key]?.[normalizedValue];
-      if (byGroup) return byGroup;
-
-      return '';
-    }
-
     bindSwatchFallbackHandlers() {
       const images = Array.from(this.querySelectorAll('[data-swatch-visual] img'));
       images.forEach((img) => {
@@ -475,7 +403,6 @@ if (!customElements.get('variant-configurator')) {
         return '#111111';
       }
 
-      if (normalized.includes('gold mirror')) return '#c8aa43';
       if (normalized.includes('inferno') || normalized.includes('photochromic')) return '#9aa0a6';
       if (normalized.includes('rose')) return '#b26b7b';
       if (normalized.includes('smoke')) return '#4a4a4a';
@@ -539,10 +466,15 @@ if (!customElements.get('variant-configurator')) {
     updateMedia() {
       const mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`);
       if (!mediaGallery) return;
-      const availableIds = this.getAvailableMediaIds(mediaGallery);
-      const filterToAvailable = (ids) => (ids || []).filter((id) => availableIds.has(Number(id)));
 
-      const mappedMediaIds = filterToAvailable(this.getMappedMediaIdsForCurrentVariant(mediaGallery));
+      const coverSeriesMediaIds = this.getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, 4);
+      if (coverSeriesMediaIds.length) {
+        this.applyVariantMediaSelection(mediaGallery, coverSeriesMediaIds);
+        this.moveActiveModalMedia(String(coverSeriesMediaIds[0]), coverSeriesMediaIds);
+        return;
+      }
+
+      const mappedMediaIds = this.getMappedMediaIdsForCurrentVariant(mediaGallery);
 
       if (mappedMediaIds.length) {
         this.applyVariantMediaSelection(mediaGallery, mappedMediaIds);
@@ -550,14 +482,7 @@ if (!customElements.get('variant-configurator')) {
         return;
       }
 
-      const coverSeriesMediaIds = filterToAvailable(this.getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, 4));
-      if (coverSeriesMediaIds.length) {
-        this.applyVariantMediaSelection(mediaGallery, coverSeriesMediaIds);
-        this.moveActiveModalMedia(String(coverSeriesMediaIds[0]), coverSeriesMediaIds);
-        return;
-      }
-
-      const fallbackMediaIds = filterToAvailable(this.getFallbackMediaIdsForCurrentVariant(mediaGallery));
+      const fallbackMediaIds = this.getFallbackMediaIdsForCurrentVariant(mediaGallery);
       if (fallbackMediaIds.length) {
         this.applyVariantMediaSelection(mediaGallery, fallbackMediaIds);
         this.moveActiveModalMedia(String(fallbackMediaIds[0]), fallbackMediaIds);
@@ -593,7 +518,11 @@ if (!customElements.get('variant-configurator')) {
     }
 
     getFallbackMediaIdsForCurrentVariant(mediaGallery) {
-      const available = this.getAvailableMediaIds(mediaGallery);
+      const available = new Set(
+        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+          .filter((value) => Number.isInteger(value) && value > 0),
+      );
 
       const ordered = [];
       const seen = new Set();
@@ -642,25 +571,33 @@ if (!customElements.get('variant-configurator')) {
 
     getMappedMediaIdsForCurrentVariant(mediaGallery) {
       const key = String(this.currentVariant?.id || '');
-      const available = this.getAvailableMediaIds(mediaGallery);
-      const ordered = [];
-      const seen = new Set();
-      const addIds = (ids) => {
-        (ids || []).forEach((candidate) => {
-          const numeric = Number(candidate);
-          if (!Number.isInteger(numeric) || numeric <= 0 || seen.has(numeric) || !available.has(numeric)) return;
-          seen.add(numeric);
-          ordered.push(numeric);
-        });
-      };
-
       const configuredIds = this.variantMediaMap?.[key] || [];
-      addIds(configuredIds);
+      if (configuredIds.length) {
+        const available = new Set(
+          Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+            .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+            .filter((value) => Number.isInteger(value) && value > 0),
+        );
 
-      const assignedMediaIds = this.variantAssignedMediaMap?.[key] || [];
-      addIds(assignedMediaIds);
+        return configuredIds.filter((id) => available.has(id));
+      }
 
-      return ordered;
+      const configuredFiles = this.variantGalleryFiles?.[key] || [];
+      if (configuredFiles.length) {
+        const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
+        if (idsFromIndex.length) return idsFromIndex;
+
+        const idsFromGalleryFiles = this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
+        if (idsFromGalleryFiles.length) return idsFromGalleryFiles;
+      }
+
+      const assignedFiles = this.variantAssignedGalleryFiles?.[key] || [];
+      if (!assignedFiles.length) return [];
+
+      const idsFromAssignedIndex = this.resolveMediaIdsByProductIndex(assignedFiles);
+      if (idsFromAssignedIndex.length) return idsFromAssignedIndex;
+
+      return this.resolveMediaIdsByFilenames(mediaGallery, assignedFiles);
     }
 
     resolveMediaIdsByProductIndex(filenames) {
@@ -696,7 +633,7 @@ if (!customElements.get('variant-configurator')) {
       const ordered = [];
       const seen = new Set();
       const normalizedFilenames = (filenames || [])
-        .map((filename) => String(filename || '').trim().toLowerCase())
+        .map((filename) => this.normalizeFilename(filename))
         .filter(Boolean);
 
       normalizedFilenames.forEach((filename) => {
@@ -710,9 +647,6 @@ if (!customElements.get('variant-configurator')) {
     }
 
     collectFilenameFromSrc(targetSet, src) {
-      const path = this.normalizeMediaPath(src);
-      if (path) targetSet.add(path);
-
       const filename = this.normalizeFilename(this.extractFilename(src));
       if (filename) targetSet.add(filename);
     }
@@ -762,17 +696,21 @@ if (!customElements.get('variant-configurator')) {
       return Number(match[1]);
     }
 
-    getAvailableMediaIds(mediaGallery) {
-      return new Set(
-        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
-          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
-          .filter((value) => Number.isInteger(value) && value > 0),
-      );
-    }
-
     applyVariantMediaSelection(mediaGallery, mediaIds) {
-      // Stable rollout mode: keep all gallery media visible and only set the active media.
-      this.clearVariantMediaSelection(mediaGallery);
+      const selectedIds = new Set(mediaIds.map((id) => Number(id)));
+
+      mediaGallery.querySelectorAll('[data-media-id]').forEach((node) => {
+        const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
+        const shouldShow = selectedIds.has(numeric);
+        node.classList.toggle('sentix-configurator__media-hidden', !shouldShow);
+        if (!shouldShow) node.classList.remove('is-active');
+      });
+
+      mediaGallery.querySelectorAll('[data-target]').forEach((node) => {
+        const numeric = this.extractTrailingNumericId(node.dataset.target);
+        const shouldShow = selectedIds.has(numeric);
+        node.classList.toggle('sentix-configurator__thumb-hidden', !shouldShow);
+      });
 
       const primaryId = mediaIds[0];
       if (primaryId && mediaGallery.setActiveMedia) {
@@ -790,19 +728,16 @@ if (!customElements.get('variant-configurator')) {
         node.classList.remove('thumbnail-list_item--variant');
       });
 
-      mediaGallery.querySelectorAll('.variant-configurator__media-hidden, .sentix-configurator__media-hidden').forEach((node) => {
-        node.classList.remove('variant-configurator__media-hidden');
+      mediaGallery.querySelectorAll('.sentix-configurator__media-hidden').forEach((node) => {
         node.classList.remove('sentix-configurator__media-hidden');
       });
-      mediaGallery.querySelectorAll('.variant-configurator__thumb-hidden, .sentix-configurator__thumb-hidden').forEach((node) => {
-        node.classList.remove('variant-configurator__thumb-hidden');
+      mediaGallery.querySelectorAll('.sentix-configurator__thumb-hidden').forEach((node) => {
         node.classList.remove('sentix-configurator__thumb-hidden');
       });
 
       const modalContent = document.querySelector(`#ProductModal-${this.sectionId} .product-media-modal__content`);
       if (!modalContent) return;
-      modalContent.querySelectorAll('.variant-configurator__modal-media-hidden, .sentix-configurator__modal-media-hidden').forEach((node) => {
-        node.classList.remove('variant-configurator__modal-media-hidden');
+      modalContent.querySelectorAll('.sentix-configurator__modal-media-hidden').forEach((node) => {
         node.classList.remove('sentix-configurator__modal-media-hidden');
       });
     }
@@ -815,17 +750,23 @@ if (!customElements.get('variant-configurator')) {
       const activeMedia = modalContent.querySelector(`[data-media-id="${selected}"]`);
       if (activeMedia) modalContent.prepend(activeMedia);
 
-      // Stable rollout mode: keep all modal media visible.
-      modalContent.querySelectorAll('.variant-configurator__modal-media-hidden, .sentix-configurator__modal-media-hidden').forEach((node) => {
-        node.classList.remove('variant-configurator__modal-media-hidden');
-        node.classList.remove('sentix-configurator__modal-media-hidden');
+      const selectedIds = new Set(mappedMediaIds || []);
+      if (!selectedIds.size) {
+        modalContent.querySelectorAll('.sentix-configurator__modal-media-hidden').forEach((node) => {
+          node.classList.remove('sentix-configurator__modal-media-hidden');
+        });
+        return;
+      }
+
+      modalContent.querySelectorAll('[data-media-id]').forEach((node) => {
+        const mediaId = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
+        node.classList.toggle('sentix-configurator__modal-media-hidden', !selectedIds.has(mediaId));
       });
     }
 
     updateURL() {
       if (!this.currentVariant) return;
-      const nextUrl = `${this.productPath}?variant=${this.currentVariant.id}`;
-      window.history.replaceState({}, '', nextUrl);
+      window.history.replaceState({}, '', `${this.productUrl}?variant=${this.currentVariant.id}`);
     }
 
     updateShareUrl() {
@@ -868,11 +809,7 @@ if (!customElements.get('variant-configurator')) {
     }
 
     renderProductInfo() {
-      const requestUrl = new URL(this.productPath, window.location.origin);
-      requestUrl.searchParams.set('variant', String(this.currentVariant.id));
-      requestUrl.searchParams.set('section_id', this.sectionId);
-
-      fetch(requestUrl.toString(), { credentials: 'same-origin' })
+      fetch(`${this.productUrl}?variant=${this.currentVariant.id}&section_id=${this.sectionId}`)
         .then((response) => response.text())
         .then((responseText) => {
           const html = new DOMParser().parseFromString(responseText, 'text/html');
@@ -888,8 +825,7 @@ if (!customElements.get('variant-configurator')) {
           }
 
           if (priceDestination) priceDestination.classList.remove('visibility-hidden');
-        })
-        .catch(() => {});
+        });
     }
 
     toggleAddButton(disable = true, text) {
@@ -918,13 +854,11 @@ if (!customElements.get('variant-configurator')) {
     }
   }
 
-  customElements.define('variant-configurator', VariantConfigurator);
-
-  // Backward-compatible aliases for any older templates not yet migrated.
+  customElements.define('variant-configurator', SentixVariantConfigurator);
   if (!customElements.get('sentix-variant-configurator')) {
-    customElements.define('sentix-variant-configurator', class SentixVariantConfigurator extends VariantConfigurator {});
+    customElements.define('sentix-variant-configurator', class SentixVariantConfiguratorAlias extends SentixVariantConfigurator {});
   }
   if (!customElements.get('gatorz-variant-configurator')) {
-    customElements.define('gatorz-variant-configurator', class GatorzVariantConfigurator extends VariantConfigurator {});
+    customElements.define('gatorz-variant-configurator', class GatorzVariantConfiguratorAlias extends SentixVariantConfigurator {});
   }
 }
