@@ -38,12 +38,37 @@
 
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
   {%- assign use_gatorz_configurator = false -%}
-  {%- assign normalized_options = product.options | join: '||' | downcase -%}
-  {%- if normalized_options contains 'lens type' and normalized_options contains 'lens color' and normalized_options contains 'frame color' -%}
+  {%- assign has_gatorz_swatch_blocks = false -%}
+  {%- for cfg_block in section.blocks -%}
+    {%- if cfg_block.type == 'gatorz_swatch' -%}
+      {%- assign has_gatorz_swatch_blocks = true -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- assign has_lens_type_option = false -%}
+  {%- assign has_lens_color_option = false -%}
+  {%- assign has_frame_color_option = false -%}
+  {%- for opt in product.options_with_values -%}
+    {%- assign opt_name = opt.name | downcase | strip -%}
+    {%- if opt_name contains 'lens' and opt_name contains 'type' -%}
+      {%- assign has_lens_type_option = true -%}
+    {%- elsif opt_name contains 'lens' and opt_name contains 'color' -%}
+      {%- assign has_lens_color_option = true -%}
+    {%- elsif opt_name contains 'frame' and opt_name contains 'color' -%}
+      {%- assign has_frame_color_option = true -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if section.settings.enable_gatorz_configurator and has_gatorz_swatch_blocks -%}
+    {%- assign use_gatorz_configurator = true -%}
+  {%- elsif has_lens_type_option and has_lens_color_option and has_frame_color_option -%}
     {%- assign use_gatorz_configurator = true -%}
   {%- endif -%}
   {%- if use_gatorz_configurator -%}
     <script src="{{ 'sentix-product-configurator.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+  {%- assign hide_variant_media = section.settings.hide_variants -%}
+  {%- if use_gatorz_configurator -%}
+    {%- assign hide_variant_media = false -%}
   {%- endif -%}
 
   {%- assign product_media_fallback_url = 'https://cdn.shopify.com/s/files/1/0662/8438/8602/files/img-fallback.png?v=1774654439' -%}
@@ -66,7 +91,7 @@
             {%- liquid
               assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src'
               assign media_count = product.media.size
-              if section.settings.hide_variants and media_count > 1
+              if hide_variant_media and media_count > 1
                 assign media_count = media_count | minus: variant_images.size | plus: 1
               endif
 
@@ -80,14 +105,14 @@
             -%}
             {%- if product.selected_or_first_available_variant.featured_media != null -%}
               {%- assign featured_media = product.selected_or_first_available_variant.featured_media -%}
-              <li id="Slide-{{ section.id }}-{{ featured_media.id }}" class="product__media-item grid__item slider__slide is-active{% if featured_media.media_type != 'image' %} product__media-item--full{% endif %}{% if section.settings.hide_variants and variant_images contains featured_media.src %} product__media-item--variant{% endif %}" data-media-id="{{ section.id }}-{{ featured_media.id }}">
+              <li id="Slide-{{ section.id }}-{{ featured_media.id }}" class="product__media-item grid__item slider__slide is-active{% if featured_media.media_type != 'image' %} product__media-item--full{% endif %}{% if hide_variant_media and variant_images contains featured_media.src %} product__media-item--variant{% endif %}" data-media-id="{{ section.id }}-{{ featured_media.id }}">
                 {%- assign media_position = 1 -%}
                 {% render 'product-thumbnail', media: featured_media, position: media_position, loop: section.settings.enable_video_looping, modal_id: section.id, xr_button: true, media_width: media_width, lazy_load: false %}
               </li>
             {%- endif -%}
             {%- for media in product.media -%}
               {%- unless media.id == product.selected_or_first_available_variant.featured_media.id -%}
-                <li id="Slide-{{ section.id }}-{{ media.id }}" class="product__media-item grid__item slider__slide{% if product.selected_or_first_available_variant.featured_media == null and forloop.index == 1 %} is-active{% endif %}{% if media.media_type != 'image' %} product__media-item--full{% endif %}{% if section.settings.hide_variants and variant_images contains media.src %} product__media-item--variant{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}">
+                <li id="Slide-{{ section.id }}-{{ media.id }}" class="product__media-item grid__item slider__slide{% if product.selected_or_first_available_variant.featured_media == null and forloop.index == 1 %} is-active{% endif %}{% if media.media_type != 'image' %} product__media-item--full{% endif %}{% if hide_variant_media and variant_images contains media.src %} product__media-item--variant{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}">
                   {%- liquid
                     assign media_position = media_position | default: 0 | plus: 1
                     assign lazy_load = false
@@ -155,7 +180,7 @@
                   endcapture
                   assign media_index = media_index | plus: 1
                 -%}
-                <li id="Slide-Thumbnails-{{ section.id }}-0" class="thumbnail-list__item slider__slide{% if section.settings.hide_variants and variant_images contains featured_media.src %} thumbnail-list_item--variant{% endif %}" data-target="{{ section.id }}-{{ featured_media.id }}" data-media-position="{{ media_index }}">
+                <li id="Slide-Thumbnails-{{ section.id }}-0" class="thumbnail-list__item slider__slide{% if hide_variant_media and variant_images contains featured_media.src %} thumbnail-list_item--variant{% endif %}" data-target="{{ section.id }}-{{ featured_media.id }}" data-media-position="{{ media_index }}">
                   <button class="thumbnail global-media-settings global-media-settings--no-shadow {% if featured_media.preview_image.aspect_ratio > 1 %}thumbnail--wide{% else %}thumbnail--narrow{% endif %}"
                     aria-label="{%- if featured_media.media_type == 'image' -%}{{ 'products.product.media.load_image' | t: index: media_index }}{%- elsif featured_media.media_type == 'model' -%}{{ 'products.product.media.load_model' | t: index: media_index }}{%- elsif featured_media.media_type == 'video' or featured_media.media_type == 'external_video' -%}{{ 'products.product.media.load_video' | t: index: media_index }}{%- endif -%}"
                     aria-current="true"
@@ -194,7 +219,7 @@
                     endcapture
                     assign media_index = media_index | plus: 1
                   -%}
-                   <li id="Slide-Thumbnails-{{ section.id }}-{{ forloop.index }}" class="thumbnail-list__item slider__slide{% if section.settings.hide_variants and variant_images contains media.src %} thumbnail-list_item--variant{% endif %}" data-target="{{ section.id }}-{{ media.id }}"  data-media-position="{{ media_index }}">
+                   <li id="Slide-Thumbnails-{{ section.id }}-{{ forloop.index }}" class="thumbnail-list__item slider__slide{% if hide_variant_media and variant_images contains media.src %} thumbnail-list_item--variant{% endif %}" data-target="{{ section.id }}-{{ media.id }}"  data-media-position="{{ media_index }}">
                     {%- if media.media_type == 'model' -%}
                       <span class="thumbnail__badge" aria-hidden="true">
                         {%- render 'icon-3d-model' -%}
@@ -378,12 +403,12 @@
               {%- assign lens_color_pos = 2 -%}
               {%- assign frame_color_pos = 3 -%}
               {%- for opt in product.options_with_values -%}
-                {%- assign opt_name = opt.name | downcase -%}
-                {%- if opt_name == 'lens type' -%}
+                {%- assign opt_name = opt.name | downcase | strip -%}
+                {%- if opt_name contains 'lens' and opt_name contains 'type' -%}
                   {%- assign lens_type_pos = opt.position -%}
-                {%- elsif opt_name == 'lens color' -%}
+                {%- elsif opt_name contains 'lens' and opt_name contains 'color' -%}
                   {%- assign lens_color_pos = opt.position -%}
-                {%- elsif opt_name == 'frame color' -%}
+                {%- elsif opt_name contains 'frame' and opt_name contains 'color' -%}
                   {%- assign frame_color_pos = opt.position -%}
                 {%- endif -%}
               {%- endfor -%}
@@ -415,6 +440,7 @@
                     <div class="sentix-configurator__support">
                       <p class="sentix-configurator__support-title" data-lens-color-support-title></p>
                       <p class="sentix-configurator__support-body" data-lens-color-support-body></p>
+                      <p class="sentix-configurator__support-body-secondary" data-lens-color-support-body-secondary></p>
                     </div>
                   </div>
 
@@ -455,6 +481,100 @@
                       {%- endfor -%}
                     ]
                   </script>
+                  <script type="application/json" data-variant-media-map>
+                    {
+                      {%- assign media_map_count = 0 -%}
+                      {%- for media_block in section.blocks -%}
+                        {%- if media_block.type == 'gatorz_variant_media_map' and media_block.settings.variant_id != blank and media_block.settings.media_ids != blank -%}
+                          {%- assign media_ids_string = media_block.settings.media_ids | strip | replace: ' ', '' -%}
+                          {%- assign media_ids_array = media_ids_string | split: ',' -%}
+                          {%- if media_map_count > 0 -%},{%- endif -%}
+                          {{ media_block.settings.variant_id | strip | json }}: {{ media_ids_array | json }}
+                          {%- assign media_map_count = media_map_count | plus: 1 -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                    }
+                  </script>
+                  <script type="application/json" data-variant-gallery-files>
+                    {
+                      {%- assign gallery_map_count = 0 -%}
+                      {%- for mapped_variant in product.variants -%}
+                        {%- assign gallery_files = mapped_variant.metafields.custom.gatorz_gallery_images.value -%}
+                        {%- assign gallery_file_1 = mapped_variant.metafields.custom.gatorz_gallery_image_1.value -%}
+                        {%- assign gallery_file_2 = mapped_variant.metafields.custom.gatorz_gallery_image_2.value -%}
+                        {%- assign gallery_file_3 = mapped_variant.metafields.custom.gatorz_gallery_image_3.value -%}
+                        {%- assign gallery_file_4 = mapped_variant.metafields.custom.gatorz_gallery_image_4.value -%}
+                        {%- if gallery_files != blank or gallery_file_1 != blank or gallery_file_2 != blank or gallery_file_3 != blank or gallery_file_4 != blank -%}
+                          {%- if gallery_map_count > 0 -%},{%- endif -%}
+                          {{ mapped_variant.id | json }}: [
+                            {%- if gallery_files != blank -%}
+                              {%- for gallery_file in gallery_files -%}
+                                {%- assign gallery_file_url = gallery_file | image_url: width: 4096 | default: gallery_file | file_url -%}
+                                {{ gallery_file_url | json }}{%- unless forloop.last -%},{%- endunless -%}
+                              {%- endfor -%}
+                            {%- else -%}
+                              {%- assign gallery_file_first = true -%}
+                              {%- if gallery_file_1 != blank -%}
+                                {%- assign gallery_file_url_1 = gallery_file_1 | image_url: width: 4096 | default: gallery_file_1 | file_url -%}
+                                {{ gallery_file_url_1 | json }}
+                                {%- assign gallery_file_first = false -%}
+                              {%- endif -%}
+                              {%- if gallery_file_2 != blank -%}
+                                {%- unless gallery_file_first -%},{%- endunless -%}
+                                {%- assign gallery_file_url_2 = gallery_file_2 | image_url: width: 4096 | default: gallery_file_2 | file_url -%}
+                                {{ gallery_file_url_2 | json }}
+                                {%- assign gallery_file_first = false -%}
+                              {%- endif -%}
+                              {%- if gallery_file_3 != blank -%}
+                                {%- unless gallery_file_first -%},{%- endunless -%}
+                                {%- assign gallery_file_url_3 = gallery_file_3 | image_url: width: 4096 | default: gallery_file_3 | file_url -%}
+                                {{ gallery_file_url_3 | json }}
+                                {%- assign gallery_file_first = false -%}
+                              {%- endif -%}
+                              {%- if gallery_file_4 != blank -%}
+                                {%- unless gallery_file_first -%},{%- endunless -%}
+                                {%- assign gallery_file_url_4 = gallery_file_4 | image_url: width: 4096 | default: gallery_file_4 | file_url -%}
+                                {{ gallery_file_url_4 | json }}
+                              {%- endif -%}
+                            {%- endif -%}
+                          ]
+                          {%- assign gallery_map_count = gallery_map_count | plus: 1 -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                    }
+                  </script>
+                  <script type="application/json" data-product-media-index>
+                    [
+                      {%- for media in product.media -%}
+                        {
+                          "id": {{ media.id | json }},
+                          "src": {{ media.preview_image | image_url: width: 4096 | json }}
+                        }{%- unless forloop.last -%},{%- endunless -%}
+                      {%- endfor -%}
+                    ]
+                  </script>
+                  <script type="application/json" data-variant-assigned-gallery-files>
+                    {
+                      {%- assign assigned_map_count = 0 -%}
+                      {%- for mapped_variant in product.variants -%}
+                        {%- assign assigned_first = true -%}
+                        {%- capture assigned_urls -%}
+                          {%- for product_image in product.images -%}
+                            {%- if product_image.variant_ids contains mapped_variant.id -%}
+                              {%- unless assigned_first -%},{%- endunless -%}
+                              {{ product_image | image_url: width: 4096 | json }}
+                              {%- assign assigned_first = false -%}
+                            {%- endif -%}
+                          {%- endfor -%}
+                        {%- endcapture -%}
+                        {%- unless assigned_urls == blank -%}
+                          {%- if assigned_map_count > 0 -%},{%- endif -%}
+                          {{ mapped_variant.id | json }}: [{{ assigned_urls | strip }}]
+                          {%- assign assigned_map_count = assigned_map_count | plus: 1 -%}
+                        {%- endunless -%}
+                      {%- endfor -%}
+                    }
+                  </script>
                   <script type="application/json" data-lens-color-content>
                     {
                       "Smoke": {
@@ -485,6 +605,33 @@
                         "title": "MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog",
                         "body": "Ballistic-rated polarized lens designed to reduce glare while maintaining screen visibility."
                       }
+                    }
+                  </script>
+                  <script type="application/json" data-lens-color-content-variant-overrides>
+                    {
+                      {%- assign lens_copy_count = 0 -%}
+                      {%- assign seen_lens_colors = '|' -%}
+                      {%- for mapped_variant in product.variants -%}
+                        {%- assign lens_color_value = mapped_variant.options[lens_color_index] | default: '' | strip -%}
+                        {%- if lens_color_value != blank -%}
+                          {%- assign lens_color_token = '|' | append: lens_color_value | append: '|' -%}
+                          {%- unless seen_lens_colors contains lens_color_token -%}
+                            {%- assign variant_title = mapped_variant.metafields.custom.gatorz_lens_support_title.value | default: '' -%}
+                            {%- assign variant_body = mapped_variant.metafields.custom.gatorz_lens_support_body.value | default: '' -%}
+                            {%- assign variant_secondary = mapped_variant.metafields.custom.gatorz_lens_support_secondary_body.value | default: '' -%}
+                            {%- if variant_title != blank or variant_body != blank or variant_secondary != blank -%}
+                              {%- if lens_copy_count > 0 -%},{%- endif -%}
+                              {{ lens_color_value | json }}: {
+                                "title": {{ variant_title | json }},
+                                "body": {{ variant_body | json }},
+                                "secondary_body": {{ variant_secondary | json }}
+                              }
+                              {%- assign lens_copy_count = lens_copy_count | plus: 1 -%}
+                            {%- endif -%}
+                            {%- assign seen_lens_colors = seen_lens_colors | append: lens_color_value | append: '|' -%}
+                          {%- endunless -%}
+                        {%- endif -%}
+                      {%- endfor -%}
                     }
                   </script>
                 </sentix-variant-configurator>
@@ -670,13 +817,13 @@
         {%- liquid
           if product.selected_or_first_available_variant.featured_media != null
             assign media = product.selected_or_first_available_variant.featured_media
-            render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: section.settings.hide_variants
+            render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: hide_variant_media
           endif
         -%}
 
         {%- for media in product.media -%}
           {%- liquid
-            if section.settings.hide_variants and variant_images contains media.src
+            if hide_variant_media and variant_images contains media.src
               assign variant_image = true
             else
               assign variant_image = false
@@ -826,6 +973,24 @@
           "type": "image_picker",
           "id": "swatch_image",
           "label": "Swatch image"
+        }
+      ]
+    },
+    {
+      "type": "gatorz_variant_media_map",
+      "name": "Gatorz variant media map",
+      "settings": [
+        {
+          "type": "text",
+          "id": "variant_id",
+          "label": "Variant ID (exact)",
+          "info": "Use the numeric Shopify variant ID."
+        },
+        {
+          "type": "text",
+          "id": "media_ids",
+          "label": "Gallery media IDs (comma separated)",
+          "info": "Enter product media IDs in display order, e.g. 1234567890,1234567891,1234567892"
         }
       ]
     },

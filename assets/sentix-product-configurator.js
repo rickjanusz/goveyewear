@@ -25,12 +25,17 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.initialVariantId = Number(this.dataset.initialVariantId || 0);
       this.optionPositions = {
         ...this.optionPositions,
-        ...this.parseJson('option-position-map'),
+        ...this.parseJson('option-position-map', {}),
       };
-      this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants'));
-      this.variantImageFilenames = this.parseJson('variant-image-filenames');
-      this.lensColorContent = this.parseJson('lens-color-content');
-      this.swatchMap = this.buildSwatchMap(this.parseJson('swatch-entries'));
+      this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants', []));
+      this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map', {}));
+      this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
+      this.variantAssignedGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-assigned-gallery-files', {}));
+      this.productMediaIndex = this.normalizeProductMediaIndex(this.parseJson('product-media-index', []));
+      const defaultLensColorContent = this.parseJson('lens-color-content', {});
+      const lensColorContentOverrides = this.parseJson('lens-color-content-variant-overrides', {});
+      this.lensColorContent = this.mergeLensColorContent(defaultLensColorContent, lensColorContentOverrides);
+      this.swatchMap = this.buildSwatchMap(this.parseJson('swatch-entries', []));
       this.groupNodes = {
         lens_type: this.querySelector('[data-option-group="lens_type"]'),
         lens_color: this.querySelector('[data-option-group="lens_color"]'),
@@ -43,10 +48,10 @@ if (!customElements.get('sentix-variant-configurator')) {
       };
       this.lensColorSupportTitle = this.querySelector('[data-lens-color-support-title]');
       this.lensColorSupportBody = this.querySelector('[data-lens-color-support-body]');
+      this.lensColorSupportBodySecondary = this.querySelector('[data-lens-color-support-body-secondary]');
+      this.clearVariantMediaSelection();
 
-      const rawSellableVariants = this.parseJson('sellable-variants');
-      const curatedSellableVariants = this.getCuratedSellableVariants(rawSellableVariants);
-      this.variantData = this.normalizeVariants(curatedSellableVariants);
+      this.variantData = this.normalizeVariants(this.parseJson('sellable-variants', []));
       this.sellableVariants = this.getSellableVariants(this.variantData);
 
       if (!this.sellableVariants.length) return;
@@ -58,9 +63,14 @@ if (!customElements.get('sentix-variant-configurator')) {
       this.syncUIFromVariant(initialVariant);
     }
 
-    parseJson(key) {
+    parseJson(key, fallback = {}) {
       const node = this.querySelector(`[data-${key}]`);
-      return node ? JSON.parse(node.textContent) : {};
+      if (!node) return fallback;
+      try {
+        return JSON.parse(node.textContent);
+      } catch (_error) {
+        return fallback;
+      }
     }
 
     buildSwatchMap(entries) {
@@ -76,6 +86,17 @@ if (!customElements.get('sentix-variant-configurator')) {
       return map;
     }
 
+    mergeLensColorContent(defaults, overrides) {
+      const merged = { ...(defaults || {}) };
+      Object.entries(overrides || {}).forEach(([key, value]) => {
+        merged[key] = {
+          ...(merged[key] || {}),
+          ...(value || {}),
+        };
+      });
+      return merged;
+    }
+
     normalizeSwatchKey(value) {
       return String(value || '')
         .toLowerCase()
@@ -87,7 +108,8 @@ if (!customElements.get('sentix-variant-configurator')) {
     }
 
     normalizeVariants(variants) {
-      return variants.map((variant) => {
+      const rows = Array.isArray(variants) ? variants : [];
+      return rows.map((variant) => {
         const native = this.nativeVariantsById.get(Number(variant.id)) || {};
         const lensType = variant.lens_type || this.getVariantOptionValue(variant, this.optionPositions.lens_type) || this.getVariantOptionValue(native, this.optionPositions.lens_type);
         const lensColor = variant.lens_color || this.getVariantOptionValue(variant, this.optionPositions.lens_color) || this.getVariantOptionValue(native, this.optionPositions.lens_color);
@@ -132,43 +154,70 @@ if (!customElements.get('sentix-variant-configurator')) {
       return variants.filter((variant) => variant.available);
     }
 
-    getCuratedSellableVariants(variants) {
-      if (this.productHandle !== 'sentix') return variants || [];
+    normalizeVariantMediaMap(rawMap) {
+      const entries = rawMap && typeof rawMap === 'object' ? Object.entries(rawMap) : [];
+      const normalized = {};
 
-      const allowedCombos = new Set([
-        'Non-polarized||Smoke||Black w/Silver Logo',
-        'OPZ Polarized||Smoke Optimized Polarized (OPz)||Black w/Black Logo',
-        'OPZ Polarized||Rose Optimized Polarized (OPz) w/ Sunburst Mirror||Graphite w/Black Logo',
-        'Ballistics||MILSPEC Ballistic Rose Optimized Polarized (OPz) w/ Gold Mirror w/Anti-Fog||Black w/Black Logo',
-        'Ballistics||MILSPEC Ballistic Smoke w/Anti-Fog||Black w/Black Logo',
-        'Ballistics||MILSPEC Ballistic Smoke w/Anti-Fog||Tan w/Black Logo',
-        'Ballistics||MILSPEC Ballistic Inferno Photochromic w/Anti-Fog||Black w/Black Logo',
-        'Ballistics||MILSPEC Ballistic Smoke Optimized Polarized (OPz) w/Anti-Fog||Black w/Black Logo',
-      ]);
+      entries.forEach(([variantId, ids]) => {
+        const key = String(variantId || '').trim();
+        if (!key) return;
 
-      const byPositions = (lensTypePos, lensColorPos, frameColorPos) =>
-        (variants || []).filter((variant) => {
-          const lensType = this.getVariantOptionValue(variant, lensTypePos);
-          const frameColor = this.getVariantOptionValue(variant, frameColorPos);
-          const lensColor = this.getVariantOptionValue(variant, lensColorPos);
-          const comboKey = `${lensType}||${lensColor}||${frameColor}`;
-          return allowedCombos.has(comboKey);
+        const source = Array.isArray(ids) ? ids : String(ids || '').split(',');
+        const unique = [];
+        const seen = new Set();
+
+        source.forEach((candidate) => {
+          const numeric = Number(String(candidate || '').trim());
+          if (!Number.isInteger(numeric) || numeric <= 0 || seen.has(numeric)) return;
+          seen.add(numeric);
+          unique.push(numeric);
         });
 
-      const lensTypePos = Number(this.optionPositions.lens_type) || 1;
-      const lensColorPos = Number(this.optionPositions.lens_color) || 2;
-      const frameColorPos = Number(this.optionPositions.frame_color) || 3;
+        if (unique.length) {
+          normalized[key] = unique;
+        }
+      });
 
-      const directMatches = byPositions(lensTypePos, lensColorPos, frameColorPos);
-      const swappedMatches = byPositions(lensTypePos, frameColorPos, lensColorPos);
+      return normalized;
+    }
 
-      if (swappedMatches.length > directMatches.length) {
-        this.optionPositions.lens_color = frameColorPos;
-        this.optionPositions.frame_color = lensColorPos;
-        return swappedMatches;
-      }
+    normalizeVariantGalleryFiles(rawMap) {
+      const entries = rawMap && typeof rawMap === 'object' ? Object.entries(rawMap) : [];
+      const normalized = {};
 
-      return directMatches;
+      entries.forEach(([variantId, urls]) => {
+        const key = String(variantId || '').trim();
+        if (!key) return;
+
+        const source = Array.isArray(urls) ? urls : [];
+        const unique = [];
+        const seen = new Set();
+
+        source.forEach((url) => {
+          const filename = this.normalizeFilename(this.extractFilename(url));
+          if (!filename || seen.has(filename)) return;
+          seen.add(filename);
+          unique.push(filename);
+        });
+
+        if (unique.length) normalized[key] = unique;
+      });
+
+      return normalized;
+    }
+
+    normalizeProductMediaIndex(rawIndex) {
+      const rows = Array.isArray(rawIndex) ? rawIndex : [];
+      const filenameToId = new Map();
+
+      rows.forEach((row) => {
+        const id = Number(row?.id);
+        const filename = this.normalizeFilename(this.extractFilename(row?.src));
+        if (!Number.isInteger(id) || id <= 0 || !filename) return;
+        if (!filenameToId.has(filename)) filenameToId.set(filename, id);
+      });
+
+      return filenameToId;
     }
 
     getOrderedOptionKeys() {
@@ -370,10 +419,25 @@ if (!customElements.get('sentix-variant-configurator')) {
       const content = this.lensColorContent[variant.lens_color] || {
         title: variant.lens_color,
         body: '',
+        secondary_body: '',
       };
+      const selectedLensColor = String(variant.lens_color || '').trim();
+      const title = String(content.title || variant.lens_color || '').trim();
+      const body = String(content.body || '').trim();
+      const secondaryBody = String(content.secondary_body || '').trim();
+      const hideTitle = !title || title.toLowerCase() === selectedLensColor.toLowerCase();
 
-      this.lensColorSupportTitle.textContent = content.title || variant.lens_color;
-      this.lensColorSupportBody.textContent = content.body || '';
+      if (this.lensColorSupportTitle) {
+        this.lensColorSupportTitle.textContent = title;
+        this.lensColorSupportTitle.hidden = hideTitle;
+      }
+      if (this.lensColorSupportBody) {
+        this.lensColorSupportBody.textContent = body;
+      }
+      if (this.lensColorSupportBodySecondary) {
+        this.lensColorSupportBodySecondary.textContent = secondaryBody;
+        this.lensColorSupportBodySecondary.hidden = !secondaryBody;
+      }
     }
 
     syncUIFromVariant(variant) {
@@ -403,69 +467,301 @@ if (!customElements.get('sentix-variant-configurator')) {
       const mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`);
       if (!mediaGallery) return;
 
-      const mediaIdFromVariant = this.currentVariant?.featured_media_id ? `${this.sectionId}-${this.currentVariant.featured_media_id}` : '';
-      const mediaIdFromFilename = this.findMediaIdForVariantFilename(mediaGallery);
-      const mediaIdFromFeaturedSrc = this.findMediaIdForVariantFeaturedImage(mediaGallery);
-      const mediaIdFromAlt = this.findMediaIdForVariantAlt(mediaGallery);
-      const resolvedMediaId = mediaIdFromVariant || mediaIdFromFilename || mediaIdFromFeaturedSrc || mediaIdFromAlt;
-
-      if (resolvedMediaId && mediaGallery.setActiveMedia) {
-        mediaGallery.setActiveMedia(resolvedMediaId, true);
+      const coverSeriesMediaIds = this.getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, 4);
+      if (coverSeriesMediaIds.length) {
+        this.applyVariantMediaSelection(mediaGallery, coverSeriesMediaIds);
+        this.moveActiveModalMedia(String(coverSeriesMediaIds[0]), coverSeriesMediaIds);
+        return;
       }
+
+      const mappedMediaIds = this.getMappedMediaIdsForCurrentVariant(mediaGallery);
+
+      if (mappedMediaIds.length) {
+        this.applyVariantMediaSelection(mediaGallery, mappedMediaIds);
+        this.moveActiveModalMedia(String(mappedMediaIds[0]), mappedMediaIds);
+        return;
+      }
+
+      const fallbackMediaIds = this.getFallbackMediaIdsForCurrentVariant(mediaGallery);
+      if (fallbackMediaIds.length) {
+        this.applyVariantMediaSelection(mediaGallery, fallbackMediaIds);
+        this.moveActiveModalMedia(String(fallbackMediaIds[0]), fallbackMediaIds);
+        return;
+      }
+
+      this.clearVariantMediaSelection(mediaGallery);
+    }
+
+    getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, maxImages = 4) {
+      const available = new Set(
+        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+          .filter((value) => Number.isInteger(value) && value > 0),
+      );
+
+      const featuredFilename = this.extractFilename(this.currentVariant?.featured_image_src);
+      const seriesIds = this.getSeriesMediaIdsFromFeaturedFilename(featuredFilename, available);
+      if (!seriesIds.length) return [];
+
+      const capped = seriesIds.slice(0, Math.max(1, Number(maxImages) || 4));
+      if (capped.length) return capped;
+
+      const featuredMediaId = Number(this.currentVariant?.featured_media_id || 0);
+      if (featuredMediaId && available.has(featuredMediaId)) return [featuredMediaId];
+
+      return [];
+    }
+
+    getPrimaryMediaId() {
+      const featuredMediaId = Number(this.currentVariant?.featured_media_id || 0);
+      return featuredMediaId ? `${this.sectionId}-${featuredMediaId}` : '';
+    }
+
+    getFallbackMediaIdsForCurrentVariant(mediaGallery) {
+      const available = new Set(
+        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+          .filter((value) => Number.isInteger(value) && value > 0),
+      );
+
+      const ordered = [];
+      const seen = new Set();
+      const addId = (id) => {
+        const numeric = Number(id);
+        if (!Number.isInteger(numeric) || numeric <= 0 || seen.has(numeric) || !available.has(numeric)) return;
+        seen.add(numeric);
+        ordered.push(numeric);
+      };
+
+      // Expand a deterministic image series from featured filename:
+      // e.g. sentix_smoke_black-1.png -> sentix_smoke_black-(1..n).png
+      const featuredFilename = this.extractFilename(this.currentVariant?.featured_image_src);
+      const seriesIds = this.getSeriesMediaIdsFromFeaturedFilename(featuredFilename, available);
+      seriesIds.forEach((id) => addId(id));
+
+      addId(this.currentVariant?.featured_media_id);
+
+      return ordered;
+    }
+
+    getSeriesMediaIdsFromFeaturedFilename(featuredFilename, availableIds) {
+      const normalizedFeaturedFilename = this.normalizeFilename(featuredFilename);
+      if (!normalizedFeaturedFilename) return [];
+
+      const match = normalizedFeaturedFilename.match(/^(.*?)-(\d+)(\.[a-z0-9]+)$/i);
+      if (!match) return [];
+
+      const [, baseName, , extension] = match;
+      const candidates = [];
+
+      this.productMediaIndex.forEach((id, filename) => {
+        if (!availableIds.has(id)) return;
+        const filenameMatch = this.normalizeFilename(filename).match(/^(.*?)-(\d+)(\.[a-z0-9]+)$/i);
+        if (!filenameMatch) return;
+
+        const [, candidateBase, candidateIndex, candidateExtension] = filenameMatch;
+        if (candidateBase !== baseName || candidateExtension.toLowerCase() !== extension.toLowerCase()) return;
+
+        candidates.push({ id, index: Number(candidateIndex) });
+      });
+
+      candidates.sort((a, b) => a.index - b.index);
+      return candidates.map((entry) => entry.id);
+    }
+
+    getMappedMediaIdsForCurrentVariant(mediaGallery) {
+      const key = String(this.currentVariant?.id || '');
+      const configuredIds = this.variantMediaMap?.[key] || [];
+      if (configuredIds.length) {
+        const available = new Set(
+          Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+            .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+            .filter((value) => Number.isInteger(value) && value > 0),
+        );
+
+        return configuredIds.filter((id) => available.has(id));
+      }
+
+      const configuredFiles = this.variantGalleryFiles?.[key] || [];
+      if (configuredFiles.length) {
+        const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
+        if (idsFromIndex.length) return idsFromIndex;
+
+        const idsFromGalleryFiles = this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
+        if (idsFromGalleryFiles.length) return idsFromGalleryFiles;
+      }
+
+      const assignedFiles = this.variantAssignedGalleryFiles?.[key] || [];
+      if (!assignedFiles.length) return [];
+
+      const idsFromAssignedIndex = this.resolveMediaIdsByProductIndex(assignedFiles);
+      if (idsFromAssignedIndex.length) return idsFromAssignedIndex;
+
+      return this.resolveMediaIdsByFilenames(mediaGallery, assignedFiles);
+    }
+
+    resolveMediaIdsByProductIndex(filenames) {
+      const ordered = [];
+      const seen = new Set();
+
+      filenames.forEach((filename) => {
+        const id = this.productMediaIndex?.get(filename);
+        if (!id || seen.has(id)) return;
+        seen.add(id);
+        ordered.push(id);
+      });
+
+      return ordered;
+    }
+
+    resolveMediaIdsByFilenames(mediaGallery, filenames) {
+      const mediaEntries = Array.from(mediaGallery.querySelectorAll('[data-media-id]')).map((node) => {
+        const id = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
+        const fileSet = new Set();
+
+        node.querySelectorAll('img').forEach((img) => {
+          this.collectFilenameFromSrc(fileSet, img.getAttribute('src'));
+          this.collectFilenamesFromSrcset(fileSet, img.getAttribute('srcset'));
+        });
+        node.querySelectorAll('source').forEach((source) => {
+          this.collectFilenamesFromSrcset(fileSet, source.getAttribute('srcset'));
+        });
+
+        return { id, fileSet };
+      }).filter((entry) => Number.isInteger(entry.id) && entry.id > 0);
+
+      const ordered = [];
+      const seen = new Set();
+      const normalizedFilenames = (filenames || [])
+        .map((filename) => this.normalizeFilename(filename))
+        .filter(Boolean);
+
+      normalizedFilenames.forEach((filename) => {
+        const match = mediaEntries.find((entry) => entry.fileSet.has(filename));
+        if (!match || seen.has(match.id)) return;
+        seen.add(match.id);
+        ordered.push(match.id);
+      });
+
+      return ordered;
+    }
+
+    collectFilenameFromSrc(targetSet, src) {
+      const filename = this.normalizeFilename(this.extractFilename(src));
+      if (filename) targetSet.add(filename);
+    }
+
+    collectFilenamesFromSrcset(targetSet, srcset) {
+      String(srcset || '')
+        .split(',')
+        .map((part) => part.trim().split(/\s+/)[0])
+        .forEach((urlPart) => this.collectFilenameFromSrc(targetSet, urlPart));
+    }
+
+    extractFilename(url) {
+      const raw = String(url || '').trim();
+      if (!raw) return '';
+      const clean = raw.split('?')[0].split('#')[0];
+      const last = clean.split('/').pop() || '';
+      return last.toLowerCase();
+    }
+
+    normalizeFilename(filename) {
+      const value = String(filename || '').trim().toLowerCase();
+      if (!value) return '';
+
+      const dotIndex = value.lastIndexOf('.');
+      if (dotIndex <= 0) return value;
+
+      let stem = value.slice(0, dotIndex);
+      const extension = value.slice(dotIndex);
+
+      // Shopify CDN frequently appends size tokens to filenames
+      // (for example: _small, _large, _1024x1024, _800x, _x800, and @2x variants).
+      stem = stem.replace(
+        /_(pico|icon|thumb|small|compact|medium|large|grande|original|master|\d+x\d+|\d+x|x\d+)(@[\dx]+)?$/i,
+        '',
+      );
+      // Shopify may append a UUID suffix during file upload:
+      // e.g. sentix_smoke_black-2_49245f25-cd6c-4831-abf4-b917e2df36c8.png
+      stem = stem.replace(/_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, '');
+
+      return `${stem}${extension}`;
+    }
+
+    extractTrailingNumericId(value) {
+      const text = String(value || '');
+      const match = text.match(/(\d+)(?!.*\d)/);
+      if (!match) return NaN;
+      return Number(match[1]);
+    }
+
+    applyVariantMediaSelection(mediaGallery, mediaIds) {
+      const selectedIds = new Set(mediaIds.map((id) => Number(id)));
+
+      mediaGallery.querySelectorAll('[data-media-id]').forEach((node) => {
+        const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
+        const shouldShow = selectedIds.has(numeric);
+        node.classList.toggle('sentix-configurator__media-hidden', !shouldShow);
+        if (!shouldShow) node.classList.remove('is-active');
+      });
+
+      mediaGallery.querySelectorAll('[data-target]').forEach((node) => {
+        const numeric = this.extractTrailingNumericId(node.dataset.target);
+        const shouldShow = selectedIds.has(numeric);
+        node.classList.toggle('sentix-configurator__thumb-hidden', !shouldShow);
+      });
+
+      const primaryId = mediaIds[0];
+      if (primaryId && mediaGallery.setActiveMedia) {
+        mediaGallery.setActiveMedia(`${this.sectionId}-${primaryId}`, true);
+      }
+    }
+
+    clearVariantMediaSelection(mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`)) {
+      if (!mediaGallery) return;
+
+      mediaGallery.querySelectorAll('.product__media-item--variant').forEach((node) => {
+        node.classList.remove('product__media-item--variant');
+      });
+      mediaGallery.querySelectorAll('.thumbnail-list_item--variant').forEach((node) => {
+        node.classList.remove('thumbnail-list_item--variant');
+      });
+
+      mediaGallery.querySelectorAll('.sentix-configurator__media-hidden').forEach((node) => {
+        node.classList.remove('sentix-configurator__media-hidden');
+      });
+      mediaGallery.querySelectorAll('.sentix-configurator__thumb-hidden').forEach((node) => {
+        node.classList.remove('sentix-configurator__thumb-hidden');
+      });
 
       const modalContent = document.querySelector(`#ProductModal-${this.sectionId} .product-media-modal__content`);
       if (!modalContent) return;
-      const numericMediaId = String(resolvedMediaId || '').split('-')[1] || '';
-      const newMediaModal = numericMediaId ? modalContent.querySelector(`[data-media-id="${numericMediaId}"]`) : null;
-      if (newMediaModal) modalContent.prepend(newMediaModal);
-    }
-
-    findMediaIdForVariantFilename(mediaGallery) {
-      if (!this.currentVariant?.id || !this.variantImageFilenames) return '';
-      const filename = this.variantImageFilenames[String(this.currentVariant.id)] || '';
-      if (!filename) return '';
-
-      const selector = [
-        `img[src*="${CSS.escape(filename)}"]`,
-        `img[srcset*="${CSS.escape(filename)}"]`,
-        `source[srcset*="${CSS.escape(filename)}"]`,
-      ].join(',');
-      const node = mediaGallery.querySelector(selector);
-      const li = node?.closest?.('[data-media-id]');
-      return li?.getAttribute?.('data-media-id') || '';
-    }
-
-    findMediaIdForVariantFeaturedImage(mediaGallery) {
-      const src = String(this.currentVariant?.featured_image_src || '');
-      if (!src) return '';
-      const filename = src.split('/').pop()?.split('?')[0] || '';
-      if (!filename) return '';
-      const selector = [
-        `img[src*="${CSS.escape(filename)}"]`,
-        `img[srcset*="${CSS.escape(filename)}"]`,
-        `source[srcset*="${CSS.escape(filename)}"]`,
-      ].join(',');
-      const node = mediaGallery.querySelector(selector);
-      const li = node?.closest?.('[data-media-id]');
-      return li?.getAttribute?.('data-media-id') || '';
-    }
-
-    findMediaIdForVariantAlt(mediaGallery) {
-      const lensColor = String(this.currentVariant?.lens_color || '').toLowerCase();
-      const frameColor = String(this.currentVariant?.frame_color || '').toLowerCase();
-      if (!lensColor && !frameColor) return '';
-
-      const candidates = Array.from(mediaGallery.querySelectorAll('img[alt], img[data-media-alt]'));
-      const match = candidates.find((img) => {
-        const alt = String(img.getAttribute('alt') || img.getAttribute('data-media-alt') || '').toLowerCase();
-        if (!alt) return false;
-        if (lensColor && alt.includes(lensColor)) return true;
-        if (frameColor && alt.includes(frameColor)) return true;
-        return false;
+      modalContent.querySelectorAll('.sentix-configurator__modal-media-hidden').forEach((node) => {
+        node.classList.remove('sentix-configurator__modal-media-hidden');
       });
+    }
 
-      const li = match?.closest?.('[data-media-id]');
-      return li?.getAttribute?.('data-media-id') || '';
+    moveActiveModalMedia(numericMediaId, mappedMediaIds) {
+      const modalContent = document.querySelector(`#ProductModal-${this.sectionId} .product-media-modal__content`);
+      if (!modalContent) return;
+
+      const selected = Number(numericMediaId);
+      const activeMedia = modalContent.querySelector(`[data-media-id="${selected}"]`);
+      if (activeMedia) modalContent.prepend(activeMedia);
+
+      const selectedIds = new Set(mappedMediaIds || []);
+      if (!selectedIds.size) {
+        modalContent.querySelectorAll('.sentix-configurator__modal-media-hidden').forEach((node) => {
+          node.classList.remove('sentix-configurator__modal-media-hidden');
+        });
+        return;
+      }
+
+      modalContent.querySelectorAll('[data-media-id]').forEach((node) => {
+        const mediaId = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
+        node.classList.toggle('sentix-configurator__modal-media-hidden', !selectedIds.has(mediaId));
+      });
     }
 
     updateURL() {
@@ -493,8 +789,12 @@ if (!customElements.get('sentix-variant-configurator')) {
       const pickUpAvailability = document.querySelector('pickup-availability');
       if (!pickUpAvailability) return;
 
+      const canFetchAvailability = typeof pickUpAvailability.fetchAvailability === 'function';
+
       if (this.currentVariant?.available) {
-        pickUpAvailability.fetchAvailability(this.currentVariant.id);
+        if (canFetchAvailability) {
+          pickUpAvailability.fetchAvailability(this.currentVariant.id);
+        }
       } else {
         pickUpAvailability.removeAttribute('available');
         pickUpAvailability.innerHTML = '';
