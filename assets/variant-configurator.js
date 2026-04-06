@@ -563,27 +563,33 @@ if (!customElements.get('variant-configurator')) {
     updateMedia() {
       const mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`);
       if (!mediaGallery) return;
+      const availableIds = this.getAvailableMediaIds(mediaGallery);
+      const filterToAvailable = (ids) => (ids || []).filter((id) => availableIds.has(Number(id)));
 
-      const mappedMediaIds = this.getMappedMediaIdsForCurrentVariant(mediaGallery);
+      const mappedMediaIds = filterToAvailable(this.getMappedMediaIdsForCurrentVariant(mediaGallery));
       const variantKey = String(this.currentVariant?.id || '');
       const configuredCount = Number(this.variantGalleryFileCounts?.[variantKey] || 0);
       const assignedCount = Number(this.variantAssignedGalleryFileCounts?.[variantKey] || 0);
       const expectsMultipleFromFiles = configuredCount > 1 || assignedCount > 1;
-      const availableIds = Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
-        .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
-        .filter((value) => Number.isInteger(value) && value > 0);
+      const featuredMediaId = Number(this.currentVariant?.featured_media_id || 0);
+      const mappedHasFeatured = featuredMediaId > 0 && mappedMediaIds.includes(featuredMediaId);
       console.info('[variant-configurator] updateMedia', {
         variantId: this.currentVariant?.id,
         mappedMediaIds,
         configuredCount,
         assignedCount,
         expectsMultipleFromFiles,
-        availableIds,
+        availableIds: Array.from(availableIds),
+        featuredMediaId,
+        mappedHasFeatured,
       });
 
       // Deterministic guard: when variant file-mapping says multiple images should exist,
       // but resolved IDs collapse to 0/1, don't hide the gallery.
-      if (expectsMultipleFromFiles && mappedMediaIds.length <= 1) {
+      if (
+        (expectsMultipleFromFiles && mappedMediaIds.length <= 1) ||
+        (featuredMediaId > 0 && mappedMediaIds.length > 0 && !mappedHasFeatured)
+      ) {
         this.clearVariantMediaSelection(mediaGallery);
         return;
       }
@@ -594,14 +600,14 @@ if (!customElements.get('variant-configurator')) {
         return;
       }
 
-      const coverSeriesMediaIds = this.getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, 4);
+      const coverSeriesMediaIds = filterToAvailable(this.getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, 4));
       if (coverSeriesMediaIds.length) {
         this.applyVariantMediaSelection(mediaGallery, coverSeriesMediaIds);
         this.moveActiveModalMedia(String(coverSeriesMediaIds[0]), coverSeriesMediaIds);
         return;
       }
 
-      const fallbackMediaIds = this.getFallbackMediaIdsForCurrentVariant(mediaGallery);
+      const fallbackMediaIds = filterToAvailable(this.getFallbackMediaIdsForCurrentVariant(mediaGallery));
       if (fallbackMediaIds.length) {
         this.applyVariantMediaSelection(mediaGallery, fallbackMediaIds);
         this.moveActiveModalMedia(String(fallbackMediaIds[0]), fallbackMediaIds);
@@ -637,11 +643,7 @@ if (!customElements.get('variant-configurator')) {
     }
 
     getFallbackMediaIdsForCurrentVariant(mediaGallery) {
-      const available = new Set(
-        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
-          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
-          .filter((value) => Number.isInteger(value) && value > 0),
-      );
+      const available = this.getAvailableMediaIds(mediaGallery);
 
       const ordered = [];
       const seen = new Set();
@@ -690,11 +692,7 @@ if (!customElements.get('variant-configurator')) {
 
     getMappedMediaIdsForCurrentVariant(mediaGallery) {
       const key = String(this.currentVariant?.id || '');
-      const available = new Set(
-        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
-          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
-          .filter((value) => Number.isInteger(value) && value > 0),
-      );
+      const available = this.getAvailableMediaIds(mediaGallery);
       const ordered = [];
       const seen = new Set();
       const addIds = (ids) => {
@@ -830,6 +828,14 @@ if (!customElements.get('variant-configurator')) {
       const match = text.match(/(\d+)(?!.*\d)/);
       if (!match) return NaN;
       return Number(match[1]);
+    }
+
+    getAvailableMediaIds(mediaGallery) {
+      return new Set(
+        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+          .filter((value) => Number.isInteger(value) && value > 0),
+      );
     }
 
     applyVariantMediaSelection(mediaGallery, mediaIds) {
