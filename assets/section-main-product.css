@@ -398,7 +398,6 @@ fieldset.product-form__input .form__label {
 
 .sentix-configurator__option--frame-color .sentix-configurator__swatch-visual img {
   object-fit: contain;
-  padding: 0.45rem;
 }
 
 .sentix-configurator__option--swatch[aria-checked='true'] .sentix-configurator__swatch-visual {
@@ -463,7 +462,7 @@ fieldset.product-form__input .form__label {
   }
 
   .sentix-configurator__option--frame-color .sentix-configurator__swatch-visual img {
-    padding: 0.35rem;
+    padding: 0;
   }
 }
 
