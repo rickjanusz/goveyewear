@@ -29,7 +29,6 @@ if (!customElements.get('variant-configurator')) {
       };
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants', []));
       this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map', {}));
-      this.variantAssignedMediaIds = this.normalizeVariantMediaMap(this.parseJson('variant-assigned-media-ids', {}));
       this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
       this.variantAssignedGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-assigned-gallery-files', {}));
       this.productMediaIndex = this.normalizeProductMediaIndex(this.parseJson('product-media-index', []));
@@ -499,34 +498,11 @@ if (!customElements.get('variant-configurator')) {
       const mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`);
       if (!mediaGallery) return;
 
-      const coverSeriesMediaIds = this.getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, 4);
-      if (coverSeriesMediaIds.length) {
-        const resolvedIds = this.dedupeMediaIdsByContent(
-          mediaGallery,
-          this.prependFeaturedMediaId(mediaGallery, coverSeriesMediaIds),
-        );
-        this.applyVariantMediaSelection(mediaGallery, resolvedIds);
-        this.moveActiveModalMedia(String(resolvedIds[0]), resolvedIds);
-        return;
-      }
-
       const mappedMediaIds = this.getMappedMediaIdsForCurrentVariant(mediaGallery);
-
       if (mappedMediaIds.length) {
         const resolvedIds = this.dedupeMediaIdsByContent(
           mediaGallery,
           this.prependFeaturedMediaId(mediaGallery, mappedMediaIds),
-        );
-        this.applyVariantMediaSelection(mediaGallery, resolvedIds);
-        this.moveActiveModalMedia(String(resolvedIds[0]), resolvedIds);
-        return;
-      }
-
-      const fallbackMediaIds = this.getFallbackMediaIdsForCurrentVariant(mediaGallery);
-      if (fallbackMediaIds.length) {
-        const resolvedIds = this.dedupeMediaIdsByContent(
-          mediaGallery,
-          this.prependFeaturedMediaId(mediaGallery, fallbackMediaIds),
         );
         this.applyVariantMediaSelection(mediaGallery, resolvedIds);
         this.moveActiveModalMedia(String(resolvedIds[0]), resolvedIds);
@@ -554,101 +530,6 @@ if (!customElements.get('variant-configurator')) {
       addId(this.currentVariant?.featured_media_id);
       (mediaIds || []).forEach((id) => addId(id));
       return ordered;
-    }
-
-    getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, maxImages = 4) {
-      const available = new Set(
-        this.getGalleryMediaItems(mediaGallery)
-          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
-          .filter((value) => Number.isInteger(value) && value > 0),
-      );
-
-      const featuredFilename = this.getFeaturedFilenameForCurrentVariant(mediaGallery);
-      const seriesIds = this.getSeriesMediaIdsFromFeaturedFilename(featuredFilename, available);
-      if (!seriesIds.length) return [];
-
-      const capped = seriesIds.slice(0, Math.max(1, Number(maxImages) || 4));
-      if (capped.length) return capped;
-
-      const featuredMediaId = Number(this.currentVariant?.featured_media_id || 0);
-      if (featuredMediaId && available.has(featuredMediaId)) return [featuredMediaId];
-
-      return [];
-    }
-
-    getFallbackMediaIdsForCurrentVariant(mediaGallery) {
-      const available = new Set(
-        this.getGalleryMediaItems(mediaGallery)
-          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
-          .filter((value) => Number.isInteger(value) && value > 0),
-      );
-
-      const ordered = [];
-      const seen = new Set();
-      const addId = (id) => {
-        const numeric = Number(id);
-        if (!Number.isInteger(numeric) || numeric <= 0 || seen.has(numeric) || !available.has(numeric)) return;
-        seen.add(numeric);
-        ordered.push(numeric);
-      };
-
-      // Expand a deterministic image series from featured filename:
-      // e.g. sentix_smoke_black-1.png -> sentix_smoke_black-(1..n).png
-      const featuredFilename = this.getFeaturedFilenameForCurrentVariant(mediaGallery);
-      const seriesIds = this.getSeriesMediaIdsFromFeaturedFilename(featuredFilename, available);
-      seriesIds.forEach((id) => addId(id));
-
-      addId(this.currentVariant?.featured_media_id);
-
-      return ordered;
-    }
-
-    getFeaturedFilenameForCurrentVariant(mediaGallery) {
-      const fromVariant = this.extractFilename(this.currentVariant?.featured_image_src);
-      if (fromVariant) return fromVariant;
-
-      const featuredId = Number(this.currentVariant?.featured_media_id || 0);
-      if (!Number.isInteger(featuredId) || featuredId <= 0) return '';
-
-      const featuredNode = this.getGalleryMediaItems(mediaGallery).find((node) => {
-        const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
-        return numeric === featuredId;
-      });
-      if (!featuredNode) return '';
-
-      const img = featuredNode.querySelector('img');
-      if (!img) return '';
-
-      const fromCurrent = this.extractFilename(img.currentSrc || img.getAttribute('src'));
-      if (fromCurrent) return fromCurrent;
-
-      const srcset = String(img.getAttribute('srcset') || '').split(',')[0]?.trim()?.split(/\s+/)?.[0] || '';
-      return this.extractFilename(srcset);
-    }
-
-    getSeriesMediaIdsFromFeaturedFilename(featuredFilename, availableIds) {
-      const normalizedFeaturedFilename = this.normalizeFilename(featuredFilename);
-      if (!normalizedFeaturedFilename) return [];
-
-      const match = normalizedFeaturedFilename.match(/^(.*?)-(\d+)(\.[a-z0-9]+)$/i);
-      if (!match) return [];
-
-      const [, baseName, , extension] = match;
-      const candidates = [];
-
-      this.productMediaIndex.forEach((id, filename) => {
-        if (!availableIds.has(id)) return;
-        const filenameMatch = this.normalizeFilename(filename).match(/^(.*?)-(\d+)(\.[a-z0-9]+)$/i);
-        if (!filenameMatch) return;
-
-        const [, candidateBase, candidateIndex, candidateExtension] = filenameMatch;
-        if (candidateBase !== baseName || candidateExtension.toLowerCase() !== extension.toLowerCase()) return;
-
-        candidates.push({ id, index: Number(candidateIndex) });
-      });
-
-      candidates.sort((a, b) => a.index - b.index);
-      return candidates.map((entry) => entry.id);
     }
 
     getMappedMediaIdsForCurrentVariant(mediaGallery) {
@@ -680,17 +561,6 @@ if (!customElements.get('variant-configurator')) {
 
         const idsFromAssignedFiles = this.resolveMediaIdsByFilenames(mediaGallery, assignedFiles);
         if (idsFromAssignedFiles.length) return idsFromAssignedFiles;
-      }
-
-      const assignedIds = this.variantAssignedMediaIds?.[key] || [];
-      if (assignedIds.length) {
-        const available = new Set(
-          this.getGalleryMediaItems(mediaGallery)
-            .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
-            .filter((value) => Number.isInteger(value) && value > 0),
-        );
-        const filteredAssigned = assignedIds.filter((id) => available.has(id));
-        if (filteredAssigned.length) return filteredAssigned;
       }
 
       return [];
