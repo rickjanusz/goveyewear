@@ -220,10 +220,17 @@ if (!customElements.get('variant-configurator')) {
         const seen = new Set();
 
         source.forEach((url) => {
-          const lookupKey = this.normalizeMediaLookupKey(url);
-          if (!lookupKey || seen.has(lookupKey)) return;
-          seen.add(lookupKey);
-          unique.push(lookupKey);
+          const pathKey = this.normalizeMediaPath(url);
+          const filenameKey = this.normalizeFilename(this.extractFilename(url));
+
+          if (pathKey && !seen.has(pathKey)) {
+            seen.add(pathKey);
+            unique.push(pathKey);
+          }
+          if (filenameKey && !seen.has(filenameKey)) {
+            seen.add(filenameKey);
+            unique.push(filenameKey);
+          }
         });
 
         if (unique.length) normalized[key] = unique;
@@ -260,12 +267,6 @@ if (!customElements.get('variant-configurator')) {
       } catch (_error) {
         return '';
       }
-    }
-
-    normalizeMediaLookupKey(value) {
-      const path = this.normalizeMediaPath(value);
-      if (path) return path;
-      return this.normalizeFilename(this.extractFilename(value));
     }
 
     getOrderedOptionKeys() {
@@ -709,7 +710,7 @@ if (!customElements.get('variant-configurator')) {
       const ordered = [];
       const seen = new Set();
       const normalizedFilenames = (filenames || [])
-        .map((filename) => this.normalizeFilename(filename))
+        .map((filename) => String(filename || '').trim().toLowerCase())
         .filter(Boolean);
 
       normalizedFilenames.forEach((filename) => {
@@ -723,6 +724,9 @@ if (!customElements.get('variant-configurator')) {
     }
 
     collectFilenameFromSrc(targetSet, src) {
+      const path = this.normalizeMediaPath(src);
+      if (path) targetSet.add(path);
+
       const filename = this.normalizeFilename(this.extractFilename(src));
       if (filename) targetSet.add(filename);
     }
@@ -885,7 +889,18 @@ if (!customElements.get('variant-configurator')) {
     }
 
     renderProductInfo() {
-      fetch(`${this.productUrl}?variant=${this.currentVariant.id}&section_id=${this.sectionId}`)
+      const productPath = (() => {
+        try {
+          return new URL(this.productUrl || window.location.pathname, window.location.origin).pathname;
+        } catch (_error) {
+          return window.location.pathname;
+        }
+      })();
+      const requestUrl = new URL(productPath, window.location.origin);
+      requestUrl.searchParams.set('variant', String(this.currentVariant.id));
+      requestUrl.searchParams.set('section_id', this.sectionId);
+
+      fetch(requestUrl.toString(), { credentials: 'same-origin' })
         .then((response) => response.text())
         .then((responseText) => {
           const html = new DOMParser().parseFromString(responseText, 'text/html');
@@ -901,7 +916,8 @@ if (!customElements.get('variant-configurator')) {
           }
 
           if (priceDestination) priceDestination.classList.remove('visibility-hidden');
-        });
+        })
+        .catch(() => {});
     }
 
     toggleAddButton(disable = true, text) {
