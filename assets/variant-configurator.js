@@ -569,6 +569,17 @@ if (!customElements.get('variant-configurator')) {
       const configuredCount = Number(this.variantGalleryFileCounts?.[variantKey] || 0);
       const assignedCount = Number(this.variantAssignedGalleryFileCounts?.[variantKey] || 0);
       const expectsMultipleFromFiles = configuredCount > 1 || assignedCount > 1;
+      const availableIds = Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+        .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+        .filter((value) => Number.isInteger(value) && value > 0);
+      console.info('[variant-configurator] updateMedia', {
+        variantId: this.currentVariant?.id,
+        mappedMediaIds,
+        configuredCount,
+        assignedCount,
+        expectsMultipleFromFiles,
+        availableIds,
+      });
 
       // Deterministic guard: when variant file-mapping says multiple images should exist,
       // but resolved IDs collapse to 0/1, don't hide the gallery.
@@ -843,6 +854,10 @@ if (!customElements.get('variant-configurator')) {
 
       // Safety net: never leave the gallery blank due to stale/mismatched IDs.
       if (selectedIds.size > 0 && matchedCount === 0) {
+        console.warn('[variant-configurator] matchedCount=0; clearing selection fallback', {
+          variantId: this.currentVariant?.id,
+          selectedIds: Array.from(selectedIds),
+        });
         this.clearVariantMediaSelection(mediaGallery);
         return;
       }
