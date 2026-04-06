@@ -506,32 +506,55 @@ if (!customElements.get('variant-configurator')) {
 
       const coverSeriesMediaIds = this.getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, 4);
       if (coverSeriesMediaIds.length) {
-        this.applyVariantMediaSelection(mediaGallery, coverSeriesMediaIds);
-        this.moveActiveModalMedia(String(coverSeriesMediaIds[0]), coverSeriesMediaIds);
+        const resolvedIds = this.prependFeaturedMediaId(mediaGallery, coverSeriesMediaIds);
+        this.applyVariantMediaSelection(mediaGallery, resolvedIds);
+        this.moveActiveModalMedia(String(resolvedIds[0]), resolvedIds);
         return;
       }
 
       const mappedMediaIds = this.getMappedMediaIdsForCurrentVariant(mediaGallery);
 
       if (mappedMediaIds.length) {
-        this.applyVariantMediaSelection(mediaGallery, mappedMediaIds);
-        this.moveActiveModalMedia(String(mappedMediaIds[0]), mappedMediaIds);
+        const resolvedIds = this.prependFeaturedMediaId(mediaGallery, mappedMediaIds);
+        this.applyVariantMediaSelection(mediaGallery, resolvedIds);
+        this.moveActiveModalMedia(String(resolvedIds[0]), resolvedIds);
         return;
       }
 
       const fallbackMediaIds = this.getFallbackMediaIdsForCurrentVariant(mediaGallery);
       if (fallbackMediaIds.length) {
-        this.applyVariantMediaSelection(mediaGallery, fallbackMediaIds);
-        this.moveActiveModalMedia(String(fallbackMediaIds[0]), fallbackMediaIds);
+        const resolvedIds = this.prependFeaturedMediaId(mediaGallery, fallbackMediaIds);
+        this.applyVariantMediaSelection(mediaGallery, resolvedIds);
+        this.moveActiveModalMedia(String(resolvedIds[0]), resolvedIds);
         return;
       }
 
       this.clearVariantMediaSelection(mediaGallery);
     }
 
+    prependFeaturedMediaId(mediaGallery, mediaIds) {
+      const ordered = [];
+      const seen = new Set();
+      const available = new Set(
+        this.getGalleryMediaItems(mediaGallery)
+          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+          .filter((value) => Number.isInteger(value) && value > 0),
+      );
+      const addId = (id) => {
+        const numeric = Number(id);
+        if (!Number.isInteger(numeric) || numeric <= 0 || seen.has(numeric) || !available.has(numeric)) return;
+        seen.add(numeric);
+        ordered.push(numeric);
+      };
+
+      addId(this.currentVariant?.featured_media_id);
+      (mediaIds || []).forEach((id) => addId(id));
+      return ordered;
+    }
+
     getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, maxImages = 4) {
       const available = new Set(
-        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+        this.getGalleryMediaItems(mediaGallery)
           .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
           .filter((value) => Number.isInteger(value) && value > 0),
       );
@@ -551,7 +574,7 @@ if (!customElements.get('variant-configurator')) {
 
     getFallbackMediaIdsForCurrentVariant(mediaGallery) {
       const available = new Set(
-        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+        this.getGalleryMediaItems(mediaGallery)
           .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
           .filter((value) => Number.isInteger(value) && value > 0),
       );
@@ -606,7 +629,7 @@ if (!customElements.get('variant-configurator')) {
       const configuredIds = this.variantMediaMap?.[key] || [];
       if (configuredIds.length) {
         const available = new Set(
-          Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+          this.getGalleryMediaItems(mediaGallery)
             .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
             .filter((value) => Number.isInteger(value) && value > 0),
         );
@@ -617,7 +640,7 @@ if (!customElements.get('variant-configurator')) {
       const assignedIds = this.variantAssignedMediaIds?.[key] || [];
       if (assignedIds.length) {
         const available = new Set(
-          Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+          this.getGalleryMediaItems(mediaGallery)
             .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
             .filter((value) => Number.isInteger(value) && value > 0),
         );
@@ -658,7 +681,7 @@ if (!customElements.get('variant-configurator')) {
     }
 
     resolveMediaIdsByFilenames(mediaGallery, filenames) {
-      const mediaEntries = Array.from(mediaGallery.querySelectorAll('[data-media-id]')).map((node) => {
+      const mediaEntries = this.getGalleryMediaItems(mediaGallery).map((node) => {
         const id = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
         const fileSet = new Set();
 
@@ -739,9 +762,18 @@ if (!customElements.get('variant-configurator')) {
       return Number(match[1]);
     }
 
+    getGalleryMediaItems(mediaGallery) {
+      if (!mediaGallery) return [];
+      const scoped = Array.from(
+        mediaGallery.querySelectorAll('.product__media-list .product__media-item[data-media-id]'),
+      );
+      if (scoped.length) return scoped;
+      return Array.from(mediaGallery.querySelectorAll('[data-media-id]'));
+    }
+
     applyVariantMediaSelection(mediaGallery, mediaIds) {
       const selectedIds = new Set(mediaIds.map((id) => Number(id)));
-      const mediaNodes = Array.from(mediaGallery.querySelectorAll('[data-media-id]'));
+      const mediaNodes = this.getGalleryMediaItems(mediaGallery);
       let visibleMediaCount = 0;
       let firstVisibleNode = null;
 
