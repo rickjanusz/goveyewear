@@ -31,12 +31,8 @@ if (!customElements.get('variant-configurator')) {
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants', []));
       this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map', {}));
       this.variantAssignedMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-assigned-media-ids', {}));
-      const rawVariantGalleryFiles = this.parseJson('variant-gallery-files', {});
-      const rawVariantAssignedGalleryFiles = this.parseJson('variant-assigned-gallery-files', {});
-      this.variantGalleryFiles = this.normalizeVariantGalleryFiles(rawVariantGalleryFiles);
-      this.variantAssignedGalleryFiles = this.normalizeVariantGalleryFiles(rawVariantAssignedGalleryFiles);
-      this.variantGalleryFileCounts = this.countVariantGalleryEntries(rawVariantGalleryFiles);
-      this.variantAssignedGalleryFileCounts = this.countVariantGalleryEntries(rawVariantAssignedGalleryFiles);
+      this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
+      this.variantAssignedGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-assigned-gallery-files', {}));
       this.productMediaIndex = this.normalizeProductMediaIndex(this.parseJson('product-media-index', []));
       this.swatchValueImageMap = this.parseJson('swatch-value-image-map', {});
       const defaultLensColorContent = this.parseJson('lens-color-content', {});
@@ -251,26 +247,6 @@ if (!customElements.get('variant-configurator')) {
       });
 
       return normalized;
-    }
-
-    countVariantGalleryEntries(rawMap) {
-      const entries = rawMap && typeof rawMap === 'object' ? Object.entries(rawMap) : [];
-      const counts = {};
-
-      entries.forEach(([variantId, urls]) => {
-        const key = String(variantId || '').trim();
-        if (!key) return;
-
-        const source = Array.isArray(urls) ? urls : [];
-        const unique = new Set();
-        source.forEach((url) => {
-          const raw = String(url || '').trim();
-          if (raw) unique.add(raw);
-        });
-        counts[key] = unique.size;
-      });
-
-      return counts;
     }
 
     normalizeProductMediaIndex(rawIndex) {
@@ -567,32 +543,6 @@ if (!customElements.get('variant-configurator')) {
       const filterToAvailable = (ids) => (ids || []).filter((id) => availableIds.has(Number(id)));
 
       const mappedMediaIds = filterToAvailable(this.getMappedMediaIdsForCurrentVariant(mediaGallery));
-      const variantKey = String(this.currentVariant?.id || '');
-      const configuredCount = Number(this.variantGalleryFileCounts?.[variantKey] || 0);
-      const assignedCount = Number(this.variantAssignedGalleryFileCounts?.[variantKey] || 0);
-      const expectsMultipleFromFiles = configuredCount > 1 || assignedCount > 1;
-      const featuredMediaId = Number(this.currentVariant?.featured_media_id || 0);
-      const mappedHasFeatured = featuredMediaId > 0 && mappedMediaIds.includes(featuredMediaId);
-      console.info('[variant-configurator] updateMedia', {
-        variantId: this.currentVariant?.id,
-        mappedMediaIds,
-        configuredCount,
-        assignedCount,
-        expectsMultipleFromFiles,
-        availableIds: Array.from(availableIds),
-        featuredMediaId,
-        mappedHasFeatured,
-      });
-
-      // Deterministic guard: when variant file-mapping says multiple images should exist,
-      // but resolved IDs collapse to 0/1, don't hide the gallery.
-      if (
-        (expectsMultipleFromFiles && mappedMediaIds.length <= 1) ||
-        (featuredMediaId > 0 && mappedMediaIds.length > 0 && !mappedHasFeatured)
-      ) {
-        this.clearVariantMediaSelection(mediaGallery);
-        return;
-      }
 
       if (mappedMediaIds.length) {
         this.applyVariantMediaSelection(mediaGallery, mappedMediaIds);
@@ -710,24 +660,6 @@ if (!customElements.get('variant-configurator')) {
       const assignedMediaIds = this.variantAssignedMediaMap?.[key] || [];
       addIds(assignedMediaIds);
 
-      const configuredFiles = this.variantGalleryFiles?.[key] || [];
-      if (configuredFiles.length) {
-        const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
-        addIds(idsFromIndex);
-
-        const idsFromGalleryFiles = this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
-        addIds(idsFromGalleryFiles);
-      }
-
-      const assignedFiles = this.variantAssignedGalleryFiles?.[key] || [];
-      if (assignedFiles.length) {
-        const idsFromAssignedIndex = this.resolveMediaIdsByProductIndex(assignedFiles);
-        addIds(idsFromAssignedIndex);
-
-        const idsFromAssignedFiles = this.resolveMediaIdsByFilenames(mediaGallery, assignedFiles);
-        addIds(idsFromAssignedFiles);
-      }
-
       return ordered;
     }
 
@@ -839,9 +771,29 @@ if (!customElements.get('variant-configurator')) {
     }
 
     applyVariantMediaSelection(mediaGallery, mediaIds) {
-      // Deterministic safe mode: never hide gallery items.
-      // Only sync active media and keep all gallery media visible.
-      this.clearVariantMediaSelection(mediaGallery);
+      const selectedIds = new Set(mediaIds.map((id) => Number(id)));
+      let matchedCount = 0;
+
+      mediaGallery.querySelectorAll('[data-media-id]').forEach((node) => {
+        const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
+        const shouldShow = selectedIds.has(numeric);
+        if (shouldShow) matchedCount += 1;
+        node.classList.toggle('variant-configurator__media-hidden', !shouldShow);
+        if (shouldShow) node.classList.remove('sentix-configurator__media-hidden');
+        if (!shouldShow) node.classList.remove('is-active');
+      });
+
+      mediaGallery.querySelectorAll('[data-target]').forEach((node) => {
+        const numeric = this.extractTrailingNumericId(node.dataset.target);
+        const shouldShow = selectedIds.has(numeric);
+        node.classList.toggle('variant-configurator__thumb-hidden', !shouldShow);
+        if (shouldShow) node.classList.remove('sentix-configurator__thumb-hidden');
+      });
+
+      if (selectedIds.size > 0 && matchedCount === 0) {
+        this.clearVariantMediaSelection(mediaGallery);
+        return;
+      }
 
       const primaryId = mediaIds[0];
       if (primaryId && mediaGallery.setActiveMedia) {
@@ -884,10 +836,20 @@ if (!customElements.get('variant-configurator')) {
       const activeMedia = modalContent.querySelector(`[data-media-id="${selected}"]`);
       if (activeMedia) modalContent.prepend(activeMedia);
 
-      // Deterministic safe mode: keep all modal media visible.
-      modalContent.querySelectorAll('.variant-configurator__modal-media-hidden, .sentix-configurator__modal-media-hidden').forEach((node) => {
-        node.classList.remove('variant-configurator__modal-media-hidden');
-        node.classList.remove('sentix-configurator__modal-media-hidden');
+      const selectedIds = new Set(mappedMediaIds || []);
+      if (!selectedIds.size) {
+        modalContent.querySelectorAll('.variant-configurator__modal-media-hidden, .sentix-configurator__modal-media-hidden').forEach((node) => {
+          node.classList.remove('variant-configurator__modal-media-hidden');
+          node.classList.remove('sentix-configurator__modal-media-hidden');
+        });
+        return;
+      }
+
+      modalContent.querySelectorAll('[data-media-id]').forEach((node) => {
+        const mediaId = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
+        const shouldHide = !selectedIds.has(mediaId);
+        node.classList.toggle('variant-configurator__modal-media-hidden', shouldHide);
+        if (!shouldHide) node.classList.remove('sentix-configurator__modal-media-hidden');
       });
     }
 
