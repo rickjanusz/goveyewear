@@ -741,13 +741,21 @@ if (!customElements.get('variant-configurator')) {
 
     applyVariantMediaSelection(mediaGallery, mediaIds) {
       const selectedIds = new Set(mediaIds.map((id) => Number(id)));
+      let visibleMediaCount = 0;
 
       mediaGallery.querySelectorAll('[data-media-id]').forEach((node) => {
         const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
         const shouldShow = selectedIds.has(numeric);
         node.classList.toggle('sentix-configurator__media-hidden', !shouldShow);
+        if (shouldShow) visibleMediaCount += 1;
         if (!shouldShow) node.classList.remove('is-active');
       });
+
+      // Safety guard: never leave the gallery fully hidden due to mapping mismatch.
+      if (visibleMediaCount === 0) {
+        this.clearVariantMediaSelection(mediaGallery);
+        return;
+      }
 
       mediaGallery.querySelectorAll('[data-target]').forEach((node) => {
         const numeric = this.extractTrailingNumericId(node.dataset.target);
