@@ -416,7 +416,7 @@
               {%- assign lens_type_index = lens_type_pos | minus: 1 -%}
               {%- assign lens_color_index = lens_color_pos | minus: 1 -%}
               {%- assign frame_color_index = frame_color_pos | minus: 1 -%}
-                <sentix-variant-configurator
+                <variant-configurator
                   class="no-js-hidden sentix-configurator"
                   data-section="{{ section.id }}"
                   data-url="{{ product.url }}"
@@ -706,7 +706,7 @@
                       {%- endfor -%}
                     }
                   </script>
-                </sentix-variant-configurator>
+                </variant-configurator>
             {%- else -%}
               {%- unless product.has_only_default_variant -%}
                 {%- if block.settings.picker_type == 'button' -%}
