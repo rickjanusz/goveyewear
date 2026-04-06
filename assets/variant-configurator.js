@@ -21,6 +21,7 @@ if (!customElements.get('variant-configurator')) {
     connectedCallback() {
       this.sectionId = this.dataset.section;
       this.productUrl = this.dataset.url;
+      this.productPath = this.normalizeProductPath(this.productUrl);
       this.productHandle = String(this.productUrl || '').split('/').filter(Boolean).pop() || '';
       this.initialVariantId = Number(this.dataset.initialVariantId || 0);
       this.optionPositions = {
@@ -63,6 +64,15 @@ if (!customElements.get('variant-configurator')) {
 
       const initialVariant = this.sellableVariants.find((variant) => variant.id === this.initialVariantId) || this.sellableVariants[0];
       this.syncUIFromVariant(initialVariant);
+    }
+
+    normalizeProductPath(url) {
+      const fallbackPath = window.location.pathname || '/';
+      try {
+        return new URL(url || fallbackPath, window.location.origin).pathname || fallbackPath;
+      } catch (_error) {
+        return fallbackPath;
+      }
     }
 
     parseJson(key, fallback = {}) {
@@ -778,10 +788,12 @@ if (!customElements.get('variant-configurator')) {
 
     applyVariantMediaSelection(mediaGallery, mediaIds) {
       const selectedIds = new Set(mediaIds.map((id) => Number(id)));
+      let matchedCount = 0;
 
       mediaGallery.querySelectorAll('[data-media-id]').forEach((node) => {
         const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
         const shouldShow = selectedIds.has(numeric);
+        if (shouldShow) matchedCount += 1;
         node.classList.toggle('sentix-configurator__media-hidden', !shouldShow);
         if (!shouldShow) node.classList.remove('is-active');
       });
@@ -791,6 +803,12 @@ if (!customElements.get('variant-configurator')) {
         const shouldShow = selectedIds.has(numeric);
         node.classList.toggle('sentix-configurator__thumb-hidden', !shouldShow);
       });
+
+      // Safety net: never leave the gallery blank due to stale/mismatched IDs.
+      if (selectedIds.size > 0 && matchedCount === 0) {
+        this.clearVariantMediaSelection(mediaGallery);
+        return;
+      }
 
       const primaryId = mediaIds[0];
       if (primaryId && mediaGallery.setActiveMedia) {
@@ -846,7 +864,8 @@ if (!customElements.get('variant-configurator')) {
 
     updateURL() {
       if (!this.currentVariant) return;
-      window.history.replaceState({}, '', `${this.productUrl}?variant=${this.currentVariant.id}`);
+      const nextUrl = `${this.productPath}?variant=${this.currentVariant.id}`;
+      window.history.replaceState({}, '', nextUrl);
     }
 
     updateShareUrl() {
@@ -889,14 +908,7 @@ if (!customElements.get('variant-configurator')) {
     }
 
     renderProductInfo() {
-      const productPath = (() => {
-        try {
-          return new URL(this.productUrl || window.location.pathname, window.location.origin).pathname;
-        } catch (_error) {
-          return window.location.pathname;
-        }
-      })();
-      const requestUrl = new URL(productPath, window.location.origin);
+      const requestUrl = new URL(this.productPath, window.location.origin);
       requestUrl.searchParams.set('variant', String(this.currentVariant.id));
       requestUrl.searchParams.set('section_id', this.sectionId);
 
