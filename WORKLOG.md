@@ -3,9 +3,9 @@
 Keep this file updated so any agent can resume without overwriting files.
 
 ## Current State
-- Branch: codex/gatorz-variants
-- HEAD commit: e61718e
-- Last pushed commit (GitHub): e61718e
+- Branch: codex/blastshield-variants
+- HEAD commit: c0c74ab
+- Last pushed commit (GitHub): 040db51
 - Local dev server:
   - Running? no
   - Port:
@@ -14,6 +14,36 @@ Keep this file updated so any agent can resume without overwriting files.
   - Live: 160510771450
 
 ## Recent Pulls
+- 2026-04-05: target theme ID `160510771450` (live)
+  - Branch + commit: `codex/blastshield-variants` @ `4b14a7f`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json --only "templates/product*.json"`
+  - Files changed: merchant-managed settings/templates synced locally for drift-safe baseline.
+  - Change: performed required live merchant-config sync before template edits.
+  - Live preview: https://goveyewear.myshopify.com/?preview_theme_id=160510771450
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: none.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/blastshield-variants` @ `4b14a7f`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160581189882 --nodelete --only config/settings_data.json --only config/settings_schema.json --only "templates/product*.json"`
+  - Files changed: merchant-managed settings/templates synced from staging.
+  - Change: pulled current staging template state to source deterministic configurator block wiring for test-template merge.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Live preview: https://goveyewear.myshopify.com/?preview_theme_id=160510771450
+  - Open TODOs/approvals needed: none.
+- 2026-04-05: target theme ID `160510771450` (live)
+  - Branch + commit: `codex/blastshield-variants` @ `2122c07`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme pull --store=goveyewear.myshopify.com --theme=160510771450 --nodelete --only config/settings_data.json --only config/settings_schema.json --only "templates/product*.json"`
+  - Files changed: live product template set and merchant settings synced locally.
+  - Change: pulled canonical live `product.gatorz-{{frame}}` templates before creating `-test` duplicates.
+  - Live preview: https://goveyewear.myshopify.com/?preview_theme_id=160510771450
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: none.
 - 2026-04-05: target theme ID `160581189882` (staging)
   - Branch + commit: `codex/gatorz-variants` @ `8038bfe`
   - Commands:
@@ -211,6 +241,132 @@ Keep this file updated so any agent can resume without overwriting files.
   - Result: success, no tracked local diffs after pull
 
 ## Recent Pushes
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/blastshield-variants` @ `c0c74ab`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only templates/product.gatorz-blastshield-test.json --only templates/product.gatorz-blastshield.json`
+  - Files pushed: `templates/product.gatorz-blastshield-test.json`, `templates/product.gatorz-blastshield.json`
+  - Change: fixed the last two Blastshield lens swatches and last two frame swatches to exact existing Shopify file keys (UUID-suffixed file names), removing stale/nonexistent file references.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: verify Blastshield lens/frame swatch rendering after hard refresh.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/blastshield-variants` @ `2f3a2e5`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/main-product.liquid --only assets/sentix-product-configurator.js`
+  - Files pushed: `sections/main-product.liquid`, `assets/sentix-product-configurator.js`
+  - Change: locked swatch resolution to deterministic key/value matching by `(option_position, option_value)` first, with group-name matching as fallback; added `option_position` to swatch entry payload emitted by Liquid.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: validate Blastshield problematic final swatches now resolve consistently under template/admin value drift.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/blastshield-variants` @ `f943c6d`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/section-main-product.css`
+  - Files pushed: `assets/section-main-product.css`
+  - Change: removed forced desktop no-wrap override for Lens Type so options remain on one line when space allows and wrap naturally when space is constrained.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: verify Lens Type row behavior on desktop widths across Sentix/Warhawk/Blastshield templates.
+- 2026-04-05: Admin API Blastshield lens support sync (no theme push)
+  - Branch + commit: `codex/blastshield-variants` @ `a109107`
+  - Commands:
+    - `curl -sL https://www.gatorz.com/products/blastshield -o /tmp/gatorz_blastshield.html`
+    - `python3` parse of `ColorSwatch__Radio` (`option-1`) values + `color-description` + swatch image filenames
+    - `python3` GraphQL `metafieldsSet` for product handle `gatorz-blastshield`
+  - Scope:
+    - Confirmed `templates/product.gatorz-blastshield-test.json` lens swatch option values + swatch filenames match Gatorz source exactly.
+    - Wrote variant metafields for all 10 Blastshield variants:
+      - `custom.gatorz_lens_support_title` = exact lens color option value
+      - `custom.gatorz_lens_support_secondary_body` = exact Gatorz `color-description` text (body 2)
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: hard refresh Blastshield staging PDP and verify lens support body 2 now renders per lens selection.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/blastshield-variants` @ `a109107`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only assets/section-main-product.css`
+  - Files pushed: `assets/section-main-product.css`
+  - Change: made Lens Type buttons render on a single horizontal row on desktop (`min-width: 750px`) while preserving wrap behavior on mobile.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: verify desktop layout on Sentix/Warhawk/Blastshield product pages.
+- 2026-04-05: Admin API template assignment sync (no theme push)
+  - Branch + commit: `codex/blastshield-variants` @ `a006ac5`
+  - Commands:
+    - `python3` GraphQL `productUpdate` for product template suffixes
+  - Products updated:
+    - `sentix` -> `gatorz-sentix-test`
+    - `warhawk-test` -> `gatorz-warhawk-test`
+    - `gatorz-blastshield` -> `gatorz-blastshield-test`
+  - Change: fixed storefront template mismatches so staging preview uses the `-test` templates containing configurator + before/after blocks.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: hard refresh each product preview and confirm before/after appears on all three products.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/blastshield-variants` @ `a006ac5`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only templates/product.gatorz-sentix-test.json --only templates/product.gatorz-warhawk-test.json --only templates/product.gatorz-blastshield-test.json`
+  - Files pushed: `templates/product.gatorz-sentix-test.json`, `templates/product.gatorz-warhawk-test.json`, `templates/product.gatorz-blastshield-test.json`
+  - Change: merged full `main-product` configurator wiring (swatch blocks + `enable_gatorz_configurator`) from working frame templates into the three `-test` templates for deterministic parity in staging.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: verify each assigned `gatorz-*-test` product renders the configurator and swatches on preview.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/blastshield-variants` @ `040db51`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only templates/product.gatorz-blastshield-b2-test.json --only templates/product.gatorz-blastshield-test.json --only templates/product.gatorz-delta-test.json --only templates/product.gatorz-havok-test.json --only templates/product.gatorz-magnum-test.json --only templates/product.gatorz-product-page-test.json --only templates/product.gatorz-revenant-test.json --only templates/product.gatorz-rig-test.json --only templates/product.gatorz-sentix-test.json --only templates/product.gatorz-w-replacements-test.json --only templates/product.gatorz-warhawk-test.json --only templates/product.gatorz-wraith-test.json --only templates/product.gatorz-wraptor-test.json`
+  - Files pushed: all `templates/product.gatorz-*-test.json` templates (13 files).
+  - Change: staged full `-test` template set cloned from live `gatorz-{{frame}}` templates; removed unsupported `ai_gen_block_*` references from 10 affected test templates to satisfy staging validation.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: assign desired `gatorz-*-test` template to each test product in admin.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/blastshield-variants` @ `f1484af`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only templates/product.gatorz-blastshield.json`
+  - Files pushed: `templates/product.gatorz-blastshield.json`
+  - Change: added `gatorz-blastshield` product template with deterministic swatch blocks for all known Blastshield lens/frame option values from the import seed set.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: assign `gatorz-blastshield` template to the Blastshield test product in admin and validate variant picker, swatches, and per-variant gallery behavior.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/warhawk-from-sentix-stable` @ `dc3c08a`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/main-product.liquid --only assets/sentix-product-configurator.js`
+  - Files pushed: `sections/main-product.liquid`, `assets/sentix-product-configurator.js`
+  - Change: added deterministic value-based swatch image fallback map in Liquid and merged it into configurator swatch resolution so Warhawk can render swatches even when block-derived swatch entries are empty.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Product preview: https://goveyewear.myshopify.com/products/warhawk-test?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: verify Warhawk swatches now render in staging preview and continue variant-gallery validation (still staging-only).
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `11ba5cd`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/main-product.liquid --only assets/sentix-product-configurator.js --only assets/section-main-product.css`
+  - Files pushed: `sections/main-product.liquid`, `assets/sentix-product-configurator.js`, `assets/section-main-product.css`
+  - Change: restored Sentix runtime to previously known-good commit state (`e61718e`) after regressions reintroduced full-gallery rendering.
+  - Product preview: https://goveyewear.myshopify.com/products/sentix?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: verify Sentix now filters gallery to selected variant image set again before further Warhawk changes.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `db99126`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/main-product.liquid --only assets/sentix-product-configurator.js --only assets/section-main-product.css`
+  - Files pushed: `sections/main-product.liquid`, `assets/sentix-product-configurator.js`, `assets/section-main-product.css`
+  - Change: rolled Sentix configurator runtime back to stable checkpoint state (`f3bd3fe`) before Warhawk iteration; removes later regressions from the active staging preview.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Product preview: https://goveyewear.myshopify.com/products/sentix?preview_theme_id=160581189882
+  - Open TODOs/approvals needed: verify Sentix picker behavior is restored; then resume Warhawk rollout from this baseline.
+- 2026-04-05: target theme ID `160581189882` (staging)
+  - Branch + commit: `codex/gatorz-variants` @ `f03ff38`
+  - Commands:
+    - `rm -rf /Users/p/Library/Preferences/shopify-cli-theme-conf-nodejs`
+    - `./scripts/shopify theme push --store=goveyewear.myshopify.com --theme=160581189882 --path . --nodelete --only sections/main-product.liquid --only templates/product.gatorz-warhawk.json`
+  - Files pushed: `sections/main-product.liquid`, `templates/product.gatorz-warhawk.json`
+  - Change: added missing Warhawk product template and ensured Gatorz configurator can render when enabled even before swatch blocks are populated.
+  - Staging preview: https://goveyewear.myshopify.com?preview_theme_id=160581189882
+  - Theme editor: https://goveyewear.myshopify.com/admin/themes/160581189882/editor
+  - Open TODOs/approvals needed: assign template `gatorz-warhawk` to the intended product in admin; then verify variant controls + gallery behavior on that product preview URL.
 - 2026-04-05: target theme ID `160581189882` (staging)
   - Branch + commit: `codex/gatorz-variants` @ `e61718e`
   - Files pushed: `assets/sentix-product-configurator.js`
