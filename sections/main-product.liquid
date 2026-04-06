@@ -472,8 +472,17 @@
                         {%- if swatch_block.type == 'gatorz_swatch' and swatch_block.settings.swatch_image != blank and swatch_block.settings.option_value != blank -%}
                           {%- unless swatch_first -%},{%- endunless -%}
                           {%- assign swatch_first = false -%}
+                          {%- assign swatch_option_position = '' -%}
+                          {%- if swatch_block.settings.group == 'lens_color' -%}
+                            {%- assign swatch_option_position = lens_color_pos -%}
+                          {%- elsif swatch_block.settings.group == 'frame_color' -%}
+                            {%- assign swatch_option_position = frame_color_pos -%}
+                          {%- elsif swatch_block.settings.group == 'lens_type' -%}
+                            {%- assign swatch_option_position = lens_type_pos -%}
+                          {%- endif -%}
                           {
                             "group": {{ swatch_block.settings.group | json }},
+                            "option_position": {{ swatch_option_position | json }},
                             "value": {{ swatch_block.settings.option_value | json }},
                             "image": {{ swatch_block.settings.swatch_image | image_url: width: 128 | json }}
                           }

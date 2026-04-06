@@ -75,23 +75,36 @@ if (!customElements.get('sentix-variant-configurator')) {
     }
 
     buildSwatchMap(entries) {
-      const map = {};
+      const map = {
+        byGroup: {},
+        byPosition: {},
+      };
       (entries || []).forEach((entry) => {
         const group = entry?.group;
         const value = entry?.value;
         const image = entry?.image;
-        if (!group || !value || !image) return;
-        map[group] ||= {};
-        map[group][this.normalizeSwatchKey(value)] = image;
+        const optionPosition = Number(entry?.option_position || 0);
+        if (!value || !image) return;
+        const normalizedKey = this.normalizeSwatchKey(value);
+
+        if (group) {
+          map.byGroup[group] ||= {};
+          map.byGroup[group][normalizedKey] = image;
+        }
+        if (optionPosition > 0) {
+          const positionKey = String(optionPosition);
+          map.byPosition[positionKey] ||= {};
+          map.byPosition[positionKey][normalizedKey] = image;
+        }
       });
 
       Object.entries(this.swatchValueImageMap || {}).forEach(([group, values]) => {
         if (!group || !values || typeof values !== 'object') return;
-        map[group] ||= {};
+        map.byGroup[group] ||= {};
         Object.entries(values).forEach(([value, image]) => {
           if (!value || !image) return;
           const key = this.normalizeSwatchKey(value);
-          if (!map[group][key]) map[group][key] = image;
+          if (!map.byGroup[group][key]) map.byGroup[group][key] = image;
         });
       });
 
@@ -359,7 +372,7 @@ if (!customElements.get('sentix-variant-configurator')) {
 
     renderOptionButton(key, position, value) {
       const selected = this.selected[key] === value;
-      const swatchUrl = this.swatchMap?.[key]?.[this.normalizeSwatchKey(value)] || '';
+      const swatchUrl = this.resolveSwatchUrl(key, position, value);
       const isSwatchOption = key === 'lens_color' || key === 'frame_color';
       const classes = [
         'sentix-configurator__option',
@@ -390,6 +403,19 @@ if (!customElements.get('sentix-variant-configurator')) {
           ${swatchMarkup}
         </button>
       `;
+    }
+
+    resolveSwatchUrl(key, position, value) {
+      const normalizedValue = this.normalizeSwatchKey(value);
+      const positionKey = String(Number(position) || '');
+
+      const byPosition = this.swatchMap?.byPosition?.[positionKey]?.[normalizedValue];
+      if (byPosition) return byPosition;
+
+      const byGroup = this.swatchMap?.byGroup?.[key]?.[normalizedValue];
+      if (byGroup) return byGroup;
+
+      return '';
     }
 
     bindSwatchFallbackHandlers() {
