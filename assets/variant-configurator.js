@@ -550,11 +550,21 @@ if (!customElements.get('variant-configurator')) {
         return;
       }
 
-      const featuredOnly = filterToAvailable([this.currentVariant?.featured_media_id]);
-      this.clearVariantMediaSelection(mediaGallery);
-      if (featuredOnly.length && mediaGallery.setActiveMedia) {
-        mediaGallery.setActiveMedia(`${this.sectionId}-${featuredOnly[0]}`, true);
+      const coverSeriesMediaIds = filterToAvailable(this.getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, 4));
+      if (coverSeriesMediaIds.length) {
+        this.applyVariantMediaSelection(mediaGallery, coverSeriesMediaIds);
+        this.moveActiveModalMedia(String(coverSeriesMediaIds[0]), coverSeriesMediaIds);
+        return;
       }
+
+      const fallbackMediaIds = filterToAvailable(this.getFallbackMediaIdsForCurrentVariant(mediaGallery));
+      if (fallbackMediaIds.length) {
+        this.applyVariantMediaSelection(mediaGallery, fallbackMediaIds);
+        this.moveActiveModalMedia(String(fallbackMediaIds[0]), fallbackMediaIds);
+        return;
+      }
+
+      this.clearVariantMediaSelection(mediaGallery);
     }
 
     getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, maxImages = 4) {
@@ -761,30 +771,8 @@ if (!customElements.get('variant-configurator')) {
     }
 
     applyVariantMediaSelection(mediaGallery, mediaIds) {
-      const selectedIds = new Set(mediaIds.map((id) => Number(id)));
-      let visibleCount = 0;
-
-      mediaGallery.querySelectorAll('[data-media-id]').forEach((node) => {
-        const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
-        const show = selectedIds.has(numeric);
-        if (show) visibleCount += 1;
-        node.classList.toggle('variant-configurator__media-hidden', !show);
-        if (show) node.classList.remove('sentix-configurator__media-hidden');
-        if (!show) node.classList.remove('is-active');
-      });
-
-      mediaGallery.querySelectorAll('[data-target]').forEach((node) => {
-        const numeric = this.extractTrailingNumericId(node.dataset.target);
-        const show = selectedIds.has(numeric);
-        node.classList.toggle('variant-configurator__thumb-hidden', !show);
-        if (show) node.classList.remove('sentix-configurator__thumb-hidden');
-      });
-
-      // Guard: never allow empty gallery due to stale mapping.
-      if (!visibleCount) {
-        this.clearVariantMediaSelection(mediaGallery);
-        return;
-      }
+      // Stable rollout mode: keep all gallery media visible and only set the active media.
+      this.clearVariantMediaSelection(mediaGallery);
 
       const primaryId = mediaIds[0];
       if (primaryId && mediaGallery.setActiveMedia) {
@@ -827,20 +815,10 @@ if (!customElements.get('variant-configurator')) {
       const activeMedia = modalContent.querySelector(`[data-media-id="${selected}"]`);
       if (activeMedia) modalContent.prepend(activeMedia);
 
-      const selectedIds = new Set((mappedMediaIds || []).map((id) => Number(id)));
-      if (!selectedIds.size) {
-        modalContent.querySelectorAll('.variant-configurator__modal-media-hidden, .sentix-configurator__modal-media-hidden').forEach((node) => {
-          node.classList.remove('variant-configurator__modal-media-hidden');
-          node.classList.remove('sentix-configurator__modal-media-hidden');
-        });
-        return;
-      }
-
-      modalContent.querySelectorAll('[data-media-id]').forEach((node) => {
-        const mediaId = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
-        const hide = !selectedIds.has(mediaId);
-        node.classList.toggle('variant-configurator__modal-media-hidden', hide);
-        if (!hide) node.classList.remove('sentix-configurator__modal-media-hidden');
+      // Stable rollout mode: keep all modal media visible.
+      modalContent.querySelectorAll('.variant-configurator__modal-media-hidden, .sentix-configurator__modal-media-hidden').forEach((node) => {
+        node.classList.remove('variant-configurator__modal-media-hidden');
+        node.classList.remove('sentix-configurator__modal-media-hidden');
       });
     }
 
