@@ -75,6 +75,7 @@
         "share"
       ],
       "settings": {
+        "enable_gatorz_configurator": true,
         "enable_sticky_info": true,
         "gallery_layout": "stacked",
         "media_size": "medium",
