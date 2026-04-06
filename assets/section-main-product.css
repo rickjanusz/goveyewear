@@ -441,10 +441,25 @@ fieldset.product-form__input .form__label {
   white-space: pre-line;
 }
 
+@media screen and (min-width: 750px) {
+  .sentix-configurator__options[data-option-group='lens_type'] {
+    flex-wrap: nowrap;
+  }
+
+  .sentix-configurator__options[data-option-group='lens_type'] .sentix-configurator__option--text {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+
 @media screen and (max-width: 749px) {
   .sentix-configurator__heading .form__label,
   .sentix-configurator__selected-value {
     font-size: 1.4rem;
+  }
+
+  .sentix-configurator__options[data-option-group='lens_type'] {
+    flex-wrap: wrap;
   }
 
   .sentix-configurator__option--text {
