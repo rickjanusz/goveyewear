@@ -500,10 +500,7 @@ if (!customElements.get('variant-configurator')) {
 
       const mappedMediaIds = this.getMappedMediaIdsForCurrentVariant(mediaGallery);
       if (mappedMediaIds.length) {
-        const resolvedIds = this.dedupeMediaIdsByContent(
-          mediaGallery,
-          this.prependFeaturedMediaId(mediaGallery, mappedMediaIds),
-        );
+        const resolvedIds = this.prependFeaturedMediaId(mediaGallery, mappedMediaIds);
         this.applyVariantMediaSelection(mediaGallery, resolvedIds);
         this.moveActiveModalMedia(String(resolvedIds[0]), resolvedIds);
         return;
@@ -669,51 +666,6 @@ if (!customElements.get('variant-configurator')) {
       );
       if (scoped.length) return scoped;
       return Array.from(mediaGallery.querySelectorAll('[data-media-id]'));
-    }
-
-    buildMediaFingerprintMap(mediaGallery) {
-      const map = new Map();
-
-      this.getGalleryMediaItems(mediaGallery).forEach((node) => {
-        const id = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
-        if (!Number.isInteger(id) || id <= 0) return;
-
-        const filenames = new Set();
-        node.querySelectorAll('img').forEach((img) => {
-          this.collectFilenameFromSrc(filenames, img.currentSrc || img.getAttribute('src'));
-          this.collectFilenamesFromSrcset(filenames, img.getAttribute('srcset'));
-        });
-        node.querySelectorAll('source').forEach((source) => {
-          this.collectFilenamesFromSrcset(filenames, source.getAttribute('srcset'));
-        });
-
-        const ordered = Array.from(filenames).sort();
-        const fingerprint = ordered.length ? ordered.join('|') : `id:${id}`;
-        map.set(id, fingerprint);
-      });
-
-      return map;
-    }
-
-    dedupeMediaIdsByContent(mediaGallery, mediaIds) {
-      const fingerprints = this.buildMediaFingerprintMap(mediaGallery);
-      const deduped = [];
-      const seenFingerprints = new Set();
-      const seenIds = new Set();
-
-      (mediaIds || []).forEach((candidate) => {
-        const id = Number(candidate);
-        if (!Number.isInteger(id) || id <= 0 || seenIds.has(id)) return;
-        seenIds.add(id);
-
-        const fingerprint = fingerprints.get(id) || `id:${id}`;
-        if (seenFingerprints.has(fingerprint)) return;
-
-        seenFingerprints.add(fingerprint);
-        deduped.push(id);
-      });
-
-      return deduped;
     }
 
     applyVariantMediaSelection(mediaGallery, mediaIds) {
