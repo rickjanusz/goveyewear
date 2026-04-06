@@ -522,7 +522,7 @@
                           {%- assign media_ids_string = media_block.settings.media_ids | strip | replace: ' ', '' -%}
                           {%- assign media_ids_array = media_ids_string | split: ',' -%}
                           {%- if media_map_count > 0 -%},{%- endif -%}
-                          {{ media_block.settings.variant_id | strip | json }}: {{ media_ids_array | json }}
+                          {{ media_block.settings.variant_id | strip | append: '' | json }}: {{ media_ids_array | json }}
                           {%- assign media_map_count = media_map_count | plus: 1 -%}
                         {%- endif -%}
                       {%- endfor -%}
@@ -544,7 +544,7 @@
                         {%- assign gallery_file_4 = gallery_file_4_metafield.value -%}
                         {%- if gallery_files != blank or gallery_file_1 != blank or gallery_file_2 != blank or gallery_file_3 != blank or gallery_file_4 != blank -%}
                           {%- if gallery_map_count > 0 -%},{%- endif -%}
-                          {{ mapped_variant.id | json }}: [
+                          {{ mapped_variant.id | append: '' | json }}: [
                             {%- if gallery_files != blank -%}
                               {%- for gallery_file in gallery_files -%}
                                 {%- assign gallery_file_url = gallery_file | image_url: width: 4096 | default: gallery_file | file_url -%}
@@ -619,7 +619,7 @@
                         {%- endcapture -%}
                         {%- unless assigned_media_ids == blank -%}
                           {%- if assigned_media_count > 0 -%},{%- endif -%}
-                          {{ mapped_variant.id | json }}: [{{ assigned_media_ids | strip }}]
+                          {{ mapped_variant.id | append: '' | json }}: [{{ assigned_media_ids | strip }}]
                           {%- assign assigned_media_count = assigned_media_count | plus: 1 -%}
                         {%- endunless -%}
                       {%- endfor -%}
@@ -641,7 +641,7 @@
                         {%- endcapture -%}
                         {%- unless assigned_urls == blank -%}
                           {%- if assigned_map_count > 0 -%},{%- endif -%}
-                          {{ mapped_variant.id | json }}: [{{ assigned_urls | strip }}]
+                          {{ mapped_variant.id | append: '' | json }}: [{{ assigned_urls | strip }}]
                           {%- assign assigned_map_count = assigned_map_count | plus: 1 -%}
                         {%- endunless -%}
                       {%- endfor -%}
