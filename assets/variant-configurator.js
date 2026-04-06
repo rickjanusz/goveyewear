@@ -31,8 +31,12 @@ if (!customElements.get('variant-configurator')) {
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants', []));
       this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map', {}));
       this.variantAssignedMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-assigned-media-ids', {}));
-      this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
-      this.variantAssignedGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-assigned-gallery-files', {}));
+      const rawVariantGalleryFiles = this.parseJson('variant-gallery-files', {});
+      const rawVariantAssignedGalleryFiles = this.parseJson('variant-assigned-gallery-files', {});
+      this.variantGalleryFiles = this.normalizeVariantGalleryFiles(rawVariantGalleryFiles);
+      this.variantAssignedGalleryFiles = this.normalizeVariantGalleryFiles(rawVariantAssignedGalleryFiles);
+      this.variantGalleryFileCounts = this.countVariantGalleryEntries(rawVariantGalleryFiles);
+      this.variantAssignedGalleryFileCounts = this.countVariantGalleryEntries(rawVariantAssignedGalleryFiles);
       this.productMediaIndex = this.normalizeProductMediaIndex(this.parseJson('product-media-index', []));
       this.swatchValueImageMap = this.parseJson('swatch-value-image-map', {});
       const defaultLensColorContent = this.parseJson('lens-color-content', {});
@@ -247,6 +251,26 @@ if (!customElements.get('variant-configurator')) {
       });
 
       return normalized;
+    }
+
+    countVariantGalleryEntries(rawMap) {
+      const entries = rawMap && typeof rawMap === 'object' ? Object.entries(rawMap) : [];
+      const counts = {};
+
+      entries.forEach(([variantId, urls]) => {
+        const key = String(variantId || '').trim();
+        if (!key) return;
+
+        const source = Array.isArray(urls) ? urls : [];
+        const unique = new Set();
+        source.forEach((url) => {
+          const raw = String(url || '').trim();
+          if (raw) unique.add(raw);
+        });
+        counts[key] = unique.size;
+      });
+
+      return counts;
     }
 
     normalizeProductMediaIndex(rawIndex) {
@@ -541,6 +565,17 @@ if (!customElements.get('variant-configurator')) {
       if (!mediaGallery) return;
 
       const mappedMediaIds = this.getMappedMediaIdsForCurrentVariant(mediaGallery);
+      const variantKey = String(this.currentVariant?.id || '');
+      const configuredCount = Number(this.variantGalleryFileCounts?.[variantKey] || 0);
+      const assignedCount = Number(this.variantAssignedGalleryFileCounts?.[variantKey] || 0);
+      const expectsMultipleFromFiles = configuredCount > 1 || assignedCount > 1;
+
+      // Deterministic guard: when variant file-mapping says multiple images should exist,
+      // but resolved IDs collapse to 0/1, don't hide the gallery.
+      if (expectsMultipleFromFiles && mappedMediaIds.length <= 1) {
+        this.clearVariantMediaSelection(mediaGallery);
+        return;
+      }
 
       if (mappedMediaIds.length) {
         this.applyVariantMediaSelection(mediaGallery, mappedMediaIds);
