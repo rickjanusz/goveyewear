@@ -408,6 +408,9 @@ if (!customElements.get('sentix-variant-configurator')) {
     resolveSwatchUrl(key, position, value) {
       const normalizedValue = this.normalizeSwatchKey(value);
       const positionKey = String(Number(position) || '');
+      const goldMirrorSmokeKey = 'ansi-z87-1-milspec-ballistic-smoke-polarized-w-gold-mirror';
+
+      if (key === 'lens_color' && normalizedValue === goldMirrorSmokeKey) return '';
 
       const byPosition = this.swatchMap?.byPosition?.[positionKey]?.[normalizedValue];
       if (byPosition) return byPosition;
@@ -441,6 +444,7 @@ if (!customElements.get('sentix-variant-configurator')) {
         return '#111111';
       }
 
+      if (normalized.includes('gold mirror')) return '#c8aa43';
       if (normalized.includes('inferno') || normalized.includes('photochromic')) return '#9aa0a6';
       if (normalized.includes('rose')) return '#b26b7b';
       if (normalized.includes('smoke')) return '#4a4a4a';
@@ -505,18 +509,18 @@ if (!customElements.get('sentix-variant-configurator')) {
       const mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`);
       if (!mediaGallery) return;
 
-      const coverSeriesMediaIds = this.getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, 4);
-      if (coverSeriesMediaIds.length) {
-        this.applyVariantMediaSelection(mediaGallery, coverSeriesMediaIds);
-        this.moveActiveModalMedia(String(coverSeriesMediaIds[0]), coverSeriesMediaIds);
-        return;
-      }
-
       const mappedMediaIds = this.getMappedMediaIdsForCurrentVariant(mediaGallery);
 
       if (mappedMediaIds.length) {
         this.applyVariantMediaSelection(mediaGallery, mappedMediaIds);
         this.moveActiveModalMedia(String(mappedMediaIds[0]), mappedMediaIds);
+        return;
+      }
+
+      const coverSeriesMediaIds = this.getCoverSeriesMediaIdsForCurrentVariant(mediaGallery, 4);
+      if (coverSeriesMediaIds.length) {
+        this.applyVariantMediaSelection(mediaGallery, coverSeriesMediaIds);
+        this.moveActiveModalMedia(String(coverSeriesMediaIds[0]), coverSeriesMediaIds);
         return;
       }
 
