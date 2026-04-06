@@ -794,14 +794,16 @@ if (!customElements.get('variant-configurator')) {
         const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
         const shouldShow = selectedIds.has(numeric);
         if (shouldShow) matchedCount += 1;
-        node.classList.toggle('sentix-configurator__media-hidden', !shouldShow);
+        node.classList.toggle('variant-configurator__media-hidden', !shouldShow);
+        if (shouldShow) node.classList.remove('sentix-configurator__media-hidden');
         if (!shouldShow) node.classList.remove('is-active');
       });
 
       mediaGallery.querySelectorAll('[data-target]').forEach((node) => {
         const numeric = this.extractTrailingNumericId(node.dataset.target);
         const shouldShow = selectedIds.has(numeric);
-        node.classList.toggle('sentix-configurator__thumb-hidden', !shouldShow);
+        node.classList.toggle('variant-configurator__thumb-hidden', !shouldShow);
+        if (shouldShow) node.classList.remove('sentix-configurator__thumb-hidden');
       });
 
       // Safety net: never leave the gallery blank due to stale/mismatched IDs.
@@ -826,16 +828,19 @@ if (!customElements.get('variant-configurator')) {
         node.classList.remove('thumbnail-list_item--variant');
       });
 
-      mediaGallery.querySelectorAll('.sentix-configurator__media-hidden').forEach((node) => {
+      mediaGallery.querySelectorAll('.variant-configurator__media-hidden, .sentix-configurator__media-hidden').forEach((node) => {
+        node.classList.remove('variant-configurator__media-hidden');
         node.classList.remove('sentix-configurator__media-hidden');
       });
-      mediaGallery.querySelectorAll('.sentix-configurator__thumb-hidden').forEach((node) => {
+      mediaGallery.querySelectorAll('.variant-configurator__thumb-hidden, .sentix-configurator__thumb-hidden').forEach((node) => {
+        node.classList.remove('variant-configurator__thumb-hidden');
         node.classList.remove('sentix-configurator__thumb-hidden');
       });
 
       const modalContent = document.querySelector(`#ProductModal-${this.sectionId} .product-media-modal__content`);
       if (!modalContent) return;
-      modalContent.querySelectorAll('.sentix-configurator__modal-media-hidden').forEach((node) => {
+      modalContent.querySelectorAll('.variant-configurator__modal-media-hidden, .sentix-configurator__modal-media-hidden').forEach((node) => {
+        node.classList.remove('variant-configurator__modal-media-hidden');
         node.classList.remove('sentix-configurator__modal-media-hidden');
       });
     }
@@ -850,7 +855,8 @@ if (!customElements.get('variant-configurator')) {
 
       const selectedIds = new Set(mappedMediaIds || []);
       if (!selectedIds.size) {
-        modalContent.querySelectorAll('.sentix-configurator__modal-media-hidden').forEach((node) => {
+        modalContent.querySelectorAll('.variant-configurator__modal-media-hidden, .sentix-configurator__modal-media-hidden').forEach((node) => {
+          node.classList.remove('variant-configurator__modal-media-hidden');
           node.classList.remove('sentix-configurator__modal-media-hidden');
         });
         return;
@@ -858,7 +864,9 @@ if (!customElements.get('variant-configurator')) {
 
       modalContent.querySelectorAll('[data-media-id]').forEach((node) => {
         const mediaId = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
-        node.classList.toggle('sentix-configurator__modal-media-hidden', !selectedIds.has(mediaId));
+        const shouldHide = !selectedIds.has(mediaId);
+        node.classList.toggle('variant-configurator__modal-media-hidden', shouldHide);
+        if (!shouldHide) node.classList.remove('sentix-configurator__modal-media-hidden');
       });
     }
 

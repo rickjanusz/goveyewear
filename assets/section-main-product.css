@@ -410,7 +410,10 @@ fieldset.product-form__input .form__label {
 
 .sentix-configurator__media-hidden,
 .sentix-configurator__thumb-hidden,
-.sentix-configurator__modal-media-hidden {
+.sentix-configurator__modal-media-hidden,
+.variant-configurator__media-hidden,
+.variant-configurator__thumb-hidden,
+.variant-configurator__modal-media-hidden {
   display: none !important;
 }
 
