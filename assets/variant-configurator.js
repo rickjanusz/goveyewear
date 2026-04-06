@@ -220,10 +220,10 @@ if (!customElements.get('variant-configurator')) {
         const seen = new Set();
 
         source.forEach((url) => {
-          const filename = this.normalizeFilename(this.extractFilename(url));
-          if (!filename || seen.has(filename)) return;
-          seen.add(filename);
-          unique.push(filename);
+          const lookupKey = this.normalizeMediaLookupKey(url);
+          if (!lookupKey || seen.has(lookupKey)) return;
+          seen.add(lookupKey);
+          unique.push(lookupKey);
         });
 
         if (unique.length) normalized[key] = unique;
@@ -234,16 +234,38 @@ if (!customElements.get('variant-configurator')) {
 
     normalizeProductMediaIndex(rawIndex) {
       const rows = Array.isArray(rawIndex) ? rawIndex : [];
-      const filenameToId = new Map();
+      const lookupToId = new Map();
 
       rows.forEach((row) => {
         const id = Number(row?.id);
-        const filename = this.normalizeFilename(this.extractFilename(row?.src));
-        if (!Number.isInteger(id) || id <= 0 || !filename) return;
-        if (!filenameToId.has(filename)) filenameToId.set(filename, id);
+        if (!Number.isInteger(id) || id <= 0) return;
+
+        const pathKey = this.normalizeMediaPath(row?.src);
+        if (pathKey && !lookupToId.has(pathKey)) lookupToId.set(pathKey, id);
+
+        const filenameKey = this.normalizeFilename(this.extractFilename(row?.src));
+        if (filenameKey && !lookupToId.has(filenameKey)) lookupToId.set(filenameKey, id);
       });
 
-      return filenameToId;
+      return lookupToId;
+    }
+
+    normalizeMediaPath(value) {
+      const raw = String(value || '').trim();
+      if (!raw) return '';
+
+      try {
+        const parsed = new URL(raw, window.location.origin);
+        return decodeURIComponent(parsed.pathname || '').toLowerCase();
+      } catch (_error) {
+        return '';
+      }
+    }
+
+    normalizeMediaLookupKey(value) {
+      const path = this.normalizeMediaPath(value);
+      if (path) return path;
+      return this.normalizeFilename(this.extractFilename(value));
     }
 
     getOrderedOptionKeys() {
