@@ -585,6 +585,28 @@
                       {%- endfor -%}
                     ]
                   </script>
+                  <script type="application/json" data-variant-assigned-media-ids>
+                    {
+                      {%- assign assigned_media_count = 0 -%}
+                      {%- for mapped_variant in product.variants -%}
+                        {%- assign assigned_media_first = true -%}
+                        {%- capture assigned_media_ids -%}
+                          {%- for product_media in product.media -%}
+                            {%- if product_media.media_type == 'image' and product_media.variant_ids contains mapped_variant.id -%}
+                              {%- unless assigned_media_first -%},{%- endunless -%}
+                              {{ product_media.id | json }}
+                              {%- assign assigned_media_first = false -%}
+                            {%- endif -%}
+                          {%- endfor -%}
+                        {%- endcapture -%}
+                        {%- unless assigned_media_ids == blank -%}
+                          {%- if assigned_media_count > 0 -%},{%- endif -%}
+                          {{ mapped_variant.id | json }}: [{{ assigned_media_ids | strip }}]
+                          {%- assign assigned_media_count = assigned_media_count | plus: 1 -%}
+                        {%- endunless -%}
+                      {%- endfor -%}
+                    }
+                  </script>
                   <script type="application/json" data-variant-assigned-gallery-files>
                     {
                       {%- assign assigned_map_count = 0 -%}
