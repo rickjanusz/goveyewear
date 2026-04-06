@@ -35,7 +35,10 @@ if (!customElements.get('variant-configurator')) {
       const defaultLensColorContent = this.parseJson('lens-color-content', {});
       const lensColorContentOverrides = this.parseJson('lens-color-content-variant-overrides', {});
       this.lensColorContent = this.mergeLensColorContent(defaultLensColorContent, lensColorContentOverrides);
-      this.swatchMap = this.buildSwatchMap(this.parseJson('swatch-entries', []));
+      this.swatchMap = this.mergeSwatchMaps(
+        this.buildSwatchMap(this.parseJson('swatch-entries', [])),
+        this.buildSwatchMapFromValueImageMap(this.parseJson('swatch-value-image-map', {})),
+      );
       this.groupNodes = {
         lens_type: this.querySelector('[data-option-group="lens_type"]'),
         lens_color: this.querySelector('[data-option-group="lens_color"]'),
@@ -84,6 +87,39 @@ if (!customElements.get('variant-configurator')) {
         map[group][this.normalizeSwatchKey(value)] = image;
       });
       return map;
+    }
+
+    buildSwatchMapFromValueImageMap(rawMap) {
+      const map = {};
+      if (!rawMap || typeof rawMap !== 'object') return map;
+
+      Object.entries(rawMap).forEach(([group, groupEntries]) => {
+        if (!groupEntries || typeof groupEntries !== 'object') return;
+        Object.entries(groupEntries).forEach(([value, image]) => {
+          if (!value || !image) return;
+          map[group] ||= {};
+          map[group][this.normalizeSwatchKey(value)] = image;
+        });
+      });
+
+      return map;
+    }
+
+    mergeSwatchMaps(primary, fallback) {
+      const merged = {};
+      const groups = new Set([
+        ...Object.keys(primary || {}),
+        ...Object.keys(fallback || {}),
+      ]);
+
+      groups.forEach((group) => {
+        merged[group] = {
+          ...(fallback?.[group] || {}),
+          ...(primary?.[group] || {}),
+        };
+      });
+
+      return merged;
     }
 
     mergeLensColorContent(defaults, overrides) {

@@ -532,12 +532,12 @@
                     {
                       {%- assign gallery_map_count = 0 -%}
                       {%- for mapped_variant in product.variants -%}
-                        {%- assign gallery_files_metafield = mapped_variant.metafields.custom.gatorz_gallery_images -%}
+                        {%- assign gallery_files_metafield = mapped_variant.metafields.custom.gatorz_gallery_images | default: mapped_variant.metafields.custom.gallery_images -%}
                         {%- assign gallery_files = gallery_files_metafield.value -%}
-                        {%- assign gallery_file_1_metafield = mapped_variant.metafields.custom.gatorz_gallery_image_1 -%}
-                        {%- assign gallery_file_2_metafield = mapped_variant.metafields.custom.gatorz_gallery_image_2 -%}
-                        {%- assign gallery_file_3_metafield = mapped_variant.metafields.custom.gatorz_gallery_image_3 -%}
-                        {%- assign gallery_file_4_metafield = mapped_variant.metafields.custom.gatorz_gallery_image_4 -%}
+                        {%- assign gallery_file_1_metafield = mapped_variant.metafields.custom.gatorz_gallery_image_1 | default: mapped_variant.metafields.custom.gallery_image_1 -%}
+                        {%- assign gallery_file_2_metafield = mapped_variant.metafields.custom.gatorz_gallery_image_2 | default: mapped_variant.metafields.custom.gallery_image_2 -%}
+                        {%- assign gallery_file_3_metafield = mapped_variant.metafields.custom.gatorz_gallery_image_3 | default: mapped_variant.metafields.custom.gallery_image_3 -%}
+                        {%- assign gallery_file_4_metafield = mapped_variant.metafields.custom.gatorz_gallery_image_4 | default: mapped_variant.metafields.custom.gallery_image_4 -%}
                         {%- assign gallery_file_1 = gallery_file_1_metafield.value -%}
                         {%- assign gallery_file_2 = gallery_file_2_metafield.value -%}
                         {%- assign gallery_file_3 = gallery_file_3_metafield.value -%}
@@ -688,9 +688,9 @@
                         {%- if lens_color_value != blank -%}
                           {%- assign lens_color_token = '|' | append: lens_color_value | append: '|' -%}
                           {%- unless seen_lens_colors contains lens_color_token -%}
-                            {%- assign variant_title = mapped_variant.metafields.custom.gatorz_lens_support_title.value | default: '' -%}
-                            {%- assign variant_body = mapped_variant.metafields.custom.gatorz_lens_support_body.value | default: '' -%}
-                            {%- assign variant_secondary = mapped_variant.metafields.custom.gatorz_lens_support_secondary_body.value | default: '' -%}
+                            {%- assign variant_title = mapped_variant.metafields.custom.gatorz_lens_support_title.value | default: mapped_variant.metafields.custom.lens_support_title.value | default: '' -%}
+                            {%- assign variant_body = mapped_variant.metafields.custom.gatorz_lens_support_body.value | default: mapped_variant.metafields.custom.lens_support_body.value | default: '' -%}
+                            {%- assign variant_secondary = mapped_variant.metafields.custom.gatorz_lens_support_secondary_body.value | default: mapped_variant.metafields.custom.lens_support_secondary_body.value | default: '' -%}
                             {%- if variant_title != blank or variant_body != blank or variant_secondary != blank -%}
                               {%- if lens_copy_count > 0 -%},{%- endif -%}
                               {{ lens_color_value | json }}: {
