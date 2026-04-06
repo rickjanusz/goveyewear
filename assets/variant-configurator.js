@@ -62,7 +62,6 @@ if (!customElements.get('variant-configurator')) {
       this.addEventListener('keydown', this.handleKeydown.bind(this));
 
       const initialVariant = this.variantData.find((variant) => variant.id === this.initialVariantId)
-        || this.variantData.find((variant) => variant.available)
         || this.variantData[0];
       this.syncUIFromVariant(initialVariant);
     }
@@ -493,7 +492,7 @@ if (!customElements.get('variant-configurator')) {
       this.renderProductInfo();
       this.updateShareUrl();
       this.updatePickupAvailability();
-      this.toggleAddButton(!variant.available, window.variantStrings.soldOut);
+      this.toggleAddButton(false);
     }
 
     updateMedia() {
@@ -897,14 +896,8 @@ if (!customElements.get('variant-configurator')) {
       if (!pickUpAvailability) return;
 
       const canFetchAvailability = typeof pickUpAvailability.fetchAvailability === 'function';
-
-      if (this.currentVariant?.available) {
-        if (canFetchAvailability) {
-          pickUpAvailability.fetchAvailability(this.currentVariant.id);
-        }
-      } else {
-        pickUpAvailability.removeAttribute('available');
-        pickUpAvailability.innerHTML = '';
+      if (canFetchAvailability && this.currentVariant?.id) {
+        pickUpAvailability.fetchAvailability(this.currentVariant.id);
       }
     }
 
