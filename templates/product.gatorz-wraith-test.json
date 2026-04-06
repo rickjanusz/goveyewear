@@ -197,32 +197,8 @@
     },
     "blocks_hLCaf4": {
       "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_5004dbb_bJYKzW": {
-          "type": "ai_gen_block_5004dbb",
-          "settings": {
-            "before_image": "shopify://shop_images/wapbefore.webp",
-            "after_image": "shopify://shop_images/wapafter.webp",
-            "aspect_ratio": 50,
-            "desktop_width_percent": 100,
-            "show_labels": false,
-            "before_label": "Before",
-            "after_label": "After",
-            "label_font_size": 14,
-            "label_bg_color": "#000000",
-            "label_text_color": "#ffffff",
-            "initial_position": 50,
-            "slider_color": "#ffffff",
-            "handle_size": 50,
-            "handle_icon_color": "#000000",
-            "border_radius": 0
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_5004dbb_bJYKzW"
-      ],
+      "blocks": {},
+      "block_order": [],
       "name": "Before and after",
       "settings": {}
     },
