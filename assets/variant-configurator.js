@@ -741,13 +741,17 @@ if (!customElements.get('variant-configurator')) {
 
     applyVariantMediaSelection(mediaGallery, mediaIds) {
       const selectedIds = new Set(mediaIds.map((id) => Number(id)));
+      const mediaNodes = Array.from(mediaGallery.querySelectorAll('[data-media-id]'));
       let visibleMediaCount = 0;
+      let firstVisibleNode = null;
 
-      mediaGallery.querySelectorAll('[data-media-id]').forEach((node) => {
+      mediaNodes.forEach((node) => {
         const numeric = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
         const shouldShow = selectedIds.has(numeric);
         node.classList.toggle('sentix-configurator__media-hidden', !shouldShow);
+        node.classList.toggle('variant-configurator__media-hidden', !shouldShow);
         if (shouldShow) visibleMediaCount += 1;
+        if (shouldShow && !firstVisibleNode) firstVisibleNode = node;
         if (!shouldShow) node.classList.remove('is-active');
       });
 
@@ -761,11 +765,22 @@ if (!customElements.get('variant-configurator')) {
         const numeric = this.extractTrailingNumericId(node.dataset.target);
         const shouldShow = selectedIds.has(numeric);
         node.classList.toggle('sentix-configurator__thumb-hidden', !shouldShow);
+        node.classList.toggle('variant-configurator__thumb-hidden', !shouldShow);
       });
 
       const primaryId = mediaIds[0];
       if (primaryId && mediaGallery.setActiveMedia) {
         mediaGallery.setActiveMedia(`${this.sectionId}-${primaryId}`, true);
+      }
+
+      const hasActiveVisible = mediaNodes.some((node) =>
+        !node.classList.contains('sentix-configurator__media-hidden')
+        && !node.classList.contains('variant-configurator__media-hidden')
+        && node.classList.contains('is-active'),
+      );
+      if (!hasActiveVisible && firstVisibleNode) {
+        mediaNodes.forEach((node) => node.classList.remove('is-active'));
+        firstVisibleNode.classList.add('is-active');
       }
     }
 
@@ -782,14 +797,23 @@ if (!customElements.get('variant-configurator')) {
       mediaGallery.querySelectorAll('.sentix-configurator__media-hidden').forEach((node) => {
         node.classList.remove('sentix-configurator__media-hidden');
       });
+      mediaGallery.querySelectorAll('.variant-configurator__media-hidden').forEach((node) => {
+        node.classList.remove('variant-configurator__media-hidden');
+      });
       mediaGallery.querySelectorAll('.sentix-configurator__thumb-hidden').forEach((node) => {
         node.classList.remove('sentix-configurator__thumb-hidden');
+      });
+      mediaGallery.querySelectorAll('.variant-configurator__thumb-hidden').forEach((node) => {
+        node.classList.remove('variant-configurator__thumb-hidden');
       });
 
       const modalContent = document.querySelector(`#ProductModal-${this.sectionId} .product-media-modal__content`);
       if (!modalContent) return;
       modalContent.querySelectorAll('.sentix-configurator__modal-media-hidden').forEach((node) => {
         node.classList.remove('sentix-configurator__modal-media-hidden');
+      });
+      modalContent.querySelectorAll('.variant-configurator__modal-media-hidden').forEach((node) => {
+        node.classList.remove('variant-configurator__modal-media-hidden');
       });
     }
 
@@ -806,12 +830,16 @@ if (!customElements.get('variant-configurator')) {
         modalContent.querySelectorAll('.sentix-configurator__modal-media-hidden').forEach((node) => {
           node.classList.remove('sentix-configurator__modal-media-hidden');
         });
+        modalContent.querySelectorAll('.variant-configurator__modal-media-hidden').forEach((node) => {
+          node.classList.remove('variant-configurator__modal-media-hidden');
+        });
         return;
       }
 
       modalContent.querySelectorAll('[data-media-id]').forEach((node) => {
         const mediaId = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
         node.classList.toggle('sentix-configurator__modal-media-hidden', !selectedIds.has(mediaId));
+        node.classList.toggle('variant-configurator__modal-media-hidden', !selectedIds.has(mediaId));
       });
     }
 
