@@ -611,44 +611,47 @@ if (!customElements.get('variant-configurator')) {
 
     getMappedMediaIdsForCurrentVariant(mediaGallery) {
       const key = String(this.currentVariant?.id || '');
-      const configuredIds = this.variantMediaMap?.[key] || [];
-      if (configuredIds.length) {
-        const available = new Set(
-          Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
-            .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
-            .filter((value) => Number.isInteger(value) && value > 0),
-        );
+      const available = new Set(
+        Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
+          .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+          .filter((value) => Number.isInteger(value) && value > 0),
+      );
+      const ordered = [];
+      const seen = new Set();
+      const addIds = (ids) => {
+        (ids || []).forEach((candidate) => {
+          const numeric = Number(candidate);
+          if (!Number.isInteger(numeric) || numeric <= 0 || seen.has(numeric) || !available.has(numeric)) return;
+          seen.add(numeric);
+          ordered.push(numeric);
+        });
+      };
 
-        return configuredIds.filter((id) => available.has(id));
-      }
+      const configuredIds = this.variantMediaMap?.[key] || [];
+      addIds(configuredIds);
 
       const assignedMediaIds = this.variantAssignedMediaMap?.[key] || [];
-      if (assignedMediaIds.length) {
-        const available = new Set(
-          Array.from(mediaGallery.querySelectorAll('[data-media-id]'))
-            .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
-            .filter((value) => Number.isInteger(value) && value > 0),
-        );
-
-        return assignedMediaIds.filter((id) => available.has(id));
-      }
+      addIds(assignedMediaIds);
 
       const configuredFiles = this.variantGalleryFiles?.[key] || [];
       if (configuredFiles.length) {
         const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
-        if (idsFromIndex.length) return idsFromIndex;
+        addIds(idsFromIndex);
 
         const idsFromGalleryFiles = this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
-        if (idsFromGalleryFiles.length) return idsFromGalleryFiles;
+        addIds(idsFromGalleryFiles);
       }
 
       const assignedFiles = this.variantAssignedGalleryFiles?.[key] || [];
-      if (!assignedFiles.length) return [];
+      if (assignedFiles.length) {
+        const idsFromAssignedIndex = this.resolveMediaIdsByProductIndex(assignedFiles);
+        addIds(idsFromAssignedIndex);
 
-      const idsFromAssignedIndex = this.resolveMediaIdsByProductIndex(assignedFiles);
-      if (idsFromAssignedIndex.length) return idsFromAssignedIndex;
+        const idsFromAssignedFiles = this.resolveMediaIdsByFilenames(mediaGallery, assignedFiles);
+        addIds(idsFromAssignedFiles);
+      }
 
-      return this.resolveMediaIdsByFilenames(mediaGallery, assignedFiles);
+      return ordered;
     }
 
     resolveMediaIdsByProductIndex(filenames) {
