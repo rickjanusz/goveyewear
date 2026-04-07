@@ -570,23 +570,29 @@
                               {%- endfor -%}
                             {%- else -%}
                               {%- assign gallery_file_first = true -%}
+                              {%- assign gallery_file_url_1 = '' -%}
                               {%- if gallery_file_1_metafield != blank -%}
                                 {%- assign gallery_file_url_1 = gallery_file_1_metafield | file_url -%}
-                                {%- if gallery_file_url_1 == blank and gallery_file_1 != blank -%}
-                                  {%- assign gallery_file_url_1 = gallery_file_1 | image_url: width: 4096 | default: gallery_file_1 | file_url -%}
-                                {%- endif -%}
+                              {%- endif -%}
+                              {%- if gallery_file_url_1 == blank and gallery_file_1 != blank -%}
+                                {%- assign gallery_file_url_1 = gallery_file_1 | image_url: width: 4096 | default: gallery_file_1 | file_url -%}
+                              {%- endif -%}
+                              {%- if gallery_file_url_1 != blank -%}
                                 {{ gallery_file_url_1 | json }}
                                 {%- assign gallery_file_first = false -%}
                               {%- elsif gallery_url_1 != blank -%}
                                 {{ gallery_url_1 | json }}
                                 {%- assign gallery_file_first = false -%}
                               {%- endif -%}
+                              {%- assign gallery_file_url_2 = '' -%}
                               {%- if gallery_file_2_metafield != blank -%}
-                                {%- unless gallery_file_first -%},{%- endunless -%}
                                 {%- assign gallery_file_url_2 = gallery_file_2_metafield | file_url -%}
-                                {%- if gallery_file_url_2 == blank and gallery_file_2 != blank -%}
-                                  {%- assign gallery_file_url_2 = gallery_file_2 | image_url: width: 4096 | default: gallery_file_2 | file_url -%}
-                                {%- endif -%}
+                              {%- endif -%}
+                              {%- if gallery_file_url_2 == blank and gallery_file_2 != blank -%}
+                                {%- assign gallery_file_url_2 = gallery_file_2 | image_url: width: 4096 | default: gallery_file_2 | file_url -%}
+                              {%- endif -%}
+                              {%- if gallery_file_url_2 != blank -%}
+                                {%- unless gallery_file_first -%},{%- endunless -%}
                                 {{ gallery_file_url_2 | json }}
                                 {%- assign gallery_file_first = false -%}
                               {%- elsif gallery_url_2 != blank -%}
@@ -594,12 +600,15 @@
                                 {{ gallery_url_2 | json }}
                                 {%- assign gallery_file_first = false -%}
                               {%- endif -%}
+                              {%- assign gallery_file_url_3 = '' -%}
                               {%- if gallery_file_3_metafield != blank -%}
-                                {%- unless gallery_file_first -%},{%- endunless -%}
                                 {%- assign gallery_file_url_3 = gallery_file_3_metafield | file_url -%}
-                                {%- if gallery_file_url_3 == blank and gallery_file_3 != blank -%}
-                                  {%- assign gallery_file_url_3 = gallery_file_3 | image_url: width: 4096 | default: gallery_file_3 | file_url -%}
-                                {%- endif -%}
+                              {%- endif -%}
+                              {%- if gallery_file_url_3 == blank and gallery_file_3 != blank -%}
+                                {%- assign gallery_file_url_3 = gallery_file_3 | image_url: width: 4096 | default: gallery_file_3 | file_url -%}
+                              {%- endif -%}
+                              {%- if gallery_file_url_3 != blank -%}
+                                {%- unless gallery_file_first -%},{%- endunless -%}
                                 {{ gallery_file_url_3 | json }}
                                 {%- assign gallery_file_first = false -%}
                               {%- elsif gallery_url_3 != blank -%}
@@ -607,12 +616,15 @@
                                 {{ gallery_url_3 | json }}
                                 {%- assign gallery_file_first = false -%}
                               {%- endif -%}
+                              {%- assign gallery_file_url_4 = '' -%}
                               {%- if gallery_file_4_metafield != blank -%}
-                                {%- unless gallery_file_first -%},{%- endunless -%}
                                 {%- assign gallery_file_url_4 = gallery_file_4_metafield | file_url -%}
-                                {%- if gallery_file_url_4 == blank and gallery_file_4 != blank -%}
-                                  {%- assign gallery_file_url_4 = gallery_file_4 | image_url: width: 4096 | default: gallery_file_4 | file_url -%}
-                                {%- endif -%}
+                              {%- endif -%}
+                              {%- if gallery_file_url_4 == blank and gallery_file_4 != blank -%}
+                                {%- assign gallery_file_url_4 = gallery_file_4 | image_url: width: 4096 | default: gallery_file_4 | file_url -%}
+                              {%- endif -%}
+                              {%- if gallery_file_url_4 != blank -%}
+                                {%- unless gallery_file_first -%},{%- endunless -%}
                                 {{ gallery_file_url_4 | json }}
                               {%- elsif gallery_url_4 != blank -%}
                                 {%- unless gallery_file_first -%},{%- endunless -%}
