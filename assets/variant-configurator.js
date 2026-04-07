@@ -28,7 +28,6 @@ if (!customElements.get('variant-configurator')) {
         ...this.parseJson('option-position-map', {}),
       };
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants', []));
-      this.variantMediaMap = this.normalizeVariantMediaMap(this.parseJson('variant-media-map', {}));
       this.variantAssignedMediaIds = this.normalizeVariantMediaMap(this.parseJson('variant-assigned-media-ids', {}));
       this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
       this.variantAssignedGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-assigned-gallery-files', {}));
@@ -532,15 +531,13 @@ if (!customElements.get('variant-configurator')) {
 
     getMappedMediaIdsForCurrentVariant(mediaGallery) {
       const key = String(this.currentVariant?.id || '');
-      const assignedIds = this.variantAssignedMediaIds?.[key] || [];
-      if (assignedIds.length) {
-        const available = new Set(
-          this.getGalleryMediaItems(mediaGallery)
-            .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
-            .filter((value) => Number.isInteger(value) && value > 0),
-        );
-        const filteredAssigned = assignedIds.filter((id) => available.has(id));
-        if (filteredAssigned.length) return filteredAssigned;
+      const configuredFiles = this.variantGalleryFiles?.[key] || [];
+      if (configuredFiles.length) {
+        const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
+        if (idsFromIndex.length) return idsFromIndex;
+
+        const idsFromGalleryFiles = this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
+        if (idsFromGalleryFiles.length) return idsFromGalleryFiles;
       }
 
       const assignedFiles = this.variantAssignedGalleryFiles?.[key] || [];
@@ -552,13 +549,15 @@ if (!customElements.get('variant-configurator')) {
         if (idsFromAssignedFiles.length) return idsFromAssignedFiles;
       }
 
-      const configuredFiles = this.variantGalleryFiles?.[key] || [];
-      if (configuredFiles.length) {
-        const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
-        if (idsFromIndex.length) return idsFromIndex;
-
-        const idsFromGalleryFiles = this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
-        if (idsFromGalleryFiles.length) return idsFromGalleryFiles;
+      const assignedIds = this.variantAssignedMediaIds?.[key] || [];
+      if (assignedIds.length) {
+        const available = new Set(
+          this.getGalleryMediaItems(mediaGallery)
+            .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
+            .filter((value) => Number.isInteger(value) && value > 0),
+        );
+        const filteredAssigned = assignedIds.filter((id) => available.has(id));
+        if (filteredAssigned.length) return filteredAssigned;
       }
 
       return [];
