@@ -28,9 +28,7 @@ if (!customElements.get('variant-configurator')) {
         ...this.parseJson('option-position-map', {}),
       };
       this.nativeVariantsById = this.indexVariantsById(this.parseJson('native-variants', []));
-      this.variantAssignedMediaIds = this.normalizeVariantMediaMap(this.parseJson('variant-assigned-media-ids', {}));
       this.variantGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-gallery-files', {}));
-      this.variantAssignedGalleryFiles = this.normalizeVariantGalleryFiles(this.parseJson('variant-assigned-gallery-files', {}));
       this.productMediaIndex = this.normalizeProductMediaIndex(this.parseJson('product-media-index', []));
       const defaultLensColorContent = this.parseJson('lens-color-content', {});
       const lensColorContentOverrides = this.parseJson('lens-color-content-variant-overrides', {});
@@ -183,33 +181,6 @@ if (!customElements.get('variant-configurator')) {
         if (variant?.id) index.set(Number(variant.id), variant);
       });
       return index;
-    }
-
-    normalizeVariantMediaMap(rawMap) {
-      const entries = rawMap && typeof rawMap === 'object' ? Object.entries(rawMap) : [];
-      const normalized = {};
-
-      entries.forEach(([variantId, ids]) => {
-        const key = String(variantId || '').trim();
-        if (!key) return;
-
-        const source = Array.isArray(ids) ? ids : String(ids || '').split(',');
-        const unique = [];
-        const seen = new Set();
-
-        source.forEach((candidate) => {
-          const numeric = Number(String(candidate || '').trim());
-          if (!Number.isInteger(numeric) || numeric <= 0 || seen.has(numeric)) return;
-          seen.add(numeric);
-          unique.push(numeric);
-        });
-
-        if (unique.length) {
-          normalized[key] = unique;
-        }
-      });
-
-      return normalized;
     }
 
     normalizeVariantGalleryFiles(rawMap) {
@@ -540,26 +511,6 @@ if (!customElements.get('variant-configurator')) {
         if (idsFromGalleryFiles.length) return idsFromGalleryFiles;
       }
 
-      const assignedFiles = this.variantAssignedGalleryFiles?.[key] || [];
-      if (assignedFiles.length) {
-        const idsFromAssignedIndex = this.resolveMediaIdsByProductIndex(assignedFiles);
-        if (idsFromAssignedIndex.length) return idsFromAssignedIndex;
-
-        const idsFromAssignedFiles = this.resolveMediaIdsByFilenames(mediaGallery, assignedFiles);
-        if (idsFromAssignedFiles.length) return idsFromAssignedFiles;
-      }
-
-      const assignedIds = this.variantAssignedMediaIds?.[key] || [];
-      if (assignedIds.length) {
-        const available = new Set(
-          this.getGalleryMediaItems(mediaGallery)
-            .map((node) => this.extractTrailingNumericId(node.getAttribute('data-media-id')))
-            .filter((value) => Number.isInteger(value) && value > 0),
-        );
-        const filteredAssigned = assignedIds.filter((id) => available.has(id));
-        if (filteredAssigned.length) return filteredAssigned;
-      }
-
       return [];
     }
 
@@ -684,18 +635,16 @@ if (!customElements.get('variant-configurator')) {
         if (!shouldShow) node.classList.remove('is-active');
       });
 
-      // Safety guard: never leave the gallery fully hidden due to mapping mismatch.
-      if (visibleMediaCount === 0) {
-        this.clearVariantMediaSelection(mediaGallery);
-        return;
-      }
-
       mediaGallery.querySelectorAll('[data-target]').forEach((node) => {
         const numeric = this.extractTrailingNumericId(node.dataset.target);
         const shouldShow = selectedIds.has(numeric);
         node.classList.toggle('sentix-configurator__thumb-hidden', !shouldShow);
         node.classList.toggle('variant-configurator__thumb-hidden', !shouldShow);
       });
+
+      if (visibleMediaCount === 0) {
+        return;
+      }
 
       const primaryId = mediaIds[0];
       if (primaryId && mediaGallery.setActiveMedia) {
