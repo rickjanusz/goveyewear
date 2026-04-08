@@ -50,7 +50,6 @@ if (!customElements.get('variant-configurator')) {
       this.lensColorSupportTitle = this.querySelector('[data-lens-color-support-title]');
       this.lensColorSupportBody = this.querySelector('[data-lens-color-support-body]');
       this.lensColorSupportBodySecondary = this.querySelector('[data-lens-color-support-body-secondary]');
-      this.clearVariantMediaSelection();
 
       this.variantData = this.normalizeVariants(this.parseJson('sellable-variants', []));
       if (!this.variantData.length) return;
@@ -344,25 +343,20 @@ if (!customElements.get('variant-configurator')) {
         node.innerHTML = values.map((value) => this.renderOptionButton(key, position, value)).join('');
       });
 
-      this.bindSwatchFallbackHandlers();
     }
 
     renderOptionButton(key, position, value) {
       const selected = this.selected[key] === value;
       const swatchUrl = this.swatchMap?.[key]?.[this.normalizeSwatchKey(value)] || '';
-      const isSwatchOption = key === 'lens_color' || key === 'frame_color';
+      const shouldRenderSwatch = (key === 'lens_color' || key === 'frame_color') && Boolean(swatchUrl);
       const classes = [
         'sentix-configurator__option',
-        isSwatchOption ? 'sentix-configurator__option--swatch' : 'sentix-configurator__option--text',
+        shouldRenderSwatch ? 'sentix-configurator__option--swatch' : 'sentix-configurator__option--text',
         `sentix-configurator__option--${key.replace('_', '-')}`,
         selected ? 'is-active' : '',
       ].join(' ');
-      const swatchFallback = this.getSwatchFallbackColor(key, value);
-      const swatchImageMarkup = swatchUrl
-        ? `<img src="${swatchUrl}" alt="" loading="lazy" decoding="async">`
-        : '';
-      const swatchMarkup = isSwatchOption
-        ? `<span class="sentix-configurator__swatch-visual" data-swatch-visual style="--sentix-swatch-fallback:${swatchFallback}">${swatchImageMarkup}</span><span class="visually-hidden">${value}</span>`
+      const swatchMarkup = shouldRenderSwatch
+        ? `<span class="sentix-configurator__swatch-visual"><img src="${swatchUrl}" alt="" loading="lazy" decoding="async"></span><span class="visually-hidden">${value}</span>`
         : `<span class="sentix-configurator__option-text">${value}</span>`;
 
       return `
@@ -380,35 +374,6 @@ if (!customElements.get('variant-configurator')) {
           ${swatchMarkup}
         </button>
       `;
-    }
-
-    bindSwatchFallbackHandlers() {
-      const images = Array.from(this.querySelectorAll('[data-swatch-visual] img'));
-      images.forEach((img) => {
-        if (img.dataset.sentixBound === 'true') return;
-        img.dataset.sentixBound = 'true';
-
-        img.addEventListener('error', () => {
-          const visual = img.closest('[data-swatch-visual]');
-          if (visual) visual.setAttribute('data-swatch-broken', 'true');
-        });
-      });
-    }
-
-    getSwatchFallbackColor(key, value) {
-      const normalized = String(value || '').toLowerCase();
-
-      if (key === 'frame_color') {
-        if (normalized.includes('tan')) return '#c9a57a';
-        if (normalized.includes('graphite')) return '#5a5f66';
-        if (normalized.includes('gunmetal')) return '#5f6b73';
-        return '#111111';
-      }
-
-      if (normalized.includes('inferno') || normalized.includes('photochromic')) return '#9aa0a6';
-      if (normalized.includes('rose')) return '#b26b7b';
-      if (normalized.includes('smoke')) return '#4a4a4a';
-      return '#777777';
     }
 
     syncSelectedLabels(variant) {
@@ -470,14 +435,12 @@ if (!customElements.get('variant-configurator')) {
       if (!mediaGallery) return;
 
       const mappedMediaIds = this.getMappedMediaIdsForCurrentVariant(mediaGallery);
-      if (mappedMediaIds.length) {
-        const resolvedIds = this.prependFeaturedMediaId(mediaGallery, mappedMediaIds);
-        this.applyVariantMediaSelection(mediaGallery, resolvedIds);
-        this.moveActiveModalMedia(String(resolvedIds[0]), resolvedIds);
-        return;
-      }
+      if (!mappedMediaIds.length) return;
 
-      this.clearVariantMediaSelection(mediaGallery);
+      const resolvedIds = this.prependFeaturedMediaId(mediaGallery, mappedMediaIds);
+      if (!resolvedIds.length) return;
+      this.applyVariantMediaSelection(mediaGallery, resolvedIds);
+      this.moveActiveModalMedia(String(resolvedIds[0]), resolvedIds);
     }
 
     prependFeaturedMediaId(mediaGallery, mediaIds) {
@@ -503,15 +466,8 @@ if (!customElements.get('variant-configurator')) {
     getMappedMediaIdsForCurrentVariant(mediaGallery) {
       const key = String(this.currentVariant?.id || '');
       const configuredFiles = this.variantGalleryFiles?.[key] || [];
-      if (configuredFiles.length) {
-        const idsFromIndex = this.resolveMediaIdsByProductIndex(configuredFiles);
-        if (idsFromIndex.length) return idsFromIndex;
-
-        const idsFromGalleryFiles = this.resolveMediaIdsByFilenames(mediaGallery, configuredFiles);
-        if (idsFromGalleryFiles.length) return idsFromGalleryFiles;
-      }
-
-      return [];
+      if (!configuredFiles.length) return [];
+      return this.resolveMediaIdsByProductIndex(configuredFiles);
     }
 
     resolveMediaIdsByProductIndex(filenames) {
@@ -528,50 +484,6 @@ if (!customElements.get('variant-configurator')) {
       return ordered;
     }
 
-    resolveMediaIdsByFilenames(mediaGallery, filenames) {
-      const mediaEntries = this.getGalleryMediaItems(mediaGallery).map((node) => {
-        const id = this.extractTrailingNumericId(node.getAttribute('data-media-id'));
-        const fileSet = new Set();
-
-        node.querySelectorAll('img').forEach((img) => {
-          this.collectFilenameFromSrc(fileSet, img.getAttribute('src'));
-          this.collectFilenamesFromSrcset(fileSet, img.getAttribute('srcset'));
-        });
-        node.querySelectorAll('source').forEach((source) => {
-          this.collectFilenamesFromSrcset(fileSet, source.getAttribute('srcset'));
-        });
-
-        return { id, fileSet };
-      }).filter((entry) => Number.isInteger(entry.id) && entry.id > 0);
-
-      const ordered = [];
-      const seen = new Set();
-      const normalizedFilenames = (filenames || [])
-        .map((filename) => this.normalizeFilename(filename))
-        .filter(Boolean);
-
-      normalizedFilenames.forEach((filename) => {
-        const match = mediaEntries.find((entry) => entry.fileSet.has(filename));
-        if (!match || seen.has(match.id)) return;
-        seen.add(match.id);
-        ordered.push(match.id);
-      });
-
-      return ordered;
-    }
-
-    collectFilenameFromSrc(targetSet, src) {
-      const filename = this.normalizeFilename(this.extractFilename(src));
-      if (filename) targetSet.add(filename);
-    }
-
-    collectFilenamesFromSrcset(targetSet, srcset) {
-      String(srcset || '')
-        .split(',')
-        .map((part) => part.trim().split(/\s+/)[0])
-        .forEach((urlPart) => this.collectFilenameFromSrc(targetSet, urlPart));
-    }
-
     extractFilename(url) {
       const raw = String(url || '').trim();
       if (!raw) return '';
@@ -581,26 +493,7 @@ if (!customElements.get('variant-configurator')) {
     }
 
     normalizeFilename(filename) {
-      const value = String(filename || '').trim().toLowerCase();
-      if (!value) return '';
-
-      const dotIndex = value.lastIndexOf('.');
-      if (dotIndex <= 0) return value;
-
-      let stem = value.slice(0, dotIndex);
-      const extension = value.slice(dotIndex);
-
-      // Shopify CDN frequently appends size tokens to filenames
-      // (for example: _small, _large, _1024x1024, _800x, _x800, and @2x variants).
-      stem = stem.replace(
-        /_(pico|icon|thumb|small|compact|medium|large|grande|original|master|\d+x\d+|\d+x|x\d+)(@[\dx]+)?$/i,
-        '',
-      );
-      // Shopify may append a UUID suffix during file upload:
-      // e.g. sentix_smoke_black-2_49245f25-cd6c-4831-abf4-b917e2df36c8.png
-      stem = stem.replace(/_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, '');
-
-      return `${stem}${extension}`;
+      return String(filename || '').trim().toLowerCase();
     }
 
     extractTrailingNumericId(value) {
@@ -660,39 +553,6 @@ if (!customElements.get('variant-configurator')) {
         mediaNodes.forEach((node) => node.classList.remove('is-active'));
         firstVisibleNode.classList.add('is-active');
       }
-    }
-
-    clearVariantMediaSelection(mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`)) {
-      if (!mediaGallery) return;
-
-      mediaGallery.querySelectorAll('.product__media-item--variant').forEach((node) => {
-        node.classList.remove('product__media-item--variant');
-      });
-      mediaGallery.querySelectorAll('.thumbnail-list_item--variant').forEach((node) => {
-        node.classList.remove('thumbnail-list_item--variant');
-      });
-
-      mediaGallery.querySelectorAll('.sentix-configurator__media-hidden').forEach((node) => {
-        node.classList.remove('sentix-configurator__media-hidden');
-      });
-      mediaGallery.querySelectorAll('.variant-configurator__media-hidden').forEach((node) => {
-        node.classList.remove('variant-configurator__media-hidden');
-      });
-      mediaGallery.querySelectorAll('.sentix-configurator__thumb-hidden').forEach((node) => {
-        node.classList.remove('sentix-configurator__thumb-hidden');
-      });
-      mediaGallery.querySelectorAll('.variant-configurator__thumb-hidden').forEach((node) => {
-        node.classList.remove('variant-configurator__thumb-hidden');
-      });
-
-      const modalContent = document.querySelector(`#ProductModal-${this.sectionId} .product-media-modal__content`);
-      if (!modalContent) return;
-      modalContent.querySelectorAll('.sentix-configurator__modal-media-hidden').forEach((node) => {
-        node.classList.remove('sentix-configurator__modal-media-hidden');
-      });
-      modalContent.querySelectorAll('.variant-configurator__modal-media-hidden').forEach((node) => {
-        node.classList.remove('variant-configurator__modal-media-hidden');
-      });
     }
 
     moveActiveModalMedia(numericMediaId, mappedMediaIds) {
