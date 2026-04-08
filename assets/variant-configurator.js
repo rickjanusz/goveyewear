@@ -434,13 +434,76 @@ if (!customElements.get('variant-configurator')) {
       const mediaGallery = document.getElementById(`MediaGallery-${this.sectionId}`);
       if (!mediaGallery) return;
 
-      const mappedMediaIds = this.getMappedMediaIdsForCurrentVariant(mediaGallery);
-      if (!mappedMediaIds.length) return;
+      // Clean up any previously injected slides before resolving
+      const viewer = mediaGallery.querySelector('[id^="GalleryViewer"]') || mediaGallery;
+      const list = viewer.querySelector('.product__media-list');
+      if (list) {
+        list.querySelectorAll('.configurator-injected-slide').forEach((el) => el.remove());
+        // Restore visibility of original media items
+        this.getGalleryMediaItems(mediaGallery).forEach((node) => {
+          node.classList.remove('sentix-configurator__media-hidden', 'variant-configurator__media-hidden');
+        });
+      }
 
-      const resolvedIds = this.prependFeaturedMediaId(mediaGallery, mappedMediaIds);
-      if (!resolvedIds.length) return;
-      this.applyVariantMediaSelection(mediaGallery, resolvedIds);
-      this.moveActiveModalMedia(String(resolvedIds[0]), resolvedIds);
+      const mappedMediaIds = this.getMappedMediaIdsForCurrentVariant(mediaGallery);
+      if (mappedMediaIds.length) {
+        const resolvedIds = this.prependFeaturedMediaId(mediaGallery, mappedMediaIds);
+        if (!resolvedIds.length) return;
+        this.applyVariantMediaSelection(mediaGallery, resolvedIds);
+        this.moveActiveModalMedia(String(resolvedIds[0]), resolvedIds);
+        return;
+      }
+
+      // Fallback: inject metafield image URLs directly into the gallery
+      const key = String(this.currentVariant?.id || '');
+      const rawUrls = this.getRawGalleryUrls(key);
+      if (!rawUrls.length) return;
+      this.injectDirectMediaSlides(mediaGallery, rawUrls);
+    }
+
+    getRawGalleryUrls(variantId) {
+      const raw = this.parseJson('variant-gallery-files', {});
+      const urls = raw?.[variantId];
+      return Array.isArray(urls) ? urls.filter(Boolean) : [];
+    }
+
+    injectDirectMediaSlides(mediaGallery, urls) {
+      const viewer = mediaGallery.querySelector('[id^="GalleryViewer"]') || mediaGallery;
+      const list = viewer.querySelector('.product__media-list');
+      if (!list) return;
+
+      // Remove any previously injected slides
+      list.querySelectorAll('.configurator-injected-slide').forEach((el) => el.remove());
+
+      // Hide existing product media items
+      const existingItems = this.getGalleryMediaItems(mediaGallery);
+      existingItems.forEach((node) => {
+        node.classList.add('sentix-configurator__media-hidden', 'variant-configurator__media-hidden');
+        node.classList.remove('is-active');
+      });
+
+      const injectedIds = [];
+      urls.forEach((url, i) => {
+        const syntheticId = `injected-${this.currentVariant.id}-${i}`;
+        const li = document.createElement('li');
+        li.className = 'product__media-item grid__item slider__slide configurator-injected-slide';
+        if (i === 0) li.classList.add('is-active');
+        li.setAttribute('data-media-id', `${this.sectionId}-${syntheticId}`);
+        li.innerHTML = `<div class="product__media media media--transparent global-media-settings" style="padding-top:100%">
+          <img src="${url}" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain" loading="lazy">
+        </div>`;
+        list.prepend(li);
+        injectedIds.push(syntheticId);
+      });
+
+      // Scroll to first injected slide
+      const firstInjected = list.querySelector('.configurator-injected-slide');
+      if (firstInjected) {
+        window.setTimeout(() => {
+          if (viewer.scrollTo) viewer.scrollTo({ left: 0, behavior: 'smooth' });
+          firstInjected.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      }
     }
 
     prependFeaturedMediaId(mediaGallery, mediaIds) {
