@@ -42,52 +42,12 @@
             "picker_type": "button"
           }
         },
-        "gatorz_swatch_lens_smoke": {
+        "gatorz_swatch_lens_smoke_antifog": {
           "type": "gatorz_swatch",
           "settings": {
             "group": "lens_color",
-            "option_value": "Smoke",
-            "swatch_image": "shopify://shop_images/smoke_small.png"
-          }
-        },
-        "gatorz_swatch_lens_smoke_opz": {
-          "type": "gatorz_swatch",
-          "settings": {
-            "group": "lens_color",
-            "option_value": "Smoke Optimized Polarized (OPz)",
-            "swatch_image": "shopify://shop_images/smoke-optimized-polarized-opz_small.png"
-          }
-        },
-        "gatorz_swatch_lens_smoke_opz_blue_mirror": {
-          "type": "gatorz_swatch",
-          "settings": {
-            "group": "lens_color",
-            "option_value": "Smoke Optimized Polarized (OPz) w/ Blue Mirror",
-            "swatch_image": "shopify://shop_images/smoke-optimized-polarized-opz-w-blue-mirror_small.png"
-          }
-        },
-        "gatorz_swatch_lens_rose_sunburst": {
-          "type": "gatorz_swatch",
-          "settings": {
-            "group": "lens_color",
-            "option_value": "Rose Optimized Polarized (OPz) w/ Sunburst Mirror",
-            "swatch_image": "shopify://shop_images/rose-optimized-polarized-opz-w-sunburst-mirror_small.png"
-          }
-        },
-        "gatorz_swatch_lens_rose_gold": {
-          "type": "gatorz_swatch",
-          "settings": {
-            "group": "lens_color",
-            "option_value": "Rose Optimized Polarized (OPz) w/ Gold Mirror",
-            "swatch_image": "shopify://shop_images/rose-optimized-polarized-opz-w-gold-mirror_small.png"
-          }
-        },
-        "gatorz_swatch_lens_brown_green": {
-          "type": "gatorz_swatch",
-          "settings": {
-            "group": "lens_color",
-            "option_value": "Brown Optimized Polarized (OPz) w/ Green Mirror",
-            "swatch_image": "shopify://shop_images/brown-optimized-polarized-opz-w-green-mirror_small.png"
+            "option_value": "Smoke w/Anti-Fog",
+            "swatch_image": "shopify://shop_images/smoke-w-anti-fog_small.png"
           }
         },
         "gatorz_swatch_lens_ballistic_smoke_antifog": {
@@ -106,12 +66,44 @@
             "swatch_image": "shopify://shop_images/ansi-z87-1-milspec-ballistic-clear-w-anti-fog_small.png"
           }
         },
+        "gatorz_swatch_lens_ballistic_smoke_polarized_gold": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "ANSI Z87.1+ MILSPEC Ballistic Smoke Polarized w/Gold Mirror",
+            "swatch_image": "shopify://shop_images/ansi-z87-1-milspec-ballistic-smoke-polarized-w-gold-mirror_small.png"
+          }
+        },
         "gatorz_swatch_lens_ballistic_inferno_antifog": {
           "type": "gatorz_swatch",
           "settings": {
             "group": "lens_color",
             "option_value": "ANSI Z87.1+ MILSPEC Ballistic Inferno Photochromic w/Anti-Fog",
             "swatch_image": "shopify://shop_images/ansi-z87-1-milspec-ballistic-inferno-photochromic-w-anti-fog_small.png"
+          }
+        },
+        "gatorz_swatch_lens_ballistic_smoke_clear_bundle": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "ANSI Z87.1+ MILSPEC Ballistic Smoke and Clear w/Anti-Fog Bundle",
+            "swatch_image": "shopify://shop_images/ansi-z87-1-milspec-ballistic-smoke-and-clear-w-anti-fog-bundle_small_41a97f29-539e-465f-bd59-1f9335043ae1.png"
+          }
+        },
+        "gatorz_swatch_lens_ballistic_day_low_bundle": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "ANSI Z87.1+ MILSPEC Ballistic Shooting Day and Low Light  w/Anti-Fog Bundle",
+            "swatch_image": "shopify://shop_images/ansi-z87-1-milspec-ballistic-shooting-day-and-low-light-w-anti-fog-bundle_small_b8108876-65bc-4267-92e7-a6a66afe7f5e.png"
+          }
+        },
+        "gatorz_swatch_lens_ballistic_smoke_polarized": {
+          "type": "gatorz_swatch",
+          "settings": {
+            "group": "lens_color",
+            "option_value": "ANSI Z87.1+ MILSPEC Ballistic Smoke Polarized",
+            "swatch_image": "shopify://shop_images/ansi-z87-1-milspec-ballistic-smoke-polarized_small.png"
           }
         },
         "gatorz_swatch_frame_black_silver": {
@@ -130,36 +122,20 @@
             "swatch_image": "shopify://shop_images/black-w-black-logo_small.png"
           }
         },
-        "gatorz_swatch_frame_frost_black": {
+        "gatorz_swatch_frame_od_green_black": {
           "type": "gatorz_swatch",
           "settings": {
             "group": "frame_color",
-            "option_value": "Frost w/Black Logo",
-            "swatch_image": "shopify://shop_images/frost-w-black-logo_small.png"
+            "option_value": "OD Green w/Black Logo",
+            "swatch_image": "shopify://shop_images/od-green-w-black-logo_small_c2997f65-e447-4fc0-9d1f-d21d518fc3b1.png"
           }
         },
-        "gatorz_swatch_frame_graphite_black": {
+        "gatorz_swatch_frame_tan_black": {
           "type": "gatorz_swatch",
           "settings": {
             "group": "frame_color",
-            "option_value": "Graphite w/Black Logo",
-            "swatch_image": "shopify://shop_images/graphite-w-black-logo_small.png"
-          }
-        },
-        "gatorz_swatch_frame_gunmetal_black": {
-          "type": "gatorz_swatch",
-          "settings": {
-            "group": "frame_color",
-            "option_value": "Gunmetal w/Black Logo",
-            "swatch_image": "shopify://shop_images/gunmetal-w-black-logo_small.png"
-          }
-        },
-        "gatorz_swatch_frame_slate_black": {
-          "type": "gatorz_swatch",
-          "settings": {
-            "group": "frame_color",
-            "option_value": "Slate w/Black Logo",
-            "swatch_image": "shopify://shop_images/slate-w-black-logo_small.png"
+            "option_value": "Tan w/Black Logo",
+            "swatch_image": "shopify://shop_images/tan-w-black-logo_small_18c0248b-b0cd-434b-9f55-d010680df416.png"
           }
         },
         "quantity_selector": {
@@ -189,21 +165,18 @@
         "caption",
         "price",
         "variant_picker",
-        "gatorz_swatch_lens_smoke",
-        "gatorz_swatch_lens_smoke_opz",
-        "gatorz_swatch_lens_smoke_opz_blue_mirror",
-        "gatorz_swatch_lens_rose_sunburst",
-        "gatorz_swatch_lens_rose_gold",
-        "gatorz_swatch_lens_brown_green",
+        "gatorz_swatch_lens_smoke_antifog",
         "gatorz_swatch_lens_ballistic_smoke_antifog",
         "gatorz_swatch_lens_ballistic_clear_antifog",
+        "gatorz_swatch_lens_ballistic_smoke_polarized_gold",
         "gatorz_swatch_lens_ballistic_inferno_antifog",
+        "gatorz_swatch_lens_ballistic_smoke_clear_bundle",
+        "gatorz_swatch_lens_ballistic_day_low_bundle",
+        "gatorz_swatch_lens_ballistic_smoke_polarized",
         "gatorz_swatch_frame_black_silver",
         "gatorz_swatch_frame_black_black",
-        "gatorz_swatch_frame_frost_black",
-        "gatorz_swatch_frame_graphite_black",
-        "gatorz_swatch_frame_gunmetal_black",
-        "gatorz_swatch_frame_slate_black",
+        "gatorz_swatch_frame_od_green_black",
+        "gatorz_swatch_frame_tan_black",
         "quantity_selector",
         "buy_buttons",
         "description",
@@ -233,7 +206,7 @@
       "type": "featured-collection",
       "name": "t:sections.featured-collection.presets.name",
       "settings": {
-        "title": "WARHAWK",
+        "title": "BLASTSHIELD",
         "enable_custom_typography": true,
         "title_font": "archivo_black_n4",
         "title_color": "#e8d7b8",
@@ -242,7 +215,7 @@
         "title_line_height": 70,
         "heading_size": "h1",
         "heading_alignment": "center",
-        "description": "<p>OTHER WARHAWK STYLES</p>",
+        "description": "<p>LENS REPLACEMENTS</p>",
         "show_description": false,
         "description_style": "body",
         "description_font": "archivo_n4",
@@ -250,7 +223,7 @@
         "description_size": 18,
         "description_size_mobile": 16,
         "description_line_height": 150,
-        "collection": "gatorz-warhawk-collection",
+        "collection": "gatorz-blastshield-lens-replacements",
         "products_to_show": 12,
         "columns_desktop": 3,
         "full_width": true,
@@ -368,14 +341,14 @@
         "heading_KreTkK": {
           "type": "heading",
           "settings": {
-            "heading": "WARHAWK",
+            "heading": "BLASTSHIELD",
             "heading_size": "h0"
           }
         },
         "text_YtBpyD": {
           "type": "text",
           "settings": {
-            "text": "<p>Your Vision, Our Mission</p>",
+            "text": "<p>Born to adapt. Built for speed.</p>",
             "text_style": "subtitle"
           }
         },
@@ -395,7 +368,7 @@
       ],
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify://shop_images/warhawk.png",
+        "image": "shopify://shop_images/GATORZ_Blastshield_MILSPEC_Smoke_TanCerakote_BlackLogo-2.png",
         "section_width": "full",
         "height": "adapt",
         "desktop_image_width": "medium",
@@ -422,7 +395,7 @@
       "name": "Brand Video",
       "settings": {
         "color_scheme": "background-1",
-        "video": "shopify://files/videos/GATORZ-Warhawk-Full-Length-16x9-No-VO.mov",
+        "video": "shopify://files/videos/Gatorz-blastshield-optimized-goveyewear.mp4",
         "video_url": "",
         "padding_top": 0,
         "padding_bottom": 0,
